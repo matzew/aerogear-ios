@@ -3,5 +3,5 @@
 build/
 
 # CocoaPods
-Podfile.lock
-Pods/
+##Podfile.lock
+##Pods/
