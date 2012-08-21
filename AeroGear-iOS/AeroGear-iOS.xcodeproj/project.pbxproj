@@ -11,6 +11,7 @@
 		1D0A1358119648AFB949959A /* libPods-AeroGear-iOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E065C8DDD305422BBB3237D5 /* libPods-AeroGear-iOSTests.a */; };
 		57345BD815E3D18600B74FEB /* AGHttpClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 57345BD715E3D18600B74FEB /* AGHttpClient.m */; };
 		57345BDC15E3D1DF00B74FEB /* AGHttpClientTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 57345BDB15E3D1DF00B74FEB /* AGHttpClientTests.m */; };
+		573CBD9A15E3ECB60071E7A6 /* AGPipeline.m in Sources */ = {isa = PBXBuildFile; fileRef = 573CBD9915E3ECB60071E7A6 /* AGPipeline.m */; };
 		57737FDD15E3D01D006B97BB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57737FDC15E3D01D006B97BB /* Foundation.framework */; };
 		57737FEC15E3D01D006B97BB /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57737FEB15E3D01D006B97BB /* SenTestingKit.framework */; };
 		57737FEE15E3D01D006B97BB /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57737FED15E3D01D006B97BB /* UIKit.framework */; };
@@ -46,6 +47,9 @@
 		57345BD715E3D18600B74FEB /* AGHttpClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGHttpClient.m; sourceTree = "<group>"; };
 		57345BDA15E3D1DF00B74FEB /* AGHttpClientTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGHttpClientTests.h; sourceTree = "<group>"; };
 		57345BDB15E3D1DF00B74FEB /* AGHttpClientTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGHttpClientTests.m; sourceTree = "<group>"; };
+		573CBD9615E3ECA80071E7A6 /* AGPipe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGPipe.h; sourceTree = "<group>"; };
+		573CBD9815E3ECB60071E7A6 /* AGPipeline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGPipeline.h; sourceTree = "<group>"; };
+		573CBD9915E3ECB60071E7A6 /* AGPipeline.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGPipeline.m; sourceTree = "<group>"; };
 		57737FD915E3D01D006B97BB /* libAeroGear-iOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libAeroGear-iOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		57737FDC15E3D01D006B97BB /* Foundation.framework */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		57737FE015E3D01D006B97BB /* AeroGear-iOS-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AeroGear-iOS-Prefix.pch"; sourceTree = "<group>"; };
@@ -124,6 +128,9 @@
 				57737FDF15E3D01D006B97BB /* Supporting Files */,
 				57345BD615E3D18600B74FEB /* AGHttpClient.h */,
 				57345BD715E3D18600B74FEB /* AGHttpClient.m */,
+				573CBD9615E3ECA80071E7A6 /* AGPipe.h */,
+				573CBD9815E3ECB60071E7A6 /* AGPipeline.h */,
+				573CBD9915E3ECB60071E7A6 /* AGPipeline.m */,
 			);
 			path = "AeroGear-iOS";
 			sourceTree = "<group>";
@@ -284,6 +291,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				57345BD815E3D18600B74FEB /* AGHttpClient.m in Sources */,
+				573CBD9A15E3ECB60071E7A6 /* AGPipeline.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
