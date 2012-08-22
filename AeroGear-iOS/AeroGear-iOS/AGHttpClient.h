@@ -11,6 +11,6 @@
 
 @interface AGHttpClient : AFHTTPClient
 
-+ (AGHttpClient *)sharedClientFor:(NSString *)url;
++ (AGHttpClient *)sharedClientFor:(NSURL *)url;
 
 @end

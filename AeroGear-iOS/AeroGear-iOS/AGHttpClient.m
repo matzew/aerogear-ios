@@ -11,11 +11,11 @@
 
 @implementation AGHttpClient
 
-+ (AGHttpClient *)sharedClientFor:(NSString *)url {
++ (AGHttpClient *)sharedClientFor:(NSURL *)url {
     static AGHttpClient *_sharedClient = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        _sharedClient = [[AGHttpClient alloc] initWithBaseURL:[NSURL URLWithString:url]];
+        _sharedClient = [[AGHttpClient alloc] initWithBaseURL:url];
     });
     
     return _sharedClient;
