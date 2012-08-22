@@ -104,5 +104,23 @@
     STAssertNil(fooPipe, @"Not deleted pipe");
 }
 
+-(void) testPipeType {
+    AGPipeline* pipeline = [AGPipeline pipelineWithPipe:@"tasks" url:nil];
+    STAssertNotNil(pipeline, @"pipeline creation");
+    
+    id<AGPipe> fooPipe = [pipeline get:@"tasks"];
+    
+    STAssertEqualObjects(@"REST", fooPipe.type, @"verifying the (default) type");
+}
+
+-(void) testPipeURL {
+    NSURL* dummyURL = [NSURL URLWithString:@"http://server.com/project"];
+    AGPipeline* pipeline = [AGPipeline pipelineWithPipe:@"tasks" url:dummyURL];
+    STAssertNotNil(pipeline, @"pipeline creation");
+    
+    id<AGPipe> fooPipe = [pipeline get:@"tasks"];
+    
+    STAssertEqualObjects(@"http://server.com/project", fooPipe.url, @"verifying the given URL");
+}
 
 @end

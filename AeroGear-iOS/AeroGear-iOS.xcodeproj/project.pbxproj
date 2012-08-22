@@ -59,6 +59,7 @@
 		573CBD9F15E4CEDD0071E7A6 /* AGPipelineTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGPipelineTests.h; sourceTree = "<group>"; };
 		573CBDA015E4CEDD0071E7A6 /* AGPipelineTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGPipelineTests.m; sourceTree = "<group>"; };
 		573CBDA315E4F31B0071E7A6 /* AGPipelineSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGPipelineSpec.m; sourceTree = "<group>"; };
+		573CBDA715E51C120071E7A6 /* AGAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGAdapter.h; sourceTree = "<group>"; };
 		57737FD915E3D01D006B97BB /* libAeroGear-iOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libAeroGear-iOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		57737FDC15E3D01D006B97BB /* Foundation.framework */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		57737FE015E3D01D006B97BB /* AeroGear-iOS-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AeroGear-iOS-Prefix.pch"; sourceTree = "<group>"; };
@@ -162,6 +163,7 @@
 				573CBD9B15E3ED7F0071E7A6 /* AGRestAdapter.h */,
 				573CBD9C15E3ED7F0071E7A6 /* AGRestAdapter.m */,
 				573CBD9E15E3EE1F0071E7A6 /* AeroGear.h */,
+				573CBDA715E51C120071E7A6 /* AGAdapter.h */,
 			);
 			path = "AeroGear-iOS";
 			sourceTree = "<group>";

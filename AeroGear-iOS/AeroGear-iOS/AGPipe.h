@@ -24,6 +24,16 @@
 @protocol AGPipe <NSObject>
 
 /**
+ * Returns the type of the underlying 'pipe implementation'
+ */
+@property (nonatomic, readonly) NSString* type;
+
+/**
+ * Returns the url string of the underlying 'pipe implementation'
+ */
+@property (nonatomic, readonly) NSString* url;
+
+/**
  * Reads all the data from the underlying server connection. The results are being returned as
  * a dictionary/map, representing the actual JSON response.
  *

@@ -40,7 +40,7 @@
     self = [self init];
     if (self) {
         // default, is REST Only...
-        id<AGPipe> pipe = [AGRestAdapter pipe];
+        id<AGPipe> pipe = [AGRestAdapter pipeForURL:url];
         
         [_pipes setValue:pipe forKey:name];
     }
@@ -58,7 +58,7 @@
         //TODO: check for (invalid) type
         
         // default, is REST Only...
-        id<AGPipe> pipe = [AGRestAdapter pipe];
+        id<AGPipe> pipe = [AGRestAdapter pipeForURL:url];
         
         
         [_pipes setValue:pipe forKey:name];
@@ -78,7 +78,7 @@
 
 -(id<AGPipe>) add:(NSString*) name url:(NSURL*)url {
     // default, is REST Only...
-    id<AGPipe> pipe = [AGRestAdapter pipe];
+    id<AGPipe> pipe = [AGRestAdapter pipeForURL:url];
     
     
     [_pipes setValue:pipe forKey:name];
@@ -92,7 +92,7 @@
     }
     
     // default, is REST Only...
-    id<AGPipe> pipe = [AGRestAdapter pipe];
+    id<AGPipe> pipe = [AGRestAdapter pipeForURL:url];
     
     
     [_pipes setValue:pipe forKey:name];

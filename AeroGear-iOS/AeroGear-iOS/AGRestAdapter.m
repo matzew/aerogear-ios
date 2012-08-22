@@ -22,17 +22,31 @@
     AGHttpClient* _client;
 }
 
+@synthesize type = _type;
+@synthesize url = _url;
+
 - (id)init
 {
     self = [super init];
     if (self) {
-        // todo...
+        // base inits:
+        _type = @"REST";
+        
+        
     }
     return self;
 }
 
-+(id) pipe {
-    return [[self alloc] init];
+-(id) initForURL:(NSURL*) url {
+    self = [self init];
+    if (self) {
+        _url = url.absoluteString;
+    }
+    return self;
+}
+
++(id) pipeForURL:(NSURL*) url {
+    return [[self alloc] initForURL:url];
 }
 
 -(NSDictionary*) read {

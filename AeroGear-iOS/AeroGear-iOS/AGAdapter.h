@@ -16,13 +16,8 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "AGPipe.h"
 
-@interface AGRestAdapter : NSObject <AGPipe>
+@protocol AGAdapter <NSObject>
 
-
-// todo: move to an 'adapter' protocol
--(id) initForURL:(NSURL*) url;
-+(id) pipeForURL:(NSURL*) url;
 
 @end
