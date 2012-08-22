@@ -15,35 +15,8 @@
  * limitations under the License.
  */
 
-#import <Kiwi/Kiwi.h>
-#import "AGPipeline.h"
+#import <SenTestingKit/SenTestingKit.h>
 
-SPEC_BEGIN(AGPipelineSpec)
+@interface AGRestAdapterTests : SenTestCase
 
-describe(@"AGPipeline", ^{
-    context(@"when newly created", ^{
-        
-        //A pipeline object:
-        __block id pipeline = nil;
-
-        
-        beforeEach(^{
-            pipeline = [AGPipeline pipelineWithPipe:@"tests" url:nil];
-        });
-        
-        
-        it(@"should not be nil", ^{
-            [pipeline shouldNotBeNil];
-            id pipe = [pipeline get:@"tests"];
-            [[theValue(pipe) shouldNot] equal:nil];
-        });
-
-        it(@"should have a pipe", ^{
-            id pipe = [pipeline get:@"tests"];
-            [[theValue(pipe) shouldNot] equal:nil];
-        });
-        
-    });
-});
-
-SPEC_END
+@end

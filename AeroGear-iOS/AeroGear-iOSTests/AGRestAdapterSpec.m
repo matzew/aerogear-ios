@@ -16,31 +16,26 @@
  */
 
 #import <Kiwi/Kiwi.h>
-#import "AGPipeline.h"
+#import "AGRestAdapter.h"
 
-SPEC_BEGIN(AGPipelineSpec)
+SPEC_BEGIN(AGRestAdapterSpec)
 
-describe(@"AGPipeline", ^{
+describe(@"AGRestAdapter", ^{
     context(@"when newly created", ^{
         
-        //A pipeline object:
-        __block id pipeline = nil;
-
+        //A 'RESTful' pipe object:
+        __block id restPipe = nil;
+        
         
         beforeEach(^{
-            pipeline = [AGPipeline pipelineWithPipe:@"tests" url:nil];
+            //pipeline = [AGPipeline pipelineWithPipe:@"tests" url:nil];
+            NSURL* dummyURL = [NSURL URLWithString:@"http://server.com/project"];
+            restPipe = [AGRestAdapter pipeForURL:dummyURL];
         });
         
         
         it(@"should not be nil", ^{
-            [pipeline shouldNotBeNil];
-            id pipe = [pipeline get:@"tests"];
-            [[theValue(pipe) shouldNot] equal:nil];
-        });
-
-        it(@"should have a pipe", ^{
-            id pipe = [pipeline get:@"tests"];
-            [[theValue(pipe) shouldNot] equal:nil];
+            [restPipe shouldNotBeNil];
         });
         
     });

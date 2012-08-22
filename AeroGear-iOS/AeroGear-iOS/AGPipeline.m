@@ -24,7 +24,9 @@
 @property (atomic, copy) NSMutableDictionary* pipes;
 @end
 
-@implementation AGPipeline
+@implementation AGPipeline {
+    // ivars...
+}
 @synthesize pipes = _pipes;
 
 
@@ -65,8 +67,6 @@
     }
     return self;
 }
-
-
 
 +(id) pipelineWithPipe:(NSString*) name url:(NSURL*)url {
     return [[self alloc] initWithPipe:name url:url];
