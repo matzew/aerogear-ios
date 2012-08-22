@@ -16,7 +16,39 @@
  */
 
 #import "AGRestAdapter.h"
+#import "AGHttpClient.h"
 
-@implementation AGRestAdapter
+@implementation AGRestAdapter {
+    AGHttpClient* _client;
+}
+
+- (id)init
+{
+    self = [super init];
+    if (self) {
+        // todo...
+    }
+    return self;
+}
+
++(id) pipe {
+    return [[self alloc] init];
+}
+
+-(NSDictionary*) read {
+    return nil;
+}
+
+-(NSDictionary*) readWithFilter:(id)filterObject {
+    return nil;
+}
+
+-(id) save:(NSDictionary*) object {
+    return nil;
+}
+
+-(id) remove:(id) key {
+    return nil;
+}
 
 @end

@@ -20,4 +20,7 @@
 
 @interface AGRestAdapter : NSObject <AGPipe>
 
+// todo: move to an 'adapter' protocol
++(id) pipe;
+
 @end
