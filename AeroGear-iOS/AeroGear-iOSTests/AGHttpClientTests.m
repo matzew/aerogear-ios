@@ -17,7 +17,7 @@
 -(void)setUp {
     [super setUp];
     // create a shared client for the demo app:
-    restClient = [AGHttpClient sharedClientFor:@"http://html5-aerogear.rhcloud.com/rest/"];
+    restClient = [AGHttpClient sharedClientFor:@"http://todo-aerogear.rhcloud.com/todo-server/"];
     restClient.parameterEncoding = AFJSONParameterEncoding;
     
     
@@ -28,10 +28,46 @@
     restClient = nil;
 }
 
+// =================================================
+// CREATE section
+// =================================================
+-(void) testPostProject {
+    // the object, fairly simple...just as a data structure... no object mapping yet..
+    NSMutableDictionary* parameters = [NSMutableDictionary dictionary];
+    
+    // {"title":"my title","style":"project-232-96-96"}
+    [parameters setValue:@"Created from testcase" forKey:@"title"];
+    [parameters setValue:@"project-234-255-0" forKey:@"style"];
+    
+    
+    [restClient postPath:@"projects" parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        
+        NSLog(@"Create Project response: %@", responseObject);
+        
+        
+        // signal that the test finished...
+        _finishedFlag = YES;
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"An error occured! \n%@", error);
+        _finishedFlag = YES;
+        STFail(@"Error...");
+        
+    } ];
+    
+    // keep the run loop going
+    while(!_finishedFlag) {
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+    }
+}
 
+// =================================================
+// READ section
+// =================================================
 
--(void) testExternalJsonCall {
-    [restClient getPath:@"members" parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+-(void) testGetProjects {
+    
+    [restClient getPath:@"projects" parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
         
         NSLog(@"Projects: %@", responseObject);
         
@@ -40,9 +76,9 @@
         _finishedFlag = YES;
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        // noop
-        
-        NSLog(@"%@", error);
+        NSLog(@"An error occured! \n%@", error);
+        _finishedFlag = YES;
+        STFail(@"Error...");
         
     } ];
     
@@ -50,7 +86,6 @@
     while(!_finishedFlag) {
         [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
     }
-    
 }
 
 @end
