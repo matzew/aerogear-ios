@@ -28,7 +28,30 @@
 @interface AGPipeline : NSObject
 
 /**
- * A factory methods to instantiate the AGPipeline, which
+ * An initializer method to instantiate the AGPipeline, which
+ * contains a RESTful pipe.
+ *
+ * @param name the name of the first AGPipe object
+ * @param url the URL of the server
+ *
+ * @return the AGPipeline object
+ */
+-(id) initWithPipe:(NSString*) name url:(NSURL*)url;
+
+/**
+ * An initializer method to instantiate the AGPipeline, which
+ * contains a pipe object. The actual type is determined by the type argument.
+ *
+ * @param name the name of the first AGPipe object
+ * @param url the URL of the server
+ * @param type the type of the actual pipe/connection
+ *
+ * @return the AGPipeline object
+ */
+-(id) initWithPipe:(NSString*) name url:(NSURL*)url type:(NSString*)type;
+
+/**
+ * A factory method to instantiate the AGPipeline, which
  * contains a RESTful pipe.
  *
  * @param name the name of the first AGPipe object
@@ -39,7 +62,7 @@
 +(id) pipelineWithPipe:(NSString*) name url:(NSURL*)url;
 
 /**
- * A factory methods to instantiate the AGPipeline, which
+ * A factory method to instantiate the AGPipeline, which
  * contains a pipe object. The actual type is determined by the type argument.
  *
  * @param name the name of the first AGPipe object

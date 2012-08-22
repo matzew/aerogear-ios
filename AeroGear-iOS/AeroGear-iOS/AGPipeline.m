@@ -16,9 +16,100 @@
  */
 
 #import "AGPipeline.h"
+#import "AGRestAdapter.h"
+
+// category
+@interface AGPipeline ()
+// concurrency...
+@property (atomic, copy) NSMutableDictionary* pipes;
+@end
 
 @implementation AGPipeline
+@synthesize pipes = _pipes;
 
- // TODO :)
+
+- (id)init
+{
+    self = [super init];
+    if (self) {
+        _pipes = [NSMutableDictionary dictionary];
+    }
+    return self;
+}
+-(id) initWithPipe:(NSString*) name url:(NSURL*)url {
+    self = [self init];
+    if (self) {
+        // default, is REST Only...
+        id<AGPipe> pipe = [AGRestAdapter pipe];
+        
+        [_pipes setValue:pipe forKey:name];
+    }
+    return self;
+}
+
+-(id) initWithPipe:(NSString*) name url:(NSURL*)url type:(NSString*)type {
+    
+    if (! [type isEqualToString:@"REST"]) {
+        return nil;
+    }
+    
+    self = [self init];
+    if (self) {
+        //TODO: check for (invalid) type
+        
+        // default, is REST Only...
+        id<AGPipe> pipe = [AGRestAdapter pipe];
+        
+        
+        [_pipes setValue:pipe forKey:name];
+    }
+    return self;
+}
+
+
+
++(id) pipelineWithPipe:(NSString*) name url:(NSURL*)url {
+    return [[self alloc] initWithPipe:name url:url];
+}
+
++(id) pipelineWithPipe:(NSString*) name url:(NSURL*)url type:(NSString*)type {
+    return [[self alloc] initWithPipe:name url:url type:type];
+}
+
+-(id<AGPipe>) add:(NSString*) name url:(NSURL*)url {
+    // default, is REST Only...
+    id<AGPipe> pipe = [AGRestAdapter pipe];
+    
+    
+    [_pipes setValue:pipe forKey:name];
+
+    return pipe;
+}
+
+-(id<AGPipe>) add:(NSString*) name url:(NSURL*)url type:(NSString*)type {
+    if (! [type isEqualToString:@"REST"]) {
+        return nil;
+    }
+    
+    // default, is REST Only...
+    id<AGPipe> pipe = [AGRestAdapter pipe];
+    
+    
+    [_pipes setValue:pipe forKey:name];
+    
+    return pipe;
+}
+
+-(id<AGPipe>) remove:(NSString*) name {
+    id<AGPipe> pipe = [self get:name];
+    [_pipes removeObjectForKey:name];
+    
+    return pipe;
+}
+
+-(id<AGPipe>) get:(NSString*) name {
+    return [_pipes valueForKey:name];
+}
+
 
 @end
