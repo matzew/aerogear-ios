@@ -98,6 +98,25 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		573CBDA515E4F9000071E7A6 /* Unit Tests */ = {
+			isa = PBXGroup;
+			children = (
+				57345BDA15E3D1DF00B74FEB /* AGHttpClientTests.h */,
+				57345BDB15E3D1DF00B74FEB /* AGHttpClientTests.m */,
+				573CBD9F15E4CEDD0071E7A6 /* AGPipelineTests.h */,
+				573CBDA015E4CEDD0071E7A6 /* AGPipelineTests.m */,
+			);
+			name = "Unit Tests";
+			sourceTree = "<group>";
+		};
+		573CBDA615E4F9110071E7A6 /* BDD Specs */ = {
+			isa = PBXGroup;
+			children = (
+				573CBDA315E4F31B0071E7A6 /* AGPipelineSpec.m */,
+			);
+			name = "BDD Specs";
+			sourceTree = "<group>";
+		};
 		57737FCE15E3D01D006B97BB = {
 			isa = PBXGroup;
 			children = (
@@ -158,12 +177,9 @@
 		57737FF315E3D01D006B97BB /* AeroGear-iOSTests */ = {
 			isa = PBXGroup;
 			children = (
+				573CBDA615E4F9110071E7A6 /* BDD Specs */,
+				573CBDA515E4F9000071E7A6 /* Unit Tests */,
 				57737FF415E3D01D006B97BB /* Supporting Files */,
-				57345BDA15E3D1DF00B74FEB /* AGHttpClientTests.h */,
-				57345BDB15E3D1DF00B74FEB /* AGHttpClientTests.m */,
-				573CBD9F15E4CEDD0071E7A6 /* AGPipelineTests.h */,
-				573CBDA015E4CEDD0071E7A6 /* AGPipelineTests.m */,
-				573CBDA315E4F31B0071E7A6 /* AGPipelineSpec.m */,
 			);
 			path = "AeroGear-iOSTests";
 			sourceTree = "<group>";
