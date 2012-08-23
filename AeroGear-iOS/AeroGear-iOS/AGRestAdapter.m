@@ -19,7 +19,7 @@
 #import "AGHttpClient.h"
 
 @implementation AGRestAdapter {
-    AGHttpClient* _client;
+    AGHttpClient* _restClient;
 }
 
 @synthesize type = _type;
@@ -31,8 +31,6 @@
     if (self) {
         // base inits:
         _type = @"REST";
-        
-        
     }
     return self;
 }
@@ -41,6 +39,7 @@
     self = [self init];
     if (self) {
         _url = url.absoluteString;
+        _restClient = [AGHttpClient clientFor:url];
     }
     return self;
 }
@@ -49,20 +48,43 @@
     return [[self alloc] initForURL:url];
 }
 
--(NSDictionary*) read {
-    return nil;
+// read all, via HTTP GET
+-(void) read:(void (^)(id responseObject))success
+     failure:(void (^)(NSError *error))failure {
+
+    // TODO: better Endpoints....
+    [_restClient getPath:@"" parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        
+        if (success) {
+            NSLog(@"Invoking successblock....");
+            success(responseObject);
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+        if (failure) {
+            NSLog(@"Invoking failure block....");
+            failure(error);
+        }
+    } ];
 }
 
--(NSDictionary*) readWithFilter:(id)filterObject {
-    return nil;
+-(void) readWithFilter:(id)filterObject
+               success:(void (^)(id responseObject))success
+               failure:(void (^)(NSError *error))failure {
+    // TODO...
 }
 
--(id) save:(NSDictionary*) object {
-    return nil;
+
+-(void) save:(NSDictionary*) object
+     success:(void (^)(id responseObject))success
+     failure:(void (^)(NSError *error))failure {
+    // TODO...
 }
 
--(id) remove:(id) key {
-    return nil;
+-(void) remove:(id) key
+       success:(void (^)(id responseObject))success
+       failure:(void (^)(NSError *error))failure {
+    // TODO...
 }
 
 @end

@@ -34,37 +34,76 @@
 @property (nonatomic, readonly) NSString* url;
 
 /**
- * Reads all the data from the underlying server connection. The results are being returned as
- * a dictionary/map, representing the actual JSON response.
+ * Reads all the data from the underlying server connection.
  *
- * @return a map, representing the JSON response
+ * @param success A block object to be executed when the request operation finishes successfully.
+ * This block has no return value and takes one argument: The object created from the response
+ * data of request.
+ *
+ * @param failure A block object to be executed when the request operation finishes unsuccessfully,
+ * or that finishes successfully, but encountered an error while parsing the resonse data.
+ * This block has no return value and takes one argument: The `NSError` object describing
+ * the network or parsing error that occurred.
  */
--(NSDictionary*) read;
+-(void) read:(void (^)(id responseObject))success
+     failure:(void (^)(NSError *error))failure;
+
 
 /**
  * Reads all the data that matches a given filter creteria from the underlying server connection.
- * The results are being returned as a dictionary/map, representing the actual JSON response.
  *
  * @param filterObject TODO some filter object..........
- * @return a map, representing the JSON response
+ *
+ *
+ * @param success A block object to be executed when the request operation finishes successfully.
+ * This block has no return value and takes one argument: The object created from the response
+ * data of request.
+ *
+ * @param failure A block object to be executed when the request operation finishes unsuccessfully,
+ * or that finishes successfully, but encountered an error while parsing the resonse data.
+ * This block has no return value and takes one argument: The `NSError` object describing
+ * the network or parsing error that occurred.
  */
--(NSDictionary*) readWithFilter:(id)filterObject;
+-(void) readWithFilter:(id)filterObject
+               success:(void (^)(id responseObject))success
+               failure:(void (^)(NSError *error))failure;
+
 
 /**
  * Saves (or updates) a give 'JSON' map on the server;
  *
  * @param object a 'JSON' map, representing the data to save/update
- * @return the created or updated object
+ *
+ * @param success A block object to be executed when the request operation finishes successfully.
+ * This block has no return value and takes one argument: The object created from the response
+ * data of request.
+ *
+ * @param failure A block object to be executed when the request operation finishes unsuccessfully,
+ * or that finishes successfully, but encountered an error while parsing the resonse data.
+ * This block has no return value and takes one argument: The `NSError` object describing
+ * the network or parsing error that occurred.
  */
--(id) save:(NSDictionary*) object;
+-(void) save:(NSDictionary*) object
+     success:(void (^)(id responseObject))success
+     failure:(void (^)(NSError *error))failure;
 
 /**
  * Removes an object from the underlying server connection. The
  * given key argument is used as the objects ID.
  *
  * @param key (string, integer,...) representing the 'id'
- * @return the removed object
+ *
+ * @param success A block object to be executed when the request operation finishes successfully.
+ * This block has no return value and takes one argument: The object created from the response
+ * data of request.
+ *
+ * @param failure A block object to be executed when the request operation finishes unsuccessfully,
+ * or that finishes successfully, but encountered an error while parsing the resonse data.
+ * This block has no return value and takes one argument: The `NSError` object describing
+ * the network or parsing error that occurred.
  */
--(id) remove:(id) key;
+-(void) remove:(id) key
+       success:(void (^)(id responseObject))success
+       failure:(void (^)(NSError *error))failure;
 
 @end

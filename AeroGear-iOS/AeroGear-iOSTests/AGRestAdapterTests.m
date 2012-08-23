@@ -18,7 +18,19 @@
 #import "AGRestAdapterTests.h"
 #import "AGRestAdapter.h"
 
-@implementation AGRestAdapterTests
+@implementation AGRestAdapterTests {
+    BOOL _finishedFlag;
+}
+
+-(void)setUp {
+    [super setUp];
+    _finishedFlag = NO;
+}
+
+-(void)tearDown {
+    //
+    [super tearDown];
+}
 
 -(void) testCreateRESTfulPipe {
     NSURL* dummyURL = [NSURL URLWithString:@"http://server.com/project"];
@@ -41,6 +53,30 @@
     
     STAssertEqualObjects(@"http://server.com/project", restPipe.url, @"verifying the given URL");
 }
+
+// Integration tests....
+-(void) testReadFromRESTfulPipe {
+    
+    NSURL* projectURL = [NSURL URLWithString:@"http://todo-aerogear.rhcloud.com/todo-server/projects"];
+    id<AGPipe> projectPipe = [AGRestAdapter pipeForURL:projectURL];
+    
+    
+    [projectPipe read:^(id responseObject) {
+        
+        NSLog(@"Projects: %@", [responseObject description]);
+        _finishedFlag = YES;
+        
+    } failure:^(NSError *error) {
+        
+        NSLog(@"An error occured! \n%@", error);
+    }];
+    
+    while(!_finishedFlag) {
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+    }
+    
+}
+
 
 
 

@@ -27,7 +27,7 @@
     [super setUp];
     // create a shared client for the demo app:
     NSURL* testURL = [NSURL URLWithString:@"http://todo-aerogear.rhcloud.com/todo-server/"];
-    restClient = [AGHttpClient sharedClientFor:testURL];
+    restClient = [AGHttpClient clientFor:testURL];
     restClient.parameterEncoding = AFJSONParameterEncoding;
     
     
@@ -75,7 +75,7 @@
 // READ section
 // =================================================
 
--(void) xtestGetProjects {
+-(void) testGetProjects {
     
     [restClient getPath:@"projects" parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
         

@@ -123,4 +123,15 @@
     STAssertEqualObjects(@"http://server.com/project", fooPipe.url, @"verifying the given URL");
 }
 
+
+
+//// Integration tests....
+//-(void) testReadFromRESTfulPipe {
+//
+//    NSURL* projectURL = [NSURL URLWithString:@"http://todo-aerogear.rhcloud.com/todo-server/projects"];
+//    
+//    AGPipeline* todoPipeline = [AGPipeline pipelineWithPipe:@"projects" url:projectURL type:@"REST"];
+//    
+//    
+//}
 @end
