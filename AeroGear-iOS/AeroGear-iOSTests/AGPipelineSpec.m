@@ -34,8 +34,6 @@ describe(@"AGPipeline", ^{
         
         it(@"should not be nil", ^{
             [pipeline shouldNotBeNil];
-            id pipe = [pipeline get:@"tests"];
-            [[theValue(pipe) shouldNot] equal:nil];
         });
 
         it(@"should have a pipe", ^{
