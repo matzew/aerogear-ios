@@ -111,5 +111,8 @@
     return [_pipes valueForKey:name];
 }
 
+-(NSString *) description {
+    return [NSString stringWithFormat: @"%@", _pipes];
+}
 
 @end
