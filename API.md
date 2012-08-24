@@ -21,7 +21,7 @@ To create a pipeline, you need to use the AGPipeline class. Below is an example:
 The pipeline object offers 'management' APIs to work with containing AGPipe objects. Below is shown how to get access to an actual pipe:
 
     // get access to the projects pipe
-    projects = [todo get:@"projects"];
+    id<AGPipe> projects = [todo get:@"projects"];
 
 ## Save data 
 
