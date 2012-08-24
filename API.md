@@ -11,10 +11,10 @@ Below is a simple 'Getting started' section on how-to use the API
 
 To create a pipeline, you need to use the AGPipeline class. Below is an example: 
 
-    // create the 'todo' pipeline;
+    // NSURL object:
     NSURL* projectsURL = [NSURL URLWithString:@"http://todo-aerogear.rhcloud.com/todo-server/projects/"];
 
-    // create it with 'one' pipe inside;
+    // create the 'todo' pipeline it with 'one' pipe inside;
     AGPipeline* todo = [AGPipeline pipelineWithPipe:@"projects" url:projectsURL type:@"REST"];
     
 
