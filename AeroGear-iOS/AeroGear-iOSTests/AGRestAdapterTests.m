@@ -33,13 +33,13 @@
 }
 
 -(void) testCreateRESTfulPipe {
-    NSURL* dummyURL = [NSURL URLWithString:@"http://server.com/project"];
+    NSURL* dummyURL = [NSURL URLWithString:@"http://server.com/projects/"];
     id<AGPipe> restPipe = [AGRestAdapter pipeForURL:dummyURL];
     STAssertNotNil(restPipe, @"pipe creation");
 }
 
 -(void) testPipeTypeProperty {
-    NSURL* dummyURL = [NSURL URLWithString:@"http://server.com/project"];
+    NSURL* dummyURL = [NSURL URLWithString:@"http://server.com/projects/"];
     id<AGPipe> restPipe = [AGRestAdapter pipeForURL:dummyURL];
     STAssertNotNil(restPipe, @"pipe creation");
     
@@ -47,17 +47,17 @@
 }
 
 -(void) testPipeURLProperty {
-    NSURL* dummyURL = [NSURL URLWithString:@"http://server.com/project"];
+    NSURL* dummyURL = [NSURL URLWithString:@"http://server.com/projects/"];
     id<AGPipe> restPipe = [AGRestAdapter pipeForURL:dummyURL];
     STAssertNotNil(restPipe, @"pipe creation");
     
-    STAssertEqualObjects(@"http://server.com/project", restPipe.url, @"verifying the given URL");
+    STAssertEqualObjects(@"http://server.com/projects/", restPipe.url, @"verifying the given URL");
 }
 
 // Integration tests....
 -(void) testReadFromRESTfulPipe {
     
-    NSURL* projectURL = [NSURL URLWithString:@"http://todo-aerogear.rhcloud.com/todo-server/projects"];
+    NSURL* projectURL = [NSURL URLWithString:@"http://todo-aerogear.rhcloud.com/todo-server/projects/"];
     id<AGPipe> projectPipe = [AGRestAdapter pipeForURL:projectURL];
     
     
@@ -68,16 +68,80 @@
         
     } failure:^(NSError *error) {
         
-        NSLog(@"An error occured! \n%@", error);
+        NSLog(@"Read: An error occured! \n%@", error);
     }];
     
     while(!_finishedFlag) {
         [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
     }
-    
 }
 
+-(void) testCreateAndDeleteProject {
+    NSMutableDictionary* newProject = [NSMutableDictionary dictionary];
+    
+    // {"title":"my title","style":"project-232-96-96"}
+    [newProject setValue:@"Integration Test" forKey:@"title"];
+    [newProject setValue:@"project-255-255-255" forKey:@"style"];
+    
+    NSURL* projectURL = [NSURL URLWithString:@"http://todo-aerogear.rhcloud.com/todo-server/projects/"];
+    id<AGPipe> projectPipe = [AGRestAdapter pipeForURL:projectURL];
+    
+    // stash the id for the created resource;
+    __block id resourceId;
+    
+    [projectPipe save:newProject success:^(id responseObject) {
+        
+        NSLog(@"Create Response\n%@", [responseObject description]);
+        
+        resourceId = [responseObject valueForKey:@"id"];
 
+        
+        // Once created and we got the response.... let's delete it :-) !!
+        [projectPipe remove:resourceId success:^(id responseObject) {
+            
+            NSLog(@"Delete Response\n%@", [responseObject description]);
+            _finishedFlag = YES;
+            
+        } failure:^(NSError *error) {
+            
+            NSLog(@"Delete: An error occured! \n%@", error);
+        }];
+        
+    } failure:^(NSError *error) {
+        
+        NSLog(@"Create: An error occured! \n%@", error);
+    }];
+    
+    while(!_finishedFlag) {
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+    }
+}
 
+-(void) testUpdateProject {
+    NSMutableDictionary* newProject = [NSMutableDictionary dictionary];
+    
+    // {"title":"my title","style":"project-232-96-96"}
+    [newProject setValue:@"15" forKey:@"id"];
+    [newProject setValue:@"matzew: do NOT delete!" forKey:@"title"];
+    [newProject setValue:@"project-255-255-255" forKey:@"style"];
+    
+    NSURL* projectURL = [NSURL URLWithString:@"http://todo-aerogear.rhcloud.com/todo-server/projects/"];
+    id<AGPipe> projectPipe = [AGRestAdapter pipeForURL:projectURL];
+    
+    
+    [projectPipe save:newProject success:^(id responseObject) {
+        
+        NSLog(@"Update Response\n%@", [responseObject description]);
+        _finishedFlag = YES;
+        
+    } failure:^(NSError *error) {
+        
+        NSLog(@"Update: An error occured! \n%@", error);
+    }];
+    
+    while(!_finishedFlag) {
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+    }
+}
 
 @end
