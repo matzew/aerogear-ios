@@ -40,6 +40,7 @@
     if (self) {
         _url = url.absoluteString;
         _restClient = [AGHttpClient clientFor:url];
+        _restClient.parameterEncoding = AFJSONParameterEncoding;
     }
     return self;
 }
@@ -78,13 +79,56 @@
 -(void) save:(NSDictionary*) object
      success:(void (^)(id responseObject))success
      failure:(void (^)(NSError *error))failure {
-    // TODO...
+
+    // Does a PUT or POST based on the fact if the object
+    // already exists (if there is an 'id').
+    
+    // the blocks are unique to PUT and POST, so let's define them up-front:
+    id successCallback = ^(AFHTTPRequestOperation *operation, id responseObject) {
+        //NSLog(@"Create Project response: %@", responseObject);
+        if (success) {
+            NSLog(@"Invoking successblock....");
+            success(responseObject);
+        }
+    };
+    
+    id failureCallback = ^(AFHTTPRequestOperation *operation, NSError *error) {
+        if (failure) {
+            NSLog(@"Invoking failure block....");
+            failure(error);
+        }
+    };
+    
+    
+    if ([object objectForKey:@"id"]) {
+        NSLog(@"HTTP PUT to update the given object");
+        NSString* updateIdPath = [object objectForKey:@"id"];
+        [_restClient putPath:updateIdPath parameters:object success:successCallback failure:failureCallback];
+    }
+    else {
+        NSLog(@"HTTP POST to create the given object");
+        [_restClient postPath:@"" parameters:object success:successCallback failure:failureCallback];
+    }
 }
 
 -(void) remove:(id) key
        success:(void (^)(id responseObject))success
        failure:(void (^)(NSError *error))failure {
-    // TODO...
+
+    [_restClient deletePath:[key stringValue] parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        
+        if (success) {
+            NSLog(@"Invoking successblock....");
+            success(responseObject);
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+        if (failure) {
+            NSLog(@"Invoking failure block....");
+            failure(error);
+        }
+    } ];
+
 }
 
 @end
