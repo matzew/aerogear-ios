@@ -112,7 +112,7 @@
 }
 
 -(NSString *) description {
-    return [NSString stringWithFormat: @"%@", _pipes];
+    return [NSString stringWithFormat: @"%@ %@", self.class, _pipes];
 }
 
 @end
