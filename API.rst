@@ -1,18 +1,16 @@
 AeroGear iOS API - DRAFT 0.1
 ============================
 
-API Docs are available `here<http://people.apache.org/~matzew/aerogear/>`_...
+API Docs are available [here](http://people.apache.org/~matzew/aerogear/)...
 
-The current key entry points are `AGPipeline<http://people.apache.org/~matzew/aerogear/Classes/AGPipeline.html>`_ and `AGPipe<http://people.apache.org/~matzew/aerogear/Protocols/AGPipe.html>`_.
+The current key entry points are [AGPipeline](http://people.apache.org/~matzew/aerogear/Classes/AGPipeline.html) and [AGPipe](http://people.apache.org/~matzew/aerogear/Protocols/AGPipe.html).
 
 Below is a simple 'Getting started' section on how-to use the API
 
-Create a pipeline and get access to an underlying pipe
-------------------------------------------------------
+## Create a pipeline and get access to an underlying pipe
 
 To create a pipeline, you need to use the AGPipeline class. Below is an example: 
 
-.. code-block:: objective-c
     // create the 'todo' pipeline;
     NSURL* projectsURL = [NSURL URLWithString:@"http://todo-aerogear.rhcloud.com/todo-server/projects/"];
 
@@ -22,12 +20,10 @@ To create a pipeline, you need to use the AGPipeline class. Below is an example:
 
 The pipeline object offers 'management' APIs to work with containing AGPipe objects. Below is shown how to get access to an actual pipe:
 
-.. code-block:: objective-c
     // get access to the projects pipe
     id<AGPipe> projects = [todo get:@"projects"];
 
-Save data
----------
+## Save data 
 
 The AGPipe offers an API to store newly created objects on an RESTful resource. CURRENTLY the objects are _just_ simple map objects... In the future we are looking to support more advanced(complex) frameworks, like Core Data. The 'save' method is described below:
 
@@ -53,8 +49,7 @@ The AGPipe offers an API to store newly created objects on an RESTful resource. 
     }];
 
 
-Update data
------------
+## Update data
 
 The 'save' method (like in aerogear.js) is also responsible for updating an 'object', when there is an 'id' property/field available:
 
@@ -70,8 +65,7 @@ The 'save' method (like in aerogear.js) is also responsible for updating an 'obj
         NSLog(@"UPDATE: An error occured! \n%@", error);
     }];
 
-Remove data
------------
+## Remove data
 
 The AGPipe also contains a 'remove' method to issue a HTTP DELETE request. It takes the value of the 'id' property, so that it knows which resource to delete:
 
@@ -87,8 +81,7 @@ The AGPipe also contains a 'remove' method to issue a HTTP DELETE request. It ta
         NSLog(@"DELETE: An error occured! \n%@", error);
     }];
 
-Read all data from the server
------------------------------
+## Read all data from the server
 
 The 'read' method allows to (currently) read _all_ data from the RESTful endpoint, of the underlying AGPipe:
 
