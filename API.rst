@@ -11,6 +11,7 @@ Below is a simple 'Getting started' section on how-to use the API
 
 To create a pipeline, you need to use the AGPipeline class. Below is an example: 
 
+.. code-block:: objective-c
     // create the 'todo' pipeline;
     NSURL* projectsURL = [NSURL URLWithString:@"http://todo-aerogear.rhcloud.com/todo-server/projects/"];
 
@@ -20,6 +21,7 @@ To create a pipeline, you need to use the AGPipeline class. Below is an example:
 
 The pipeline object offers 'management' APIs to work with containing AGPipe objects. Below is shown how to get access to an actual pipe:
 
+.. code-block:: objective-c
     // get access to the projects pipe
     id<AGPipe> projects = [todo get:@"projects"];
 
