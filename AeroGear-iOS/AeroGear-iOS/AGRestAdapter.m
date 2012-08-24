@@ -115,7 +115,14 @@
        success:(void (^)(id responseObject))success
        failure:(void (^)(NSError *error))failure {
 
-    [_restClient deletePath:[key stringValue] parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    id deleteKey;
+    if ([key isKindOfClass:[NSString class]]) {
+        deleteKey = key;
+    } else {
+        deleteKey = [key stringValue];
+    }
+
+    [_restClient deletePath:deleteKey parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
         
         if (success) {
             NSLog(@"Invoking successblock....");
