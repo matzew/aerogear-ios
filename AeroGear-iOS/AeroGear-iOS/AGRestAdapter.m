@@ -138,4 +138,8 @@
 
 }
 
+-(NSString *) description {
+    return [NSString stringWithFormat: @"type=%@, url=%@", _type, _url];
+}
+
 @end
