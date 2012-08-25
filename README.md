@@ -8,6 +8,10 @@ based on the [AFNetworking](https://github.com/AFNetworking/AFNetworking/) libra
 
 The project requires [CocoaPods](http://cocoapods.org/) for dependency management;
 
+## API docs
+
+The API is documented [here](http://aerogear.github.com/aerogear-ios/). Some basic usages are documented [here](aerogear-ios/blob/master/API.md).
+
 ## Test cases
 
 The test case just checks a simple GET and POST request against the [AeroGear TODO app](http://todo-aerogear.rhcloud.com/)
