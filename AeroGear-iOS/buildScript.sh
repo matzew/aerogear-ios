@@ -18,3 +18,8 @@
 
 ## this matches what we have in Jenkins as well (currently only local, on matzew's machine)
 xcodebuild -scheme AeroGear-iOSTests -sdk iphonesimulator -workspace AeroGear-iOS.xcworkspace -configuration Release clean build TEST_AFTER_BUILD=YES
+
+## Clean old appledoc
+rm -rf ./Docset
+## Run appledoc
+appledoc --project-name AeroGear-iOS --project-company "Red Hat" --company-id org.jboss.aerogear --output ~/help --docset-install-path ./Docset ./AeroGear-iOS/ 
