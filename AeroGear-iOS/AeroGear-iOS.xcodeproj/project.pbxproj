@@ -24,6 +24,9 @@
 		57737FEF15E3D01D006B97BB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57737FDC15E3D01D006B97BB /* Foundation.framework */; };
 		57737FF215E3D01D006B97BB /* libAeroGear-iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 57737FD915E3D01D006B97BB /* libAeroGear-iOS.a */; };
 		57737FF815E3D01D006B97BB /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 57737FF615E3D01D006B97BB /* InfoPlist.strings */; };
+		57F095D115EE4CB400B2C6B0 /* AGPipe.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 573CBD9615E3ECA80071E7A6 /* AGPipe.h */; };
+		57F095D215EE4CB400B2C6B0 /* AGPipeline.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 573CBD9815E3ECB60071E7A6 /* AGPipeline.h */; };
+		57F095D315EE4CB400B2C6B0 /* AeroGear.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 573CBD9E15E3EE1F0071E7A6 /* AeroGear.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,6 +46,9 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				57F095D115EE4CB400B2C6B0 /* AGPipe.h in CopyFiles */,
+				57F095D215EE4CB400B2C6B0 /* AGPipeline.h in CopyFiles */,
+				57F095D315EE4CB400B2C6B0 /* AeroGear.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
