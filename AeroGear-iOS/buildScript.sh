@@ -16,10 +16,21 @@
 # limitations under the License.
 #
 
+## NOTE set the 'build dir' to the 'Workspace-relative' folder 'build' (in Xcode: File->Workspace Settings...)
+
+## clean up the previous builds...
+echo "Clean up (rm -rf build/)"
+rm -rf build/
+
 ## this matches what we have in Jenkins as well (currently only local, on matzew's machine)
+echo "Building for the iphonesimulator SDK and executing tests"
 xcodebuild -scheme AeroGear-iOSTests -sdk iphonesimulator -workspace AeroGear-iOS.xcworkspace -configuration Release clean build TEST_AFTER_BUILD=YES
 
+## build for the ARM arch:
+##xcodebuild -scheme AeroGear-iOS -sdk iphoneos -workspace AeroGear-iOS.xcworkspace -configuration Release clean build
+
 ## Clean old appledoc
+echo "Generating the API doc"
 rm -rf ./Docset
 ## Run appledoc
 appledoc --project-name AeroGear-iOS --project-company "Red Hat" --company-id org.jboss.aerogear --output ~/help --docset-install-path ./Docset ./AeroGear-iOS/ 
