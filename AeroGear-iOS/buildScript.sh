@@ -33,10 +33,17 @@ xcodebuild -scheme AeroGear-iOSTests -sdk iphonesimulator -workspace AeroGear-iO
 
 ## Generate universal binary for the device and simulator
 mkdir build/universal
+mkdir build/universal/Headers
 SIMULATOR_LIB="build/AeroGear-iOS/Build/Products/Release-iphonesimulator/libAeroGear-iOS.a"
 DEVICE_LIB="build/AeroGear-iOS/Build/Products/Release-iphoneos/libAeroGear-iOS.a"
 lipo ${SIMULATOR_LIB} ${DEVICE_LIB} -create -output build/universal/libAeroGear-iOS.a
 
+## copy header files
+cp -r build/AeroGear-iOS/Build/Products/Release-iphoneos/include/AeroGear-iOS/ build/universal/Headers
+
+## creating a 'simple' dist file (tarball)
+cd build/universal
+tar cfvz ../../AeroGear-iOS.tgz *
 
 ## Clean old appledoc
 echo "Generating the API doc"
