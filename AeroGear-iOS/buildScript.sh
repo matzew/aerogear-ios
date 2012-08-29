@@ -22,12 +22,21 @@
 echo "Clean up (rm -rf build/)"
 rm -rf build/
 
-## this matches what we have in Jenkins as well (currently only local, on matzew's machine)
+## build for the ARM arch:
+echo "Building for the iOS SDK (ARM arch.)"
+xcodebuild -scheme AeroGear-iOS -sdk iphoneos -workspace AeroGear-iOS.xcworkspace -configuration Release clean build
+
+## Simulator: this matches what we have in Jenkins as well (currently only local, on matzew's machine)
 echo "Building for the iphonesimulator SDK and executing tests"
 xcodebuild -scheme AeroGear-iOSTests -sdk iphonesimulator -workspace AeroGear-iOS.xcworkspace -configuration Release clean build TEST_AFTER_BUILD=YES
 
-## build for the ARM arch:
-##xcodebuild -scheme AeroGear-iOS -sdk iphoneos -workspace AeroGear-iOS.xcworkspace -configuration Release clean build
+
+## Generate universal binary for the device and simulator
+mkdir build/universal
+SIMULATOR_LIB="build/AeroGear-iOS/Build/Products/Release-iphonesimulator/libAeroGear-iOS.a"
+DEVICE_LIB="build/AeroGear-iOS/Build/Products/Release-iphoneos/libAeroGear-iOS.a"
+lipo ${SIMULATOR_LIB} ${DEVICE_LIB} -create -output build/universal/libAeroGear-iOS.a
+
 
 ## Clean old appledoc
 echo "Generating the API doc"
