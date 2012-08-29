@@ -42,8 +42,10 @@ lipo ${SIMULATOR_LIB} ${DEVICE_LIB} -create -output build/universal/libAeroGear-
 cp -r build/AeroGear-iOS/Build/Products/Release-iphoneos/include/AeroGear-iOS/ build/universal/Headers
 
 ## creating a 'simple' dist file (tarball)
-cd build/universal
+pushd build/universal
 tar cfvz ../../AeroGear-iOS.tgz *
+
+popd
 
 ## Clean old appledoc
 echo "Generating the API doc"
