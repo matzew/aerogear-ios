@@ -121,7 +121,7 @@
     NSMutableDictionary* newProject = [NSMutableDictionary dictionary];
     
     // {"title":"my title","style":"project-232-96-96"}
-    [newProject setValue:@"144" forKey:@"id"];
+    [newProject setValue:@"182" forKey:@"id"];
     [newProject setValue:@"matzew: do NOT delete!" forKey:@"title"];
     [newProject setValue:@"project-255-255-255" forKey:@"style"];
     
@@ -133,6 +133,10 @@
         
         NSLog(@"Update Response\n%@", [responseObject description]);
         _finishedFlag = YES;
+        
+        id updatedId = [responseObject valueForKey:@"id"];
+
+        STAssertEqualObjects([newProject valueForKey:@"id"], [updatedId stringValue], @"Updated ID should match");
         
     } failure:^(NSError *error) {
         
