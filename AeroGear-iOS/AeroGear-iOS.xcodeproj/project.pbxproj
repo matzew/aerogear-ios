@@ -85,6 +85,7 @@
 		65D1DA06FAB24A18AB6A5963 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8AB37EC1AA3464892D758C1 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
 		D6A7A8124B23447DA65BC0DE /* Pods-AeroGear-iOSTests.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AeroGear-iOSTests.xcconfig"; path = "Pods/Pods-AeroGear-iOSTests.xcconfig"; sourceTree = SOURCE_ROOT; };
+		DD46252015EF437500A5040C /* common.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = common.xcconfig; sourceTree = "<group>"; };
 		E065C8DDD305422BBB3237D5 /* libPods-AeroGear-iOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-AeroGear-iOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -140,6 +141,7 @@
 		57737FCE15E3D01D006B97BB = {
 			isa = PBXGroup;
 			children = (
+				DD46252015EF437500A5040C /* common.xcconfig */,
 				57737FDE15E3D01D006B97BB /* AeroGear-iOS */,
 				57737FF315E3D01D006B97BB /* AeroGear-iOSTests */,
 				57737FDB15E3D01D006B97BB /* Frameworks */,
@@ -387,6 +389,7 @@
 /* Begin XCBuildConfiguration section */
 		57737FFC15E3D01D006B97BB /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = DD46252015EF437500A5040C /* common.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
@@ -413,6 +416,7 @@
 		};
 		57737FFD15E3D01D006B97BB /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = DD46252015EF437500A5040C /* common.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
