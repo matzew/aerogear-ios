@@ -24,7 +24,7 @@ Pod::Spec.new do |s|
   s.source       = { :git => 'https://github.com/aerogear/aerogear-ios.git', :commit => '185b5d5c244cba37fe0cfa9d29687eb2dc87cb01' }
   s.platform     = :ios
   s.source_files = 'AeroGear-iOS/AeroGear-iOS'
-  s.public_header_files = 'AeroGear-iOS/AeroGear.h', 'AeroGear-iOS/AGPipe.h', 'AeroGear-iOS/AGPipeline.h'
+  s.public_header_files = 'AeroGear-iOS/AeroGear-iOS/AeroGear.h', 'AeroGear-iOS/AeroGear-iOS/AGPipe.h', 'AeroGear-iOS/AeroGear-iOS/AGPipeline.h'
   s.requires_arc = true
   s.dependency 'AFNetworking', '~> 1.0RC1'
 end
