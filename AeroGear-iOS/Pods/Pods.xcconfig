@@ -1,4 +1,5 @@
 PODS_ROOT = ${SRCROOT}/Pods
+BUILD_DIR=${PODS_ROOT}/../build/AeroGear-iOS/Build/Products
 OTHER_LDFLAGS = -ObjC -framework SystemConfiguration
 PODS_BUILD_HEADERS_SEARCH_PATHS = "${PODS_ROOT}/BuildHeaders" "${PODS_ROOT}/BuildHeaders/AFNetworking"
 HEADER_SEARCH_PATHS = ${PODS_HEADERS_SEARCH_PATHS}
