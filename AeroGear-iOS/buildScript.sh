@@ -16,11 +16,11 @@
 # limitations under the License.
 #
 
-## NOTE set the 'build dir' to the 'Workspace-relative' folder 'build' (in Xcode: File->Workspace Settings...)
+BUILD_DIR="build"
 
 ## clean up the previous builds...
-echo "Clean up (rm -rf build/)"
-rm -rf build/
+echo "Clean up (rm -rf $BUILD_DIR/)"
+rm -rf $BUILD_DIR/
 
 ## build for the ARM arch:
 echo "Building for the iOS SDK (ARM arch.)"
@@ -32,17 +32,17 @@ xcodebuild -scheme AeroGear-iOSTests -sdk iphonesimulator -workspace AeroGear-iO
 
 
 ## Generate universal binary for the device and simulator
-mkdir build/universal
-mkdir build/universal/Headers
-SIMULATOR_LIB="build/AeroGear-iOS/Build/Products/Release-iphonesimulator/libAeroGear-iOS.a"
-DEVICE_LIB="build/AeroGear-iOS/Build/Products/Release-iphoneos/libAeroGear-iOS.a"
-lipo ${SIMULATOR_LIB} ${DEVICE_LIB} -create -output build/universal/libAeroGear-iOS.a
+mkdir $BUILD_DIR/universal
+mkdir $BUILD_DIR/universal/Headers
+SIMULATOR_LIB="$BUILD_DIR/AeroGear-iOS/Build/Products/Release-iphonesimulator/libAeroGear-iOS.a"
+DEVICE_LIB="$BUILD_DIR/AeroGear-iOS/Build/Products/Release-iphoneos/libAeroGear-iOS.a"
+lipo ${SIMULATOR_LIB} ${DEVICE_LIB} -create -output $BUILD_DIR/universal/libAeroGear-iOS.a
 
 ## copy header files
-cp -r build/AeroGear-iOS/Build/Products/Release-iphoneos/include/AeroGear-iOS/ build/universal/Headers
+cp -r $BUILD_DIR/AeroGear-iOS/Build/Products/Release-iphoneos/include/AeroGear-iOS/ $BUILD_DIR/universal/Headers
 
 ## creating a 'simple' dist file (tarball)
-pushd build/universal
+pushd $BUILD_DIR/universal
 tar cfvz ../../AeroGear-iOS.tgz *
 
 popd
