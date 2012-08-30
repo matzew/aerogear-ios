@@ -1,5 +1,0 @@
-## NOTHING here, yet... JUST ideas...
-
-## Run appledoc
-appledoc --project-name AeroGear-iOS --project-company "Red Hat" --company-id org.jboss.aerogear --output ~/help .
-
