@@ -54,4 +54,15 @@
     STAssertEqualObjects(@"http://server.com/projects/", restPipe.url, @"verifying the given URL");
 }
 
+-(void) testAccepts {
+    STAssertTrue([AGRestAdapter accepts:@"REST"], @"type '%@' should be accepted", @"REST");
+    [self assertNotAcceptedType: nil];
+    [self assertNotAcceptedType: @"bogus"];
+    [self assertNotAcceptedType:[@"REST" lowercaseString]];
+}
+
+-(void) assertNotAcceptedType:(NSString*) type {
+    STAssertFalse([AGRestAdapter accepts:type], @"type '%@' should not be accepted", type);
+}
+
 @end

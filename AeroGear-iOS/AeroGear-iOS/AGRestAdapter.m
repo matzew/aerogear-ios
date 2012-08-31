@@ -144,4 +144,8 @@
     return [NSString stringWithFormat: @"%@ [type=%@, url=%@]", self.class, _type, _url];
 }
 
++ (BOOL) accepts:(NSString *) type {
+    return [type isEqualToString:@"REST"];
+}
+
 @end
