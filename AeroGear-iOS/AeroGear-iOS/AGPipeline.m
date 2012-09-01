@@ -39,31 +39,20 @@
     return self;
 }
 -(id) initWithPipe:(NSString*) name url:(NSURL*)url {
-    self = [self init];
-    if (self) {
-        // default, is REST Only...
-        id<AGPipe> pipe = [AGRestAdapter pipeForURL:url];
-        
-        [_pipes setValue:pipe forKey:name];
-    }
-    return self;
+    return [self initWithPipe:name url:url type:@"REST"];
 }
 
 -(id) initWithPipe:(NSString*) name url:(NSURL*)url type:(NSString*)type {
     
-    if (! [type isEqualToString:@"REST"]) {
+    if (! [AGRestAdapter accepts :type]) {
         return nil;
     }
     
     self = [self init];
     if (self) {
         //TODO: check for (invalid) type
-        
         // default, is REST Only...
-        id<AGPipe> pipe = [AGRestAdapter pipeForURL:url];
-        
-        
-        [_pipes setValue:pipe forKey:name];
+        [self add:name url:url type:@"REST"];
     }
     return self;
 }
@@ -78,25 +67,15 @@
 
 -(id<AGPipe>) add:(NSString*) name url:(NSURL*)url {
     // default, is REST Only...
-    id<AGPipe> pipe = [AGRestAdapter pipeForURL:url];
-    
-    
-    [_pipes setValue:pipe forKey:name];
-
-    return pipe;
+    return [self add:name url:url type:@"REST"];
 }
 
 -(id<AGPipe>) add:(NSString*) name url:(NSURL*)url type:(NSString*)type {
-    if (! [type isEqualToString:@"REST"]) {
+    if (! [AGRestAdapter accepts:type]) {
         return nil;
     }
-    
-    // default, is REST Only...
     id<AGPipe> pipe = [AGRestAdapter pipeForURL:url];
-    
-    
     [_pipes setValue:pipe forKey:name];
-    
     return pipe;
 }
 
