@@ -15,15 +15,36 @@
  * limitations under the License.
  */
 
-#import <Foundation/Foundation.h>
-#import "AGPipe.h"
+#import "AGBaseAdapterTests.h"
 #import "AGBaseAdapter.h"
 
-@interface AGRestAdapter : AGBaseAdapter <AGPipe>
+@implementation AGBaseAdapterTests
 
+-(void)testAbstractClass {
+    @try {
+        id adapter = [[AGBaseAdapter alloc] init];
+        STFail(@"should not get here...");
+    }
+    @catch (NSException *exception) {
+        // expected...
+    }
+    @finally {
+        // nope..
 
-// todo: move to an 'adapter' protocol
--(id) initForURL:(NSURL*) url;
-+(id) pipeForURL:(NSURL*) url;
+    }
+}
+
+-(void)testAbstractMethod {
+    @try {
+        [AGBaseAdapter accepts:@"FOO"];
+        STFail(@"should not get here...");
+    }
+    @catch (NSException *exception) {
+        // expected...
+    }
+    @finally {
+        // nope..
+    }
+}
 
 @end

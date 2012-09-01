@@ -23,6 +23,8 @@
 		57737FEF15E3D01D006B97BB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57737FDC15E3D01D006B97BB /* Foundation.framework */; };
 		57737FF215E3D01D006B97BB /* libAeroGear-iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 57737FD915E3D01D006B97BB /* libAeroGear-iOS.a */; };
 		57737FF815E3D01D006B97BB /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 57737FF615E3D01D006B97BB /* InfoPlist.strings */; };
+		57DCDB8415F20E4800289EA4 /* AGBaseAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 57DCDB8315F20E4800289EA4 /* AGBaseAdapter.m */; };
+		57DCDB8815F20FB700289EA4 /* AGBaseAdapterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 57DCDB8715F20FB700289EA4 /* AGBaseAdapterTests.m */; };
 		57F095D115EE4CB400B2C6B0 /* AGPipe.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 573CBD9615E3ECA80071E7A6 /* AGPipe.h */; };
 		57F095D215EE4CB400B2C6B0 /* AGPipeline.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 573CBD9815E3ECB60071E7A6 /* AGPipeline.h */; };
 		57F095D315EE4CB400B2C6B0 /* AeroGear.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 573CBD9E15E3EE1F0071E7A6 /* AeroGear.h */; };
@@ -79,6 +81,10 @@
 		57737FED15E3D01D006B97BB /* UIKit.framework */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
 		57737FF515E3D01D006B97BB /* AeroGear-iOSTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "AeroGear-iOSTests-Info.plist"; sourceTree = "<group>"; };
 		57737FF715E3D01D006B97BB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		57DCDB8215F20E4800289EA4 /* AGBaseAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGBaseAdapter.h; sourceTree = "<group>"; };
+		57DCDB8315F20E4800289EA4 /* AGBaseAdapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGBaseAdapter.m; sourceTree = "<group>"; };
+		57DCDB8615F20FB700289EA4 /* AGBaseAdapterTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGBaseAdapterTests.h; sourceTree = "<group>"; };
+		57DCDB8715F20FB700289EA4 /* AGBaseAdapterTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGBaseAdapterTests.m; sourceTree = "<group>"; };
 		65D1DA06FAB24A18AB6A5963 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8AB37EC1AA3464892D758C1 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
 		D6A7A8124B23447DA65BC0DE /* Pods-AeroGear-iOSTests.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AeroGear-iOSTests.xcconfig"; path = "Pods/Pods-AeroGear-iOSTests.xcconfig"; sourceTree = SOURCE_ROOT; };
@@ -180,6 +186,8 @@
 				573CBD9C15E3ED7F0071E7A6 /* AGRestAdapter.m */,
 				573CBD9E15E3EE1F0071E7A6 /* AeroGear.h */,
 				573CBDA715E51C120071E7A6 /* AGAdapter.h */,
+				57DCDB8215F20E4800289EA4 /* AGBaseAdapter.h */,
+				57DCDB8315F20E4800289EA4 /* AGBaseAdapter.m */,
 			);
 			path = "AeroGear-iOS";
 			sourceTree = "<group>";
@@ -198,6 +206,8 @@
 				573CBDA615E4F9110071E7A6 /* BDD Specs */,
 				573CBDA515E4F9000071E7A6 /* Unit Tests */,
 				57737FF415E3D01D006B97BB /* Supporting Files */,
+				57DCDB8615F20FB700289EA4 /* AGBaseAdapterTests.h */,
+				57DCDB8715F20FB700289EA4 /* AGBaseAdapterTests.m */,
 			);
 			path = "AeroGear-iOSTests";
 			sourceTree = "<group>";
@@ -344,6 +354,7 @@
 				57345BD815E3D18600B74FEB /* AGHttpClient.m in Sources */,
 				573CBD9A15E3ECB60071E7A6 /* AGPipeline.m in Sources */,
 				573CBD9D15E3ED7F0071E7A6 /* AGRestAdapter.m in Sources */,
+				57DCDB8415F20E4800289EA4 /* AGBaseAdapter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -356,6 +367,7 @@
 				573CBDA415E4F31B0071E7A6 /* AGPipelineSpec.m in Sources */,
 				573CBDAA15E546A20071E7A6 /* AGRestAdapterTests.m in Sources */,
 				573CBDAD15E546B70071E7A6 /* AGRestAdapterSpec.m in Sources */,
+				57DCDB8815F20FB700289EA4 /* AGBaseAdapterTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

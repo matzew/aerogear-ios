@@ -15,15 +15,8 @@
  * limitations under the License.
  */
 
-#import <Foundation/Foundation.h>
-#import "AGPipe.h"
-#import "AGBaseAdapter.h"
+#import <SenTestingKit/SenTestingKit.h>
 
-@interface AGRestAdapter : AGBaseAdapter <AGPipe>
-
-
-// todo: move to an 'adapter' protocol
--(id) initForURL:(NSURL*) url;
-+(id) pipeForURL:(NSURL*) url;
+@interface AGBaseAdapterTests : SenTestCase
 
 @end

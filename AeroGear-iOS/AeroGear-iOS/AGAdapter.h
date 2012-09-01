@@ -18,5 +18,4 @@
 #import <Foundation/Foundation.h>
 
 @protocol AGAdapter <NSObject>
-+(BOOL) accepts:(NSString*) type;
 @end
