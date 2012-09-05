@@ -18,7 +18,7 @@ To create a pipeline, you need to use the AGPipeline class. Below is an example:
     AGPipeline* todo = [AGPipeline pipelineWithPipe:@"projects" url:projectsURL type:@"REST"];
     
 
-The pipeline object offers 'management' APIs to work with containing AGPipe objects. Below is shown how to get access to an actual pipe:
+The pipeline object offers 'management' APIs to work with containing AGPipe objects, which itself represents a server connection. The AGPipe API is basically an abstraction layer for any server side connection. Details like RESTful APIs (e.g. HTTP PUT) are not exposed. Below is shown how to get access to an actual pipe:
 
     // get access to the projects pipe
     id<AGPipe> projects = [todo get:@"projects"];
