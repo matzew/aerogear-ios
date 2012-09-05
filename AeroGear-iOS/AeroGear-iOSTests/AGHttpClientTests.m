@@ -15,8 +15,12 @@
  * limitations under the License.
  */
 
-#import "AGHttpClientTests.h"
+#import <SenTestingKit/SenTestingKit.h>
 #import "AGHttpClient.h"
+
+@interface AGHttpClientTests : SenTestCase
+
+@end
 
 @implementation AGHttpClientTests{
     BOOL _finishedFlag;
@@ -38,43 +42,7 @@
     restClient = nil;
 }
 
-// =================================================
-// CREATE section
-// =================================================
--(void) xtestPostProject {
-    // the object, fairly simple...just as a data structure... no object mapping yet..
-    NSMutableDictionary* parameters = [NSMutableDictionary dictionary];
-    
-    // {"title":"my title","style":"project-232-96-96"}
-    [parameters setValue:@"Created from testcase" forKey:@"title"];
-    [parameters setValue:@"project-234-255-0" forKey:@"style"];
-    
-    
-    [restClient postPath:@"projects" parameters:parameters success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        
-        NSLog(@"Create Project response: %@", responseObject);
-        
-        
-        // signal that the test finished...
-        _finishedFlag = YES;
-        
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"An error occured! \n%@", error);
-        _finishedFlag = YES;
-        STFail(@"Error...");
-        
-    } ];
-    
-    // keep the run loop going
-    while(!_finishedFlag) {
-        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
-    }
-}
-
-// =================================================
-// READ section
-// =================================================
-
+// Simple test, that goes to the web to see if the client works
 -(void) testGetProjects {
     
     [restClient getPath:@"projects" parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {

@@ -58,7 +58,6 @@
 /* Begin PBXFileReference section */
 		57345BD615E3D18600B74FEB /* AGHttpClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGHttpClient.h; sourceTree = "<group>"; };
 		57345BD715E3D18600B74FEB /* AGHttpClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGHttpClient.m; sourceTree = "<group>"; };
-		57345BDA15E3D1DF00B74FEB /* AGHttpClientTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGHttpClientTests.h; sourceTree = "<group>"; };
 		57345BDB15E3D1DF00B74FEB /* AGHttpClientTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGHttpClientTests.m; sourceTree = "<group>"; };
 		573CBD9615E3ECA80071E7A6 /* AGPipe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGPipe.h; sourceTree = "<group>"; };
 		573CBD9815E3ECB60071E7A6 /* AGPipeline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGPipeline.h; sourceTree = "<group>"; };
@@ -66,11 +65,9 @@
 		573CBD9B15E3ED7F0071E7A6 /* AGRestAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGRestAdapter.h; sourceTree = "<group>"; };
 		573CBD9C15E3ED7F0071E7A6 /* AGRestAdapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGRestAdapter.m; sourceTree = "<group>"; };
 		573CBD9E15E3EE1F0071E7A6 /* AeroGear.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AeroGear.h; sourceTree = "<group>"; };
-		573CBD9F15E4CEDD0071E7A6 /* AGPipelineTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGPipelineTests.h; sourceTree = "<group>"; };
 		573CBDA015E4CEDD0071E7A6 /* AGPipelineTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGPipelineTests.m; sourceTree = "<group>"; };
 		573CBDA315E4F31B0071E7A6 /* AGPipelineSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGPipelineSpec.m; sourceTree = "<group>"; };
 		573CBDA715E51C120071E7A6 /* AGAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGAdapter.h; sourceTree = "<group>"; };
-		573CBDA815E546A20071E7A6 /* AGRestAdapterTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGRestAdapterTests.h; sourceTree = "<group>"; };
 		573CBDA915E546A20071E7A6 /* AGRestAdapterTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGRestAdapterTests.m; sourceTree = "<group>"; };
 		573CBDAC15E546B70071E7A6 /* AGRestAdapterSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGRestAdapterSpec.m; sourceTree = "<group>"; };
 		57737FD915E3D01D006B97BB /* libAeroGear-iOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libAeroGear-iOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -120,11 +117,8 @@
 		573CBDA515E4F9000071E7A6 /* Unit Tests */ = {
 			isa = PBXGroup;
 			children = (
-				57345BDA15E3D1DF00B74FEB /* AGHttpClientTests.h */,
 				57345BDB15E3D1DF00B74FEB /* AGHttpClientTests.m */,
-				573CBD9F15E4CEDD0071E7A6 /* AGPipelineTests.h */,
 				573CBDA015E4CEDD0071E7A6 /* AGPipelineTests.m */,
-				573CBDA815E546A20071E7A6 /* AGRestAdapterTests.h */,
 				573CBDA915E546A20071E7A6 /* AGRestAdapterTests.m */,
 			);
 			name = "Unit Tests";
@@ -203,9 +197,9 @@
 		57737FF315E3D01D006B97BB /* AeroGear-iOSTests */ = {
 			isa = PBXGroup;
 			children = (
+				57737FF415E3D01D006B97BB /* Supporting Files */,
 				573CBDA615E4F9110071E7A6 /* BDD Specs */,
 				573CBDA515E4F9000071E7A6 /* Unit Tests */,
-				57737FF415E3D01D006B97BB /* Supporting Files */,
 				57DCDB8615F20FB700289EA4 /* AGBaseAdapterTests.h */,
 				57DCDB8715F20FB700289EA4 /* AGBaseAdapterTests.m */,
 			);

@@ -15,8 +15,12 @@
  * limitations under the License.
  */
 
-#import "AGRestAdapterTests.h"
+#import <SenTestingKit/SenTestingKit.h>
 #import "AGRestAdapter.h"
+
+@interface AGRestAdapterTests : SenTestCase
+
+@end
 
 @implementation AGRestAdapterTests {
     BOOL _finishedFlag;

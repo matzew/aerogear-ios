@@ -15,8 +15,13 @@
  * limitations under the License.
  */
 
-#import "AGBaseAdapterTests.h"
+#import <SenTestingKit/SenTestingKit.h>
+
 #import "AGBaseAdapter.h"
+
+@interface AGBaseAdapterTests : SenTestCase
+
+@end
 
 @implementation AGBaseAdapterTests
 

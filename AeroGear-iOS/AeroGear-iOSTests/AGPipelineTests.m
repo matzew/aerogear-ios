@@ -15,8 +15,12 @@
  * limitations under the License.
  */
 
-#import "AGPipelineTests.h"
+#import <SenTestingKit/SenTestingKit.h>
 #import "AGPipeline.h"
+
+@interface AGPipelineTests : SenTestCase
+
+@end
 
 @implementation AGPipelineTests
 -(void)setUp {
