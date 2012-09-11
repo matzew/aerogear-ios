@@ -20,6 +20,7 @@
 
 @interface AGBaseAdapter : NSObject <AGAdapter>
 
+// TODO: move out of here, move it into a util class...
 +(BOOL) accepts:(NSString*) type;
 
 @end
