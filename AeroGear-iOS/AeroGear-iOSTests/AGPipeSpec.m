@@ -17,15 +17,16 @@
 
 #import <Kiwi/Kiwi.h>
 #import "AGPipeline.h"
+#import "AGPipe.h"
 
-SPEC_BEGIN(AGPipelineSpec)
+SPEC_BEGIN(AGPipeSpec)
 
-describe(@"AGPipeline", ^{
+describe(@"AGPipe", ^{
     context(@"when newly created", ^{
         
         //A pipeline object:
         __block id pipeline = nil;
-
+        
         
         beforeEach(^{
             NSURL* baseURL = [NSURL URLWithString:@"http://server.com/"];
@@ -33,13 +34,15 @@ describe(@"AGPipeline", ^{
         });
         
         
-        it(@"should not be nil", ^{
-            [pipeline shouldNotBeNil];
-        });
-
-        it(@"should have a pipe", ^{
-            id pipe = [pipeline get:@"tests"];
-            [[theValue(pipe) shouldNot] equal:nil];
+        it(@"AGPipe should have an expected URL", ^{
+            
+            NSURL* testURL = [NSURL URLWithString:@"http://server.com/tests"];
+            
+            id<AGPipe> pipe = [pipeline get:@"tests"];
+            [[theValue(pipe.url) shouldNot] equal:nil];
+            
+            // does it match ?
+            [[pipe.url should] equal:testURL.absoluteString];
         });
         
     });

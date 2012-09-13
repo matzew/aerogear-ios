@@ -28,6 +28,7 @@
 		57F095D115EE4CB400B2C6B0 /* AGPipe.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 573CBD9615E3ECA80071E7A6 /* AGPipe.h */; };
 		57F095D215EE4CB400B2C6B0 /* AGPipeline.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 573CBD9815E3ECB60071E7A6 /* AGPipeline.h */; };
 		57F095D315EE4CB400B2C6B0 /* AeroGear.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 573CBD9E15E3EE1F0071E7A6 /* AeroGear.h */; };
+		57F24DFC1601F91600A3EAD8 /* AGPipeSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 57F24DFB1601F91600A3EAD8 /* AGPipeSpec.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -81,6 +82,7 @@
 		57DCDB8215F20E4800289EA4 /* AGBaseAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGBaseAdapter.h; sourceTree = "<group>"; };
 		57DCDB8315F20E4800289EA4 /* AGBaseAdapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGBaseAdapter.m; sourceTree = "<group>"; };
 		57DCDB8715F20FB700289EA4 /* AGBaseAdapterTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGBaseAdapterTests.m; sourceTree = "<group>"; };
+		57F24DFB1601F91600A3EAD8 /* AGPipeSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGPipeSpec.m; sourceTree = "<group>"; };
 		65D1DA06FAB24A18AB6A5963 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8AB37EC1AA3464892D758C1 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
 		D6A7A8124B23447DA65BC0DE /* Pods-AeroGear-iOSTests.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AeroGear-iOSTests.xcconfig"; path = "Pods/Pods-AeroGear-iOSTests.xcconfig"; sourceTree = SOURCE_ROOT; };
@@ -129,6 +131,7 @@
 			children = (
 				573CBDA315E4F31B0071E7A6 /* AGPipelineSpec.m */,
 				573CBDAC15E546B70071E7A6 /* AGRestAdapterSpec.m */,
+				57F24DFB1601F91600A3EAD8 /* AGPipeSpec.m */,
 			);
 			name = "BDD Specs";
 			sourceTree = "<group>";
@@ -360,6 +363,7 @@
 				573CBDAA15E546A20071E7A6 /* AGRestAdapterTests.m in Sources */,
 				573CBDAD15E546B70071E7A6 /* AGRestAdapterSpec.m in Sources */,
 				57DCDB8815F20FB700289EA4 /* AGBaseAdapterTests.m in Sources */,
+				57F24DFC1601F91600A3EAD8 /* AGPipeSpec.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
