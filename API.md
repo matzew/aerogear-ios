@@ -1,9 +1,9 @@
 AeroGear iOS API - DRAFT 0.1
 ============================
 
-API Docs are available [here](http://people.apache.org/~matzew/aerogear/)...
+API Docs are available [here](http://aerogear.github.com/aerogear-ios/)...
 
-The current key entry points are [AGPipeline](http://people.apache.org/~matzew/aerogear/Classes/AGPipeline.html) and [AGPipe](http://people.apache.org/~matzew/aerogear/Protocols/AGPipe.html).
+The current key entry points are [AGPipeline](http://aerogear.github.com/aerogear-ios/Classes/AGPipeline.html) and [AGPipe](http://aerogear.github.com/aerogear-ios/Protocols/AGPipe.html).
 
 Below is a simple 'Getting started' section on how-to use the API
 
