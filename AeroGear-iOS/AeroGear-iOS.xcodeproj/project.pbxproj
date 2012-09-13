@@ -80,7 +80,6 @@
 		57737FF715E3D01D006B97BB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		57DCDB8215F20E4800289EA4 /* AGBaseAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGBaseAdapter.h; sourceTree = "<group>"; };
 		57DCDB8315F20E4800289EA4 /* AGBaseAdapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGBaseAdapter.m; sourceTree = "<group>"; };
-		57DCDB8615F20FB700289EA4 /* AGBaseAdapterTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGBaseAdapterTests.h; sourceTree = "<group>"; };
 		57DCDB8715F20FB700289EA4 /* AGBaseAdapterTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGBaseAdapterTests.m; sourceTree = "<group>"; };
 		65D1DA06FAB24A18AB6A5963 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8AB37EC1AA3464892D758C1 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
@@ -117,6 +116,7 @@
 		573CBDA515E4F9000071E7A6 /* Unit Tests */ = {
 			isa = PBXGroup;
 			children = (
+				57DCDB8715F20FB700289EA4 /* AGBaseAdapterTests.m */,
 				57345BDB15E3D1DF00B74FEB /* AGHttpClientTests.m */,
 				573CBDA015E4CEDD0071E7A6 /* AGPipelineTests.m */,
 				573CBDA915E546A20071E7A6 /* AGRestAdapterTests.m */,
@@ -200,8 +200,6 @@
 				57737FF415E3D01D006B97BB /* Supporting Files */,
 				573CBDA615E4F9110071E7A6 /* BDD Specs */,
 				573CBDA515E4F9000071E7A6 /* Unit Tests */,
-				57DCDB8615F20FB700289EA4 /* AGBaseAdapterTests.h */,
-				57DCDB8715F20FB700289EA4 /* AGBaseAdapterTests.m */,
 			);
 			path = "AeroGear-iOSTests";
 			sourceTree = "<group>";
