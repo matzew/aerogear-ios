@@ -28,7 +28,6 @@ describe(@"AGRestAdapter", ^{
         
         
         beforeEach(^{
-            //pipeline = [AGPipeline pipelineWithPipe:@"tests" url:nil];
             NSURL* dummyURL = [NSURL URLWithString:@"http://server.com/project"];
             restPipe = [AGRestAdapter pipeForURL:dummyURL];
         });
@@ -36,6 +35,10 @@ describe(@"AGRestAdapter", ^{
         
         it(@"should not be nil", ^{
             [restPipe shouldNotBeNil];
+        });
+        
+        it(@"should have an expected url", ^{
+            [[[restPipe url] should] equal:@"http://server.com/project"];
         });
         
     });

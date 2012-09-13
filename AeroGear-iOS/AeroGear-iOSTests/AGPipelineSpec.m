@@ -17,6 +17,7 @@
 
 #import <Kiwi/Kiwi.h>
 #import "AGPipeline.h"
+#import "AGPipe.h"
 
 SPEC_BEGIN(AGPipelineSpec)
 
@@ -28,7 +29,8 @@ describe(@"AGPipeline", ^{
 
         
         beforeEach(^{
-            pipeline = [AGPipeline pipelineWithPipe:@"tests" url:nil];
+            NSURL* baseURL = [NSURL URLWithString:@"http://server.com/"];
+            pipeline = [AGPipeline pipelineWithPipe:@"tests" baseURL:baseURL];
         });
         
         
@@ -39,6 +41,17 @@ describe(@"AGPipeline", ^{
         it(@"should have a pipe", ^{
             id pipe = [pipeline get:@"tests"];
             [[theValue(pipe) shouldNot] equal:nil];
+        });
+        
+        it(@"should have an expected URL", ^{
+            
+            NSURL* testURL = [NSURL URLWithString:@"http://server.com/tests"];
+            
+            id<AGPipe> pipe = [pipeline get:@"tests"];
+            [[theValue(pipe.url) shouldNot] equal:nil];
+            
+            // does it match ?
+            [[pipe.url should] equal:testURL.absoluteString];
         });
         
     });

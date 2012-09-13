@@ -26,6 +26,7 @@
 
 @implementation AGPipeline {
     // ivars...
+    NSURL* _baseURL;
 }
 @synthesize pipes = _pipes;
 
@@ -38,46 +39,110 @@
     }
     return self;
 }
--(id) initWithPipe:(NSString*) name url:(NSURL*)url {
-    return [self initWithPipe:name url:url type:@"REST"];
+-(id) initWithPipe:(NSString*) name baseURL:(NSURL*)baseURL {
+    return [self initWithPipe:name baseURL:baseURL endpoint:name type:@"REST"];
 }
 
--(id) initWithPipe:(NSString*) name url:(NSURL*)url type:(NSString*)type {
-    
+-(id) initWithPipe:(NSString*) name baseURL:(NSURL*)baseURL type:(NSString*)type {
+    return [self initWithPipe:name baseURL:baseURL endpoint:name type:type];
+}
+
+-(id) initWithPipe:(NSString*) name baseURL:(NSURL*)baseURL endpoint:(NSString*)endpoint {
+    return [self initWithPipe:name baseURL:baseURL endpoint:endpoint type:@"REST"];
+}
+
+-(id) initWithPipe:(NSString*) name baseURL:(NSURL*)baseURL endpoint:(NSString*)endpoint type:(NSString*)type {
+
     if (! [AGRestAdapter accepts :type]) {
         return nil;
     }
     
     self = [self init];
     if (self) {
-        //TODO: check for (invalid) type
-        // default, is REST Only...
-        [self add:name url:url type:@"REST"];
+        
+        // stash the baseURL, used for the 'add' functions that have no (base)URL argument
+        _baseURL = baseURL;
+        
+        // append the endpoint name and use it as the final URL
+        NSURL* finalURL = [self appendEndpoint:endpoint toURL:baseURL];
+        [self add:name url:finalURL type:@"REST"];
     }
     return self;
 }
 
-+(id) pipelineWithPipe:(NSString*) name url:(NSURL*)url {
-    return [[self alloc] initWithPipe:name url:url];
++(id) pipelineWithPipe:(NSString*) name baseURL:(NSURL*)baseURL {
+    return [[self alloc] initWithPipe:name baseURL:baseURL];
 }
 
-+(id) pipelineWithPipe:(NSString*) name url:(NSURL*)url type:(NSString*)type {
-    return [[self alloc] initWithPipe:name url:url type:type];
++(id) pipelineWithPipe:(NSString*) name baseURL:(NSURL*)baseURL type:(NSString*)type {
+    return [[self alloc] initWithPipe:name baseURL:baseURL type:type];
 }
 
--(id<AGPipe>) add:(NSString*) name url:(NSURL*)url {
-    // default, is REST Only...
-    return [self add:name url:url type:@"REST"];
++(id) pipelineWithPipe:(NSString*) name baseURL:(NSURL*)baseURL endpoint:(NSString*)endpoint {
+    return [[self alloc] initWithPipe:name baseURL:baseURL endpoint:endpoint];
 }
 
++(id) pipelineWithPipe:(NSString*) name baseURL:(NSURL*)baseURL endpoint:(NSString*)endpoint type:(NSString*)type {
+    return [[self alloc] initWithPipe:name baseURL:baseURL endpoint:endpoint type:type];
+}
+
+
+-(id<AGPipe>) add:(NSString*) name {
+    return [self add:name baseURL:_baseURL endpoint:name type:@"REST"];
+}
+
+-(id<AGPipe>) add:(NSString*) name endpoint:(NSString*)endpoint {
+    return [self add:name baseURL:_baseURL endpoint:endpoint type:@"REST"];
+}
+
+-(id<AGPipe>) add:(NSString*) name type:(NSString*)type {
+    return [self add:name baseURL:_baseURL endpoint:name type:type];
+}
+
+-(id<AGPipe>) add:(NSString*) name endpoint:(NSString*)endpoint type:(NSString*)type {
+    return [self add:name baseURL:_baseURL endpoint:endpoint type:type];
+}
+
+-(id<AGPipe>) add:(NSString*) name baseURL:(NSURL*)baseURL {
+    return [self add:name baseURL:baseURL endpoint:name type:@"REST"];
+}
+-(id<AGPipe>) add:(NSString*) name baseURL:(NSURL*)baseURL endpoint:(NSString*)endpoint {
+    return [self add:name baseURL:baseURL endpoint:endpoint type:@"REST"];
+}
+
+-(id<AGPipe>) add:(NSString*) name baseURL:(NSURL*)baseURL type:(NSString*)type {
+    return [self add:name baseURL:baseURL endpoint:name type:type];
+}
+-(id<AGPipe>) add:(NSString*) name baseURL:(NSURL*)baseURL endpoint:(NSString*)endpoint type:(NSString*)type {
+    
+    // append the endpoint name and use it as the final URL
+    NSURL* finalURL = [self appendEndpoint:endpoint toURL:baseURL];
+    return [self add:name url:finalURL type:type];
+}
+
+// a private add, since we really don't have a 'baseURL' on the final URL...
 -(id<AGPipe>) add:(NSString*) name url:(NSURL*)url type:(NSString*)type {
+    // TODO check ALL supported types...
     if (! [AGRestAdapter accepts:type]) {
         return nil;
     }
+    
     id<AGPipe> pipe = [AGRestAdapter pipeForURL:url];
     [_pipes setValue:pipe forKey:name];
     return pipe;
+    
 }
+
+// private helper to append the endpoint
+-(NSURL*) appendEndpoint:(NSString*)endpoint toURL:(NSURL*)baseURL {
+    if (endpoint == nil) {
+        endpoint = @"";
+    }
+
+    // append the endpoint name and use it as the final URL
+    return [baseURL URLByAppendingPathComponent:endpoint];
+}
+
 
 -(id<AGPipe>) remove:(NSString*) name {
     id<AGPipe> pipe = [self get:name];
