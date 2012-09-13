@@ -17,6 +17,7 @@
 
 #import <Kiwi/Kiwi.h>
 #import "AGPipeline.h"
+#import "AGPipe.h"
 
 SPEC_BEGIN(AGPipelineSpec)
 
@@ -25,21 +26,105 @@ describe(@"AGPipeline", ^{
         
         //A pipeline object:
         __block id pipeline = nil;
-
         
         beforeEach(^{
             NSURL* baseURL = [NSURL URLWithString:@"http://server.com/"];
             pipeline = [AGPipeline pipelineWithPipe:@"tests" baseURL:baseURL];
         });
         
-        
         it(@"should not be nil", ^{
             [pipeline shouldNotBeNil];
         });
-
+        
         it(@"should have a pipe", ^{
             id pipe = [pipeline get:@"tests"];
             [[theValue(pipe) shouldNot] equal:nil];
+        });
+        
+    });
+    context(@"static constructor", ^{
+        
+        //A pipeline object:
+        __block id pipeline = nil;
+        __block NSURL* baseURL;
+        
+        beforeEach(^{
+            baseURL = [NSURL URLWithString:@"http://server.com/"];
+        });
+        
+        it(@"with name and baseURL", ^{
+            pipeline = [AGPipeline pipelineWithPipe:@"tests" baseURL:baseURL];
+            [pipeline shouldNotBeNil];
+            
+            id<AGPipe> pipe = [pipeline get:@"tests"];
+            [[pipe.url should] equal:@"http://server.com/tests"];
+        });
+        
+        it(@"with name and baseURL and endpoint", ^{
+            pipeline = [AGPipeline pipelineWithPipe:@"some bad name" baseURL:baseURL endpoint:@"tests"];
+            [pipeline shouldNotBeNil];
+            
+            id<AGPipe> pipe = [pipeline get:@"some bad name"];
+            [[pipe.url should] equal:@"http://server.com/tests"];
+        });
+        
+        it(@"with name and baseURL and endpoint and (known) type", ^{
+            pipeline = [AGPipeline pipelineWithPipe:@"some bad name" baseURL:baseURL endpoint:@"tests" type:@"REST"];
+            [pipeline shouldNotBeNil];
+            
+            id<AGPipe> pipe = [pipeline get:@"some bad name"];
+            [[pipe.url should] equal:@"http://server.com/tests"];
+        });
+        
+        it(@"with name and baseURL and (known) type", ^{
+            pipeline = [AGPipeline pipelineWithPipe:@"tests" baseURL:baseURL type:@"REST"];
+            [pipeline shouldNotBeNil];
+            
+            id<AGPipe> pipe = [pipeline get:@"tests"];
+            [[pipe.url should] equal:@"http://server.com/tests"];
+        });
+        
+    });
+    context(@"init methods", ^{
+        
+        //A pipeline object:
+        __block id pipeline = nil;
+        __block NSURL* baseURL;
+        
+        beforeEach(^{
+            baseURL = [NSURL URLWithString:@"http://server.com/"];
+        });
+        
+        it(@"with name and baseURL", ^{
+            pipeline = [[AGPipeline alloc] initWithPipe:@"tests" baseURL:baseURL];
+            [pipeline shouldNotBeNil];
+            
+            id<AGPipe> pipe = [pipeline get:@"tests"];
+            [[pipe.url should] equal:@"http://server.com/tests"];
+        });
+        
+        it(@"with name and baseURL and endpoint", ^{
+            pipeline = [[AGPipeline alloc] initWithPipe:@"some bad name" baseURL:baseURL endpoint:@"tests"];
+            [pipeline shouldNotBeNil];
+            
+            id<AGPipe> pipe = [pipeline get:@"some bad name"];
+            [[pipe.url should] equal:@"http://server.com/tests"];
+        });
+        
+        it(@"with name and baseURL and endpoint and (known) type", ^{
+            pipeline = [[AGPipeline alloc] initWithPipe:@"some bad name" baseURL:baseURL endpoint:@"tests" type:@"REST"];
+            [pipeline shouldNotBeNil];
+            
+            id<AGPipe> pipe = [pipeline get:@"some bad name"];
+            [[pipe.url should] equal:@"http://server.com/tests"];
+        });
+        
+        it(@"with name and baseURL and (known) type", ^{
+            pipeline = [[AGPipeline alloc] initWithPipe:@"tests" baseURL:baseURL type:@"REST"];
+            [pipeline shouldNotBeNil];
+            
+            id<AGPipe> pipe = [pipeline get:@"tests"];
+            [[pipe.url should] equal:@"http://server.com/tests"];
         });
         
     });

@@ -34,7 +34,6 @@
     restClient = [AGHttpClient clientFor:testURL];
     restClient.parameterEncoding = AFJSONParameterEncoding;
     
-    
     _finishedFlag = NO;
 }
 
@@ -44,6 +43,8 @@
 
 // Simple test, that goes to the web to see if the client works
 -(void) testGetProjects {
+    
+    // TODO: use OCMock here in order to NOT require network access.....
     
     [restClient getPath:@"projects" parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
         
