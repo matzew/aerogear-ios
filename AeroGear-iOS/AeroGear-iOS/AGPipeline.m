@@ -62,6 +62,9 @@
         
         // stash the baseURL, used for the 'add' functions that have no (base)URL argument
         _baseURL = baseURL;
+
+        // we need to append an 'ending'
+        endpoint = [endpoint stringByAppendingString:@"/"];
         
         // append the endpoint name and use it as the final URL
         NSURL* finalURL = [self appendEndpoint:endpoint toURL:baseURL];
