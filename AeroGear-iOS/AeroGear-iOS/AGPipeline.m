@@ -63,9 +63,6 @@
         // stash the baseURL, used for the 'add' functions that have no (base)URL argument
         _baseURL = baseURL;
 
-        // we need to append an 'ending'
-        endpoint = [endpoint stringByAppendingString:@"/"];
-        
         // append the endpoint name and use it as the final URL
         NSURL* finalURL = [self appendEndpoint:endpoint toURL:baseURL];
         [self add:name url:finalURL type:@"REST"];
@@ -128,6 +125,13 @@
     // TODO check ALL supported types...
     if (! [AGRestAdapter accepts:type]) {
         return nil;
+    }
+    
+    // work-around for AFNetworking (for now) we need to append an ending '/'...
+    if (! [url.absoluteString hasSuffix:@"/"]) {
+        // this basically marks the ending of the current URI as a directory..
+        // TODO: see how to improve directly in AFNetworking
+        url = [url URLByAppendingPathComponent:@""];
     }
     
     id<AGPipe> pipe = [AGRestAdapter pipeForURL:url];
