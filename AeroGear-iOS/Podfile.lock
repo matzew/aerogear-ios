@@ -4,6 +4,6 @@ PODS:
   - OCMock (2.0.1)
 
 DEPENDENCIES:
-  - AFNetworking (~> 1.0RC1)
+  - AFNetworking (= 1.0RC1)
   - Kiwi
   - OCMock
