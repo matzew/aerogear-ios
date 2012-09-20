@@ -18,24 +18,6 @@
 -(void) testCreateDataManager {
     AGDataManager* mgr = [[AGDataManager alloc] init];
     
-    NSLog(@"\n\n\n====>>>>>>>>>>>>>>>>>'%@'\n\n", mgr);
-    
-    
-    id<AGStore> store;
-    
-    
-    [store reset:^{
-        //adsdsa
-    } failure:^(NSError *error) {
-        // dsadsa
-    }];
-    
-//    [store reset:^(id responseObject) {
-//        //
-//    } failure:^(NSError *error) {
-//        //
-//    }];
-    
 }
 
 @end
