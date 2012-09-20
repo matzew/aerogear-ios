@@ -39,6 +39,8 @@
 /**
  * Reads a specific object/record from the underlying storage system.
  *
+ * @param recordId id from the desired object
+ *
  * @param success A block object to be executed when the operation finishes successfully.
  * This block has no return value and takes one argument: The object (or nil) read from the
  * underlying storage.
@@ -54,6 +56,8 @@
 /**
  * Reads all, based on a filter, from the underlying storage system.
  *
+ * @param filterObject the filter criteria.
+ *
  * @param success A block object to be executed when the operation finishes successfully.
  * This block has no return value and takes one argument: A collection, containing all stored
  * objects, matching the given filter. The argument is nil, if nothing matches the criteria.
@@ -67,9 +71,10 @@
        failure:(void (^)(NSError *error))failure;
 
 
-
 /**
  * Saves the given object in the underlying storage system.
+ *
+ * @param data An object or a collection (e.g. NSArray) which is being persisted.
  *
  * @param success A block object to be executed when the operation finishes successfully.
  * This block has no return value and takes one argument: The object that has been stored.
@@ -81,7 +86,6 @@
 -(void) save:(id) data
      success:(void (^)(id object))success
      failure:(void (^)(NSError *error))failure;
-
 
 
 /**
@@ -100,6 +104,8 @@
 
 /**
  * Removes a specific object/record from the underlying storage system.
+ *
+ * @param recordId id from the desired object
  *
  * @param success A block object to be executed when the operation finishes successfully.
  * This block has no return value and takes one argument: The object that has been removed.
