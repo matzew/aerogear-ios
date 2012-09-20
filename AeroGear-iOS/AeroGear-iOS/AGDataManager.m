@@ -15,16 +15,16 @@
  * limitations under the License.
  */
 
-#ifndef _AEROGEAR_
-#define _AEROGEAR_
-
-// Pipeline
-#import "AGPipe.h"
-#import "AGPipeline.h"
-
-// DataManager
-#import "AGStore.h"
 #import "AGDataManager.h"
 
-#endif /* _AEROGEAR_ */
+@implementation AGDataManager
 
+
+
+-(id<AGStore>)add:(NSString*) storeName {
+    
+    
+    return nil;
+}
+
+@end
