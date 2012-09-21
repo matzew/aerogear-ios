@@ -118,19 +118,4 @@
        success:(void (^)(id object))success
        failure:(void (^)(NSError *error))failure;
 
-/**
- * Removes all the data from the underlying storage system.
- *
- * @param success A block object to be executed when the operation finishes successfully.
- * This block has no return value and takes one argument: A collection, containing all
- * removed.
- *
- * @param failure A block object to be executed when the operation finishes unsuccessfully.
- * This block has no return value and takes one argument: The `NSError` object describing
- * the error that occurred.
- */
--(void) removeAll:(void (^)(id responseObject))success
-          failure:(void (^)(NSError *error))failure;
-
-
 @end
