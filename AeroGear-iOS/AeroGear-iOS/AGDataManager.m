@@ -16,15 +16,72 @@
  */
 
 #import "AGDataManager.h"
+#import "AGMemoryStorage.h"
 
-@implementation AGDataManager
+@implementation AGDataManager {
+    NSMutableDictionary* _stores;
+}
+
+- (id)init
+{
+    self = [super init];
+    if (self) {
+        _stores = [NSMutableDictionary dictionary];
+    }
+    return self;
+}
 
 
+//
+-(id) initWithStore:(NSString*) name {
+    return [self initWithStore:name type:@"MEMORY"];
+}
+-(id) initWithStore:(NSString*) name type:(NSString*)type {
+
+    // TODO: util class
+    if (! [type isEqualToString:@"MEMORY"]) {
+        return nil;
+    }
+
+    self = [self init];
+    if (self) {
+        // TODO: really pass the string here (again?)
+        [self add:name type:@"MEMORY"];
+    }
+    return self;
+}
+
++(id) store:(NSString*) name {
+    return [[self alloc] initWithStore:name];
+}
++(id) store:(NSString*) name type:(NSString*)type {
+    return [[self alloc] initWithStore:name type:type];
+}
 
 -(id<AGStore>)add:(NSString*) storeName {
+    return [self add:storeName type:@"MEMORY"];
+}
+
+-(id<AGStore>)add:(NSString*) storeName type:(NSString*) type {
+    // TODO check ALL supported types...
+    if (! [type isEqualToString:@"MEMORY"]) {
+        return nil;
+    }
     
     
-    return nil;
+    id<AGStore> store = [[AGMemoryStorage alloc] init];;
+    [_stores setValue:store forKey:storeName];
+    return store;
+}
+
+-(id<AGStore>)remove:(NSString*) storeName {
+    id<AGStore> store = [self get:storeName];
+    [_stores removeObjectForKey:storeName];
+    return store;
+}
+
+-(id<AGStore>)get:(NSString*) storeName {
+    return [_stores valueForKey:storeName];
 }
 
 @end

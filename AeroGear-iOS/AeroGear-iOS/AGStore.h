@@ -23,17 +23,22 @@
 @protocol AGStore <NSObject>
 
 /**
+ * Returns the type of the underlying 'store implementation'
+ */
+@property (nonatomic, readonly) NSString* type;
+
+/**
  * Reads all the data from the underlying storage system.
  *
  * @param success A block object to be executed when the operation finishes successfully.
- * This block has no return value and takes one argument: A collection, containing all stored
+ * This block has no return value and takes one argument: A collection (NSArray), containing all stored
  * objects.
  *
  * @param failure A block object to be executed when the operation finishes unsuccessfully.
  * This block has no return value and takes one argument: The `NSError` object describing
  * the error that occurred.
  */
--(void) readAll:(void (^)(id objects))success
+-(void) readAll:(void (^)(NSArray* objects))success
         failure:(void (^)(NSError *error))failure;
 
 /**
@@ -59,7 +64,7 @@
  * @param filterObject the filter criteria.
  *
  * @param success A block object to be executed when the operation finishes successfully.
- * This block has no return value and takes one argument: A collection, containing all stored
+ * This block has no return value and takes one argument: A collection (NSArray), containing all stored
  * objects, matching the given filter. The argument is nil, if nothing matches the criteria.
  *
  * @param failure A block object to be executed when the operation finishes unsuccessfully.
@@ -67,7 +72,7 @@
  * the error that occurred.
  */
 -(void) filter:(id)filterObject
-       success:(void (^)(id objects))success
+       success:(void (^)(NSArray* objects))success
        failure:(void (^)(NSError *error))failure;
 
 

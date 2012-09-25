@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		08D43362329A46488E585071 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 65D1DA06FAB24A18AB6A5963 /* libPods.a */; };
 		1D0A1358119648AFB949959A /* libPods-AeroGear-iOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E065C8DDD305422BBB3237D5 /* libPods-AeroGear-iOSTests.a */; };
+		571DBACB1610715800A0A3A6 /* AGMemoryStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 571DBACA1610715800A0A3A6 /* AGMemoryStorage.m */; };
+		571DBACF161071BF00A0A3A6 /* AGBaseStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 571DBACE161071BF00A0A3A6 /* AGBaseStorage.m */; };
+		571DBAD51610C3D700A0A3A6 /* AGMemoryStorageSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 571DBAD41610C3D700A0A3A6 /* AGMemoryStorageSpec.m */; };
 		57345BD815E3D18600B74FEB /* AGHttpClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 57345BD715E3D18600B74FEB /* AGHttpClient.m */; };
 		57345BDC15E3D1DF00B74FEB /* AGHttpClientTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 57345BDB15E3D1DF00B74FEB /* AGHttpClientTests.m */; };
 		573CBD9A15E3ECB60071E7A6 /* AGPipeline.m in Sources */ = {isa = PBXBuildFile; fileRef = 573CBD9915E3ECB60071E7A6 /* AGPipeline.m */; };
@@ -63,6 +66,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		571DBAC91610715800A0A3A6 /* AGMemoryStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGMemoryStorage.h; sourceTree = "<group>"; };
+		571DBACA1610715800A0A3A6 /* AGMemoryStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGMemoryStorage.m; sourceTree = "<group>"; };
+		571DBACD161071BF00A0A3A6 /* AGBaseStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGBaseStorage.h; sourceTree = "<group>"; };
+		571DBACE161071BF00A0A3A6 /* AGBaseStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGBaseStorage.m; sourceTree = "<group>"; };
+		571DBAD41610C3D700A0A3A6 /* AGMemoryStorageSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGMemoryStorageSpec.m; sourceTree = "<group>"; };
 		57345BD615E3D18600B74FEB /* AGHttpClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGHttpClient.h; sourceTree = "<group>"; };
 		57345BD715E3D18600B74FEB /* AGHttpClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGHttpClient.m; sourceTree = "<group>"; };
 		57345BDB15E3D1DF00B74FEB /* AGHttpClientTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGHttpClientTests.m; sourceTree = "<group>"; };
@@ -143,6 +151,7 @@
 				573CBDA315E4F31B0071E7A6 /* AGPipelineSpec.m */,
 				573CBDAC15E546B70071E7A6 /* AGRestAdapterSpec.m */,
 				57F24DFB1601F91600A3EAD8 /* AGPipeSpec.m */,
+				571DBAD41610C3D700A0A3A6 /* AGMemoryStorageSpec.m */,
 			);
 			name = "BDD Specs";
 			sourceTree = "<group>";
@@ -241,6 +250,10 @@
 				57ED144C160B490F00881924 /* AGDataManager.h */,
 				57ED144D160B490F00881924 /* AGDataManager.m */,
 				57ED1453160B566200881924 /* AGStore.h */,
+				571DBAC91610715800A0A3A6 /* AGMemoryStorage.h */,
+				571DBACA1610715800A0A3A6 /* AGMemoryStorage.m */,
+				571DBACD161071BF00A0A3A6 /* AGBaseStorage.h */,
+				571DBACE161071BF00A0A3A6 /* AGBaseStorage.m */,
 			);
 			name = DataManager;
 			sourceTree = "<group>";
@@ -389,6 +402,8 @@
 				573CBD9D15E3ED7F0071E7A6 /* AGRestAdapter.m in Sources */,
 				57DCDB8415F20E4800289EA4 /* AGBaseAdapter.m in Sources */,
 				57ED144E160B490F00881924 /* AGDataManager.m in Sources */,
+				571DBACB1610715800A0A3A6 /* AGMemoryStorage.m in Sources */,
+				571DBACF161071BF00A0A3A6 /* AGBaseStorage.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -404,6 +419,7 @@
 				57DCDB8815F20FB700289EA4 /* AGBaseAdapterTests.m in Sources */,
 				57F24DFC1601F91600A3EAD8 /* AGPipeSpec.m in Sources */,
 				57ED1452160B492B00881924 /* AGDataManagerTests.m in Sources */,
+				571DBAD51610C3D700A0A3A6 /* AGMemoryStorageSpec.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
