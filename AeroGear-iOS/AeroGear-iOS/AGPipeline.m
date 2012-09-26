@@ -31,8 +31,7 @@
 @synthesize pipes = _pipes;
 
 
-- (id)init
-{
+- (id)init {
     self = [super init];
     if (self) {
         _pipes = [NSMutableDictionary dictionary];
