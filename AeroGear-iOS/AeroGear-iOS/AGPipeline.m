@@ -52,7 +52,7 @@
 }
 
 -(id) initWithPipe:(NSString*) name baseURL:(NSURL*)baseURL endpoint:(NSString*)endpoint type:(NSString*)type {
-
+    // TODO check ALL supported types...
     if (! [AGRestAdapter accepts :type]) {
         return nil;
     }
