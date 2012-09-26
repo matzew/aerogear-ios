@@ -65,7 +65,7 @@
 
         // append the endpoint name and use it as the final URL
         NSURL* finalURL = [self appendEndpoint:endpoint toURL:baseURL];
-        [self add:name url:finalURL type:@"REST"];
+        [self add:name url:finalURL type:type];
     }
     return self;
 }
