@@ -116,3 +116,9 @@ Since we are pointing to a RESTful endpoint, the API issues a HTTP GET request. 
 	)
 
 Of course the _collection_ behind the responseObject can be stored to a variable...
+
+
+AGDataManager ...
+=================
+
+TDB...

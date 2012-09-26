@@ -15,16 +15,9 @@
  * limitations under the License.
  */
 
-#ifndef _AEROGEAR_
-#define _AEROGEAR_
-
-// Pipeline
-#import "AGPipe.h"
-#import "AGPipeline.h"
-
-// DataManager
+#import <Foundation/Foundation.h>
 #import "AGStore.h"
-#import "AGDataManager.h"
 
-#endif /* _AEROGEAR_ */
+@interface AGMemoryStorage : NSObject <AGStore>
 
+@end

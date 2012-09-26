@@ -15,16 +15,8 @@
  * limitations under the License.
  */
 
-#ifndef _AEROGEAR_
-#define _AEROGEAR_
+#import "AGBaseStorage.h"
 
-// Pipeline
-#import "AGPipe.h"
-#import "AGPipeline.h"
+@implementation AGBaseStorage
 
-// DataManager
-#import "AGStore.h"
-#import "AGDataManager.h"
-
-#endif /* _AEROGEAR_ */
-
+@end
