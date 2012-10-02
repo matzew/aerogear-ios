@@ -36,6 +36,7 @@
 		57F095D215EE4CB400B2C6B0 /* AGPipeline.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 573CBD9815E3ECB60071E7A6 /* AGPipeline.h */; };
 		57F095D315EE4CB400B2C6B0 /* AeroGear.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 573CBD9E15E3EE1F0071E7A6 /* AeroGear.h */; };
 		57F24DFC1601F91600A3EAD8 /* AGPipeSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 57F24DFB1601F91600A3EAD8 /* AGPipeSpec.m */; };
+		57F8B7C4161B2EE0007C4EBA /* AGSecurityTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 57F8B7C3161B2EE0007C4EBA /* AGSecurityTests.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -101,6 +102,7 @@
 		57ED1451160B492B00881924 /* AGDataManagerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGDataManagerTests.m; sourceTree = "<group>"; };
 		57ED1453160B566200881924 /* AGStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGStore.h; sourceTree = "<group>"; };
 		57F24DFB1601F91600A3EAD8 /* AGPipeSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGPipeSpec.m; sourceTree = "<group>"; };
+		57F8B7C3161B2EE0007C4EBA /* AGSecurityTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGSecurityTests.m; sourceTree = "<group>"; };
 		65D1DA06FAB24A18AB6A5963 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8AB37EC1AA3464892D758C1 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
 		D6A7A8124B23447DA65BC0DE /* Pods-AeroGear-iOSTests.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AeroGear-iOSTests.xcconfig"; path = "Pods/Pods-AeroGear-iOSTests.xcconfig"; sourceTree = SOURCE_ROOT; };
@@ -141,6 +143,7 @@
 				573CBDA015E4CEDD0071E7A6 /* AGPipelineTests.m */,
 				573CBDA915E546A20071E7A6 /* AGRestAdapterTests.m */,
 				57ED1451160B492B00881924 /* AGDataManagerTests.m */,
+				57F8B7C3161B2EE0007C4EBA /* AGSecurityTests.m */,
 			);
 			name = "Unit Tests";
 			sourceTree = "<group>";
@@ -420,6 +423,7 @@
 				57F24DFC1601F91600A3EAD8 /* AGPipeSpec.m in Sources */,
 				57ED1452160B492B00881924 /* AGDataManagerTests.m in Sources */,
 				571DBAD51610C3D700A0A3A6 /* AGMemoryStorageSpec.m in Sources */,
+				57F8B7C4161B2EE0007C4EBA /* AGSecurityTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
