@@ -120,7 +120,7 @@
     STAssertNil(fooPipe, @"Not deleted pipe");
 }
 
--(void) testPipeTypeProperty {
+-(void) testPipeDefaultTypeProperty {
     NSURL* baseURL = [NSURL URLWithString:@"http://server.com/context/"];
     AGPipeline* pipeline = [AGPipeline pipelineWithPipe:@"tasks" baseURL:baseURL];
     STAssertNotNil(pipeline, @"pipeline creation");
@@ -179,6 +179,29 @@
     
     id<AGPipe> newPipe = [pipeline get:@"bad name"];
     STAssertEqualObjects(@"http://server.com/otherContext/foo/", newPipe.url, @"verifying the given URL");
+}
+
+-(void) testAddWithRestType {
+    NSURL* baseURL = [NSURL URLWithString:@"http://server.com/context/"];
+    AGPipeline* pipeline = [AGPipeline pipelineWithPipe:@"projects" baseURL:baseURL];
+    STAssertNotNil(pipeline, @"pipeline creation");
+
+    [pipeline add:@"foo" type:@"REST"];
+
+    id<AGPipe> newPipe = [pipeline get:@"foo"];
+    STAssertEqualObjects(@"REST", newPipe.type, @"verifying the type");
+}
+
+-(void) testAddWithEndpointAndRestType {
+    NSURL* baseURL = [NSURL URLWithString:@"http://server.com/context/"];
+    AGPipeline* pipeline = [AGPipeline pipelineWithPipe:@"projects" baseURL:baseURL];
+    STAssertNotNil(pipeline, @"pipeline creation");
+
+    [pipeline add:@"foo" endpoint:@"bar" type:@"REST"];
+
+    id<AGPipe> newPipe = [pipeline get:@"foo"];
+    STAssertEqualObjects(@"REST", newPipe.type, @"verifying the type");
+    STAssertEqualObjects(@"http://server.com/context/bar/", newPipe.url, @"verifying the given URL");
 }
 
 -(void) testAddPipeWithoutEndpoint {
