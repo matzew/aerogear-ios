@@ -14,6 +14,7 @@
 		571DBAD51610C3D700A0A3A6 /* AGMemoryStorageSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 571DBAD41610C3D700A0A3A6 /* AGMemoryStorageSpec.m */; };
 		57345BD815E3D18600B74FEB /* AGHttpClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 57345BD715E3D18600B74FEB /* AGHttpClient.m */; };
 		57345BDC15E3D1DF00B74FEB /* AGHttpClientTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 57345BDB15E3D1DF00B74FEB /* AGHttpClientTests.m */; };
+		573B709D161DA2AE009F0452 /* AGAuthenticationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 573B709C161DA2AE009F0452 /* AGAuthenticationManager.m */; };
 		573CBD9A15E3ECB60071E7A6 /* AGPipeline.m in Sources */ = {isa = PBXBuildFile; fileRef = 573CBD9915E3ECB60071E7A6 /* AGPipeline.m */; };
 		573CBD9D15E3ED7F0071E7A6 /* AGRestAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 573CBD9C15E3ED7F0071E7A6 /* AGRestAdapter.m */; };
 		573CBDA115E4CEDD0071E7A6 /* AGPipelineTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 573CBDA015E4CEDD0071E7A6 /* AGPipelineTests.m */; };
@@ -75,6 +76,9 @@
 		57345BD615E3D18600B74FEB /* AGHttpClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGHttpClient.h; sourceTree = "<group>"; };
 		57345BD715E3D18600B74FEB /* AGHttpClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGHttpClient.m; sourceTree = "<group>"; };
 		57345BDB15E3D1DF00B74FEB /* AGHttpClientTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGHttpClientTests.m; sourceTree = "<group>"; };
+		573B709A161DA29A009F0452 /* AGAuthenticationModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGAuthenticationModule.h; sourceTree = "<group>"; };
+		573B709B161DA2AE009F0452 /* AGAuthenticationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGAuthenticationManager.h; sourceTree = "<group>"; };
+		573B709C161DA2AE009F0452 /* AGAuthenticationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGAuthenticationManager.m; sourceTree = "<group>"; };
 		573CBD9615E3ECA80071E7A6 /* AGPipe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGPipe.h; sourceTree = "<group>"; };
 		573CBD9815E3ECB60071E7A6 /* AGPipeline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGPipeline.h; sourceTree = "<group>"; };
 		573CBD9915E3ECB60071E7A6 /* AGPipeline.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGPipeline.m; sourceTree = "<group>"; };
@@ -135,6 +139,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		573B7099161D9D51009F0452 /* Security */ = {
+			isa = PBXGroup;
+			children = (
+				573B709B161DA2AE009F0452 /* AGAuthenticationManager.h */,
+				573B709C161DA2AE009F0452 /* AGAuthenticationManager.m */,
+				573B709A161DA29A009F0452 /* AGAuthenticationModule.h */,
+			);
+			name = Security;
+			sourceTree = "<group>";
+		};
 		573CBDA515E4F9000071E7A6 /* Unit Tests */ = {
 			isa = PBXGroup;
 			children = (
@@ -199,6 +213,7 @@
 				57737FDF15E3D01D006B97BB /* Supporting Files */,
 				57ED1456160B569500881924 /* Core */,
 				57ED1455160B568800881924 /* DataManager */,
+				573B7099161D9D51009F0452 /* Security */,
 				57ED1454160B568000881924 /* Pipeline */,
 				573CBD9E15E3EE1F0071E7A6 /* AeroGear.h */,
 			);
@@ -407,6 +422,7 @@
 				57ED144E160B490F00881924 /* AGDataManager.m in Sources */,
 				571DBACB1610715800A0A3A6 /* AGMemoryStorage.m in Sources */,
 				571DBACF161071BF00A0A3A6 /* AGBaseStorage.m in Sources */,
+				573B709D161DA2AE009F0452 /* AGAuthenticationManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
