@@ -15,8 +15,14 @@
  * limitations under the License.
  */
 
-#import "AGAuthenticationManager.h"
+#import <Foundation/Foundation.h>
+#import "AGAuthenticationModuleAdapter.h"
 
-@implementation AGAuthenticationManager
+@interface AGRestAuthentication : NSObject <AGAuthenticationModuleAdapter>
+
+
+-(id) initForBaseURL:(NSURL*) baseURL;
++(id) moduleForBaseURL:(NSURL*) baseURL;
+
 
 @end

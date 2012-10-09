@@ -24,7 +24,7 @@
  * The class offers simple APIs to add, remove or get access to a 'authentication module'.
  *
  */
-@interface AGAuthenticationManager : NSObject
+@interface AGAuthenticator : NSObject
 
 
 /**

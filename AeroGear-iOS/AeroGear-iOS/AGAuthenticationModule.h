@@ -23,6 +23,32 @@
 @protocol AGAuthenticationModule <NSObject>
 
 /**
+ * Returns the type of the underlying 'auth module implementation'
+ */
+@property (nonatomic, readonly) NSString* type;
+
+/**
+ * Returns the baseURL string of the underlying 'auth module implementation'
+ */
+@property (nonatomic, readonly) NSString* baseURL;
+
+/**
+ * Returns the 'login endpoint' of the underlying 'auth module implementation'
+ */
+@property (nonatomic, readonly) NSString* loginEndpoint;
+
+/**
+ * Returns the 'logout endpoint' of the underlying 'auth module implementation'
+ */
+@property (nonatomic, readonly) NSString* logoutEndpoint;
+
+/**
+ * Returns the 'enroll endpoint' of the underlying 'auth module implementation'
+ */
+@property (nonatomic, readonly) NSString* enrollEndpoint;
+
+
+/**
  * Performs a signup of a new user. The request accepts a NSDictionary which will be translated to JSON 
  * and send to the endpoint.
  *
@@ -37,7 +63,7 @@
  * This block has no return value and takes one argument: The `NSError` object describing
  * the error that occurred.
  */
--(id) signup:(id) userData
+-(void) enroll:(id) userData
      success:(void (^)(id object))success
      failure:(void (^)(NSError *error))failure;
 
@@ -57,7 +83,7 @@
  * This block has no return value and takes one argument: The `NSError` object describing
  * the error that occurred.
  */
--(id) login:(NSString*) username
+-(void) login:(NSString*) username
     password:(NSString*) password
      success:(void (^)(id object))success
      failure:(void (^)(NSError *error))failure;
@@ -72,7 +98,7 @@
  * This block has no return value and takes one argument: The `NSError` object describing
  * the error that occurred.
  */
--(id) logout:(void (^)())success
+-(void) logout:(void (^)())success
      failure:(void (^)(NSError *error))failure;
 
 @end
