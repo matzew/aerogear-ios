@@ -26,10 +26,10 @@
 
 -(void) testCreateDataManagerWithOneStore {
     AGDataManager* mgr = [AGDataManager store:@"tasks"];
-    STAssertNotNil(mgr, @"storage not nil");
+    STAssertNotNil(mgr, @"storage could not be null");
     
     id<AGStore> taskStore = [mgr get:@"tasks"];
-    STAssertNotNil(taskStore, @"actual store not nil");
+    STAssertNotNil(taskStore, @"actual store could not be null");
     
     id<AGStore> noStore = [mgr get:@"foobar"];
     STAssertNil(noStore, @"actual store should be nil");
@@ -42,11 +42,11 @@
     
     
     id<AGStore> taskStore = [mgr get:@"tasks"];
-    STAssertNotNil(taskStore, @"actual store not nil");
+    STAssertNotNil(taskStore, @"actual store could not be null");
     id<AGStore> tagStore = [mgr get:@"tags"];
-    STAssertNotNil(tagStore, @"actual store not nil");
+    STAssertNotNil(tagStore, @"actual store could not be null");
     id<AGStore> projectStore = [mgr get:@"projects"];
-    STAssertNotNil(projectStore, @"actual store not nil");
+    STAssertNotNil(projectStore, @"actual store could not be null");
 }
     
 -(void) testCreateDataManagerAndAddAndRemoveStores {
@@ -56,23 +56,23 @@
     
     
     id<AGStore> taskStore = [mgr get:@"tasks"];
-    STAssertNotNil(taskStore, @"actual store not nil");
+    STAssertNotNil(taskStore, @"actual store could not be null");
     id<AGStore> tagStore = [mgr get:@"tags"];
-    STAssertNotNil(tagStore, @"actual store not nil");
+    STAssertNotNil(tagStore, @"actual store could not be null");
     id<AGStore> projectStore = [mgr get:@"projects"];
-    STAssertNotNil(projectStore, @"actual store not nil");
+    STAssertNotNil(projectStore, @"actual store could not be null");
     
     
     projectStore = [mgr remove:@"projects"];
-    STAssertNotNil(projectStore, @"actual store not nil");
+    STAssertNotNil(projectStore, @"actual store could not be null");
     projectStore = [mgr get:@"projects"];
-    STAssertNil(projectStore, @"actual store not nil");
+    STAssertNil(projectStore, @"actual store should be null");
 }
 
 -(void) testCreateDataManagerAndAddWrongStoreType {
     AGDataManager* mgr = [AGDataManager store:@"tasks"];
     id<AGStore> noStore = [mgr add:@"projects" type:@"FOOBAR"];
-    STAssertNil(noStore, @"actual store not nil");
+    STAssertNil(noStore, @"actual store should be null");
 }
 
 @end
