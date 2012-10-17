@@ -22,16 +22,32 @@
     // ivars
     AGHttpClient* _restClient;
     
-    // this is an 'im memory' token storage...
-    NSString* _authToken;
-    
 }
 
+// public API:
 @synthesize type = _type;
 @synthesize baseURL = _baseURL;
 @synthesize loginEndpoint = _loginEndpoint;
 @synthesize logoutEndpoint = _logoutEndpoint;
 @synthesize enrollEndpoint = _enrollEndpoint;
+
+// internal API:
+@synthesize authToken = _authToken;
+
+
+// custom getters for our properties:
+-(NSString*) loginEndpoint {
+    return [_baseURL stringByAppendingString:_loginEndpoint];
+}
+
+-(NSString*) logoutEndpoint {
+    return [_baseURL stringByAppendingString:_logoutEndpoint];
+}
+
+-(NSString*) enrollEndpoint {
+    return [_baseURL stringByAppendingString:_enrollEndpoint];
+}
+
 
 
 
@@ -49,11 +65,6 @@
     return self;
 }
 
--(void)dealloc {
-    _restClient = nil;
-}
-
-
 -(id) initForBaseURL:(NSURL*) baseURL {
     self = [self init];
     if (self) {
@@ -68,19 +79,6 @@
     return [[self alloc] initForBaseURL:baseURL];
 }
 
-// custom getters for our properties:
--(NSString*) loginEndpoint {
-    return [_baseURL stringByAppendingString:_loginEndpoint];
-}
-
--(NSString*) logoutEndpoint {
-    return [_baseURL stringByAppendingString:_logoutEndpoint];
-}
-
--(NSString*) enrollEndpoint {
-    return [_baseURL stringByAppendingString:_enrollEndpoint];
-}
-
 
 // Module (public API)
 -(void) enroll:(id) userData
@@ -89,6 +87,10 @@
     
     
     [_restClient postPath:_enrollEndpoint parameters:userData success:^(AFHTTPRequestOperation *operation, id responseObject) {
+
+        // stash the auth token...:
+        [self readAndStashToken:operation];
+        
         if (success) {
             NSLog(@"Invoking successblock....");
             success(responseObject);
@@ -103,6 +105,11 @@
     
 }
 
+-(void) readAndStashToken:(AFHTTPRequestOperation*) operation {
+    // TODO: hard-coded header name:
+    _authToken = [[[operation response] allHeaderFields] valueForKey:@"Auth-Token"];
+}
+
 -(void) login:(NSString*) username
    password:(NSString*) password
     success:(void (^)(id object))success
@@ -111,8 +118,9 @@
     NSDictionary* loginData = [NSDictionary dictionaryWithObjectsAndKeys:username,@"username",password,@"password", nil];
     
     [_restClient postPath:_loginEndpoint parameters:loginData success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        // TODO: hard-coded header name:
-        _authToken = [[[operation response] allHeaderFields] valueForKey:@"Auth-Token"];
+        
+        // stash the auth token...:
+        [self readAndStashToken:operation];
         
         if (success) {
             NSLog(@"Invoking successblock....");
@@ -138,6 +146,10 @@
     
     // logoff:
     [_restClient postPath:_logoutEndpoint parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        
+        // hrm, really needed....:
+        [self deauthorize];
+        
         if (success) {
             NSLog(@"Invoking successblock....");
             success();
@@ -148,35 +160,24 @@
             failure(error);
         }
     }];
-
 }
 
 // Adapter (internal API)
 
-- (id)isAuthenticated {
-    return nil;
+- (BOOL)isAuthenticated {
+    //return !!_authToken;
+    return (nil != _authToken);
 }
-- (id)addAuthIdentifier {
-    return nil;
+- (void)deauthorize {
+    _authToken = nil;
 }
-- (id)deauthorize {
-    return nil;
+
+
+-(void)dealloc {
+    _restClient = nil;
 }
-// ==> type.... eigene classe... (all (three) auth endpoints);
-- (id)endpoints {
-    return nil;
-}
-- (id)type {
-    return nil;
-}
-- (id)name {
-    return nil;
-}
-- (id)baseURL {
-    return nil;
-}
-- (id)tokenName {
-    return nil;
-}
+
+
+
 
 @end

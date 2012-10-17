@@ -16,10 +16,12 @@
  */
 
 #import "AGRestAdapter.h"
+#import "AGRestAuthentication.h"
 #import "AGHttpClient.h"
 
 @implementation AGRestAdapter {
     AGHttpClient* _restClient;
+    AGRestAuthentication* _authModule;
 }
 
 @synthesize type = _type;
@@ -34,23 +36,38 @@
     return self;
 }
 
--(id) initForURL:(NSURL*) url {
+-(id) initForURL:(NSURL*) url authModule:(id<AGAuthenticationModule>) authModule{
     self = [self init];
     if (self) {
         _url = url.absoluteString;
         _restClient = [AGHttpClient clientFor:url];
         _restClient.parameterEncoding = AFJSONParameterEncoding;
+        
+        
+        NSLog(@"\n\n%@\n\n", [authModule class]);
+        
+        _authModule = (AGRestAuthentication*) authModule;
     }
     return self;
 }
 
-+(id) pipeForURL:(NSURL*) url {
-    return [[self alloc] initForURL:url];
++(id) pipeForURL:(NSURL*) url authModule:(id<AGAuthenticationModule>) authModule{
+    return [[self alloc] initForURL:url authModule:authModule];
 }
 
 // read all, via HTTP GET
 -(void) read:(void (^)(id responseObject))success
      failure:(void (^)(NSError *error))failure {
+    
+    
+    if ([_authModule isAuthenticated]) {
+        NSLog(@"\n\n\n\nYYYYYYYYYYYY\n");
+        
+        [_restClient setDefaultHeader:@"Auth-Token" value:[_authModule authToken]];
+        
+    }
+    
+    
 
     // TODO: better Endpoints....
     [_restClient getPath:@"" parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {

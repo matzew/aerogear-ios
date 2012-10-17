@@ -30,7 +30,8 @@ describe(@"AGPipe", ^{
         
         beforeEach(^{
             NSURL* baseURL = [NSURL URLWithString:@"http://server.com/"];
-            pipeline = [AGPipeline pipelineWithPipe:@"tests" baseURL:baseURL];
+            pipeline = [AGPipeline pipeline];
+            [pipeline add:@"tests" baseURL:baseURL];
         });
 
         it(@"AGPipe should have an expected URL", ^{

@@ -20,17 +20,10 @@
 
 @protocol AGAuthenticationModuleAdapter <AGAuthenticationModule>
 
-// some getters.... see 'privileged' JS methods...
 
-- (id)isAuthenticated;
-- (id)addAuthIdentifier;
-- (id)deauthorize;
-// ==> type.... eigene classe... (all (three) auth endpoints);
-- (id)endpoints;
-- (id)type;
-- (id)name;
-- (id)baseURL;
-- (id)tokenName;
+@property (nonatomic, readonly) NSString* authToken;
 
+- (BOOL)isAuthenticated;
+- (void)deauthorize;
 
 @end

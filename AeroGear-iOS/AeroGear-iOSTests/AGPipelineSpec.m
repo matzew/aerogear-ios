@@ -29,7 +29,8 @@ describe(@"AGPipeline", ^{
         
         beforeEach(^{
             NSURL* baseURL = [NSURL URLWithString:@"http://server.com/"];
-            pipeline = [AGPipeline pipelineWithPipe:@"tests" baseURL:baseURL];
+            pipeline = [AGPipeline pipeline];
+            [pipeline add:@"tests" baseURL:baseURL];
         });
         
         it(@"should not be nil", ^{
@@ -42,7 +43,7 @@ describe(@"AGPipeline", ^{
         });
         
     });
-    context(@"static constructor", ^{
+    context(@"adding new pipes", ^{
         
         //A pipeline object:
         __block id pipeline = nil;
@@ -53,7 +54,8 @@ describe(@"AGPipeline", ^{
         });
         
         it(@"with name and baseURL", ^{
-            pipeline = [AGPipeline pipelineWithPipe:@"tests" baseURL:baseURL];
+            pipeline = [AGPipeline pipeline];
+            [pipeline add:@"tests" baseURL:baseURL];
             [pipeline shouldNotBeNil];
             
             id<AGPipe> pipe = [pipeline get:@"tests"];
@@ -61,7 +63,9 @@ describe(@"AGPipeline", ^{
         });
         
         it(@"with name and baseURL and endpoint", ^{
-            pipeline = [AGPipeline pipelineWithPipe:@"some bad name" baseURL:baseURL endpoint:@"tests"];
+            pipeline = [AGPipeline pipeline];
+            [pipeline add:@"some bad name" baseURL:baseURL endpoint:@"tests"];
+
             [pipeline shouldNotBeNil];
             
             id<AGPipe> pipe = [pipeline get:@"some bad name"];
@@ -69,7 +73,8 @@ describe(@"AGPipeline", ^{
         });
         
         it(@"with name and baseURL and endpoint and (known) type", ^{
-            pipeline = [AGPipeline pipelineWithPipe:@"some bad name" baseURL:baseURL endpoint:@"tests" type:@"REST"];
+            pipeline = [AGPipeline pipeline];
+            [pipeline add:@"some bad name" baseURL:baseURL endpoint:@"tests" type:@"REST"];
             [pipeline shouldNotBeNil];
             
             id<AGPipe> pipe = [pipeline get:@"some bad name"];
@@ -77,50 +82,8 @@ describe(@"AGPipeline", ^{
         });
         
         it(@"with name and baseURL and (known) type", ^{
-            pipeline = [AGPipeline pipelineWithPipe:@"tests" baseURL:baseURL type:@"REST"];
-            [pipeline shouldNotBeNil];
-            
-            id<AGPipe> pipe = [pipeline get:@"tests"];
-            [[pipe.url should] equal:@"http://server.com/tests/"];
-        });
-        
-    });
-    context(@"init methods", ^{
-        
-        //A pipeline object:
-        __block id pipeline = nil;
-        __block NSURL* baseURL;
-        
-        beforeEach(^{
-            baseURL = [NSURL URLWithString:@"http://server.com/"];
-        });
-        
-        it(@"with name and baseURL", ^{
-            pipeline = [[AGPipeline alloc] initWithPipe:@"tests" baseURL:baseURL];
-            [pipeline shouldNotBeNil];
-            
-            id<AGPipe> pipe = [pipeline get:@"tests"];
-            [[pipe.url should] equal:@"http://server.com/tests/"];
-        });
-        
-        it(@"with name and baseURL and endpoint", ^{
-            pipeline = [[AGPipeline alloc] initWithPipe:@"some bad name" baseURL:baseURL endpoint:@"tests"];
-            [pipeline shouldNotBeNil];
-            
-            id<AGPipe> pipe = [pipeline get:@"some bad name"];
-            [[pipe.url should] equal:@"http://server.com/tests/"];
-        });
-        
-        it(@"with name and baseURL and endpoint and (known) type", ^{
-            pipeline = [[AGPipeline alloc] initWithPipe:@"some bad name" baseURL:baseURL endpoint:@"tests" type:@"REST"];
-            [pipeline shouldNotBeNil];
-            
-            id<AGPipe> pipe = [pipeline get:@"some bad name"];
-            [[pipe.url should] equal:@"http://server.com/tests/"];
-        });
-        
-        it(@"with name and baseURL and (known) type", ^{
-            pipeline = [[AGPipeline alloc] initWithPipe:@"tests" baseURL:baseURL type:@"REST"];
+            pipeline = [AGPipeline pipeline];
+            [pipeline add:@"tests" baseURL:baseURL type:@"REST"];
             [pipeline shouldNotBeNil];
             
             id<AGPipe> pipe = [pipeline get:@"tests"];

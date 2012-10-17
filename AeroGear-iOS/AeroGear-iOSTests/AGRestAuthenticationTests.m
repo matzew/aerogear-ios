@@ -18,6 +18,7 @@
 
 #import <SenTestingKit/SenTestingKit.h>
 #import "AGRestAuthentication.h"
+#import "AGPipeline.h"
 
 @interface AGRestAuthenticationTests : SenTestCase
 
@@ -30,8 +31,8 @@
 -(void)setUp {
     [super setUp];
     // create a shared client for the demo app:
-    //NSURL* baseURL = [NSURL URLWithString:@"http://localhost:8080/todo-server/"];
-    NSURL* baseURL = [NSURL URLWithString:@"https://todoauth-aerogear.rhcloud.com/todo-server/"];
+    NSURL* baseURL = [NSURL URLWithString:@"http://localhost:8080/todo-server/"];
+    //NSURL* baseURL = [NSURL URLWithString:@"https://todoauth-aerogear.rhcloud.com/todo-server/"];
     restAuthModule = [AGRestAuthentication moduleForBaseURL:baseURL];
 
     _finishedFlag = NO;
@@ -44,7 +45,86 @@
 ///////// this is more an integration test......
 
 
--(void) testSuccessfulLogin {
+
+-(void) testLoginAndProtectedAccess {
+    
+    [restAuthModule login:@"john" password:@"123" success:^(id object) {
+        //        _finishedFlag = YES;
+        
+        
+        AGPipeline* pipeline = [AGPipeline pipeline];
+        id<AGPipe> projects = [pipeline add:@"projects" baseURL:[NSURL URLWithString:@"http://localhost:8080/todo-server/"] authModule:restAuthModule];
+        
+        [projects read:^(id responseObject) {
+            _finishedFlag = YES;
+            NSLog(@"\n%@", responseObject);
+        } failure:^(NSError *error) {
+            _finishedFlag = YES;
+            STFail(@"no access to server resource: %@", error);
+        }];
+        
+        [projects read:^(id responseObject) {
+            _finishedFlag = YES;
+            NSLog(@"\n%@", responseObject);
+        } failure:^(NSError *error) {
+            _finishedFlag = YES;
+            STFail(@"no access to server resource: %@", error);
+        }];
+        
+        
+    } failure:^(NSError *error) {
+        _finishedFlag = YES;
+        STFail(@"wrong login");
+    }];
+    
+    // keep the run loop going
+    while(!_finishedFlag) {
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+    }
+    
+    
+    
+    
+}
+
+-(void) testLoginWithProtectedAccessAndLogout {
+    
+    [restAuthModule login:@"john" password:@"123" success:^(id object) {
+        //        _finishedFlag = YES;
+        [restAuthModule logout:^{
+            AGPipeline* pipeline = [AGPipeline pipeline];
+            id<AGPipe> tasks = [pipeline add:@"tasks" baseURL:[NSURL URLWithString:@"http://localhost:8080/todo-server/"] authModule:restAuthModule];
+            
+            [tasks read:^(id responseObject) {
+                _finishedFlag = YES;
+                STFail(@"should have NO access to server resource...");
+            } failure:^(NSError *error) {
+                _finishedFlag = YES;
+            }];
+            
+            
+            
+        } failure:^(NSError *error) {
+            _finishedFlag = YES;
+            STFail(@"wrong login");
+        }];
+        
+        
+    } failure:^(NSError *error) {
+        _finishedFlag = YES;
+        STFail(@"wrong login");
+    }];
+    
+    // keep the run loop going
+    while(!_finishedFlag) {
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+    }
+    
+}
+
+
+
+-(void) XtestSuccessfulLogin {
     
     [restAuthModule login:@"john" password:@"123" success:^(id object) {
         _finishedFlag = YES;
@@ -59,7 +139,7 @@
     }
 }
 
--(void) testUnsuccessfulLogin {
+-(void) XtestUnsuccessfulLogin {
 
     [restAuthModule login:@"johnny" password:@"likeAboss" success:^(id object) {
         STFail(@"should not work...");
@@ -75,7 +155,7 @@
 }
 
 
--(void) testLogoff {
+-(void) XtestLogoff {
     
     [restAuthModule login:@"john" password:@"123" success:^(id object) {
         // after initial login, we issue a logout:
@@ -97,7 +177,7 @@
 }
 
 
--(void) testWrongLogoff {
+-(void) XtestWrongLogoff {
     
     // blank logoff....
     [restAuthModule logout:^{
