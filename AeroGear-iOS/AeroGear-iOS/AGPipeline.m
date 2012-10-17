@@ -38,19 +38,23 @@
     }
     return self;
 }
+
 - (id)init:(NSURL*) baseURL {
-    self = [super init];
+    self = [self init];
     if (self) {
-        _pipes = [NSMutableDictionary dictionary];
+        
+        // stash the baseURL, used for the 'add' functions that have no (base)URL argument
+        _baseURL = baseURL;
     }
     return self;
 }
+
 +(id)pipeline {
     return [[self alloc] init];
 }
 
 +(id)pipeline:(NSURL*) baseURL; {
-    return [[self alloc] init];
+    return [[self alloc] init:baseURL];
 }
 
 -(id<AGPipe>) add:(NSString*) name {

@@ -37,7 +37,8 @@
 
 -(void) testCreateDefaultPipeline {
     NSURL* baseURL = [NSURL URLWithString:@"http://server.com/context/"];
-    AGPipeline* pipeline = [AGPipeline pipeline];
+    //AGPipeline* pipeline = [AGPipeline pipeline];
+    AGPipeline* pipeline = [AGPipeline pipeline:baseURL];
     [pipeline add:@"tasks" baseURL:baseURL];
     STAssertNotNil(pipeline, @"pipeline creation");
 }
@@ -52,9 +53,10 @@
 
 -(void) testCreatePipelineWithInvalidType {
     NSURL* baseURL = [NSURL URLWithString:@"http://server.com/context/"];
-    AGPipeline* pipeline = [AGPipeline pipeline];
+    //AGPipeline* pipeline = [AGPipeline pipeline];
+    AGPipeline* pipeline = [AGPipeline pipeline:baseURL];
     [pipeline add:@"tasks" baseURL:baseURL type:@"OData"];
-    STAssertNil(pipeline, @"invalid pipeline creation");
+    STAssertNil([pipeline get:@"tasks"], @"invalid pipeline creation");
     
 }
 
@@ -211,7 +213,8 @@
 
 -(void) testAddWithEndpointAndRestType {
     NSURL* baseURL = [NSURL URLWithString:@"http://server.com/context/"];
-    AGPipeline* pipeline = [AGPipeline pipeline];
+    //AGPipeline* pipeline = [AGPipeline pipeline];
+    AGPipeline* pipeline = [AGPipeline pipeline:baseURL];
     [pipeline add:@"projects" baseURL:baseURL];
     STAssertNotNil(pipeline, @"pipeline creation");
 
@@ -242,7 +245,8 @@
 
 -(void) testAddPipeWithoutEndpointAndWithoutBaseURL {
     NSURL* baseURL = [NSURL URLWithString:@"http://server.com/context/"];
-    AGPipeline* pipeline = [AGPipeline pipeline];
+    //AGPipeline* pipeline = [AGPipeline pipeline];
+    AGPipeline* pipeline = [AGPipeline pipeline:baseURL];
     [pipeline add:@"projects" baseURL:baseURL];
     STAssertNotNil(pipeline, @"pipeline creation");
     

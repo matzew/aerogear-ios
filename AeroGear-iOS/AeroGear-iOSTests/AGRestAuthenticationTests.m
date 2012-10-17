@@ -27,12 +27,12 @@
 @implementation AGRestAuthenticationTests{
     BOOL _finishedFlag;
     AGRestAuthentication* restAuthModule;
+    NSURL* baseURL;
 }
 -(void)setUp {
     [super setUp];
     // create a shared client for the demo app:
-    NSURL* baseURL = [NSURL URLWithString:@"http://localhost:8080/todo-server/"];
-    //NSURL* baseURL = [NSURL URLWithString:@"https://todoauth-aerogear.rhcloud.com/todo-server/"];
+    baseURL = [NSURL URLWithString:@"https://todoauth-aerogear.rhcloud.com/todo-server/"];
     restAuthModule = [AGRestAuthentication moduleForBaseURL:baseURL];
 
     _finishedFlag = NO;
@@ -53,7 +53,7 @@
         
         
         AGPipeline* pipeline = [AGPipeline pipeline];
-        id<AGPipe> projects = [pipeline add:@"projects" baseURL:[NSURL URLWithString:@"http://localhost:8080/todo-server/"] authModule:restAuthModule];
+        id<AGPipe> projects = [pipeline add:@"projects" baseURL:baseURL authModule:restAuthModule];
         
         [projects read:^(id responseObject) {
             _finishedFlag = YES;
@@ -93,7 +93,7 @@
         //        _finishedFlag = YES;
         [restAuthModule logout:^{
             AGPipeline* pipeline = [AGPipeline pipeline];
-            id<AGPipe> tasks = [pipeline add:@"tasks" baseURL:[NSURL URLWithString:@"http://localhost:8080/todo-server/"] authModule:restAuthModule];
+            id<AGPipe> tasks = [pipeline add:@"tasks" baseURL:baseURL authModule:restAuthModule];
             
             [tasks read:^(id responseObject) {
                 _finishedFlag = YES;
@@ -124,7 +124,7 @@
 
 
 
--(void) XtestSuccessfulLogin {
+-(void) testSuccessfulLogin {
     
     [restAuthModule login:@"john" password:@"123" success:^(id object) {
         _finishedFlag = YES;
@@ -139,7 +139,7 @@
     }
 }
 
--(void) XtestUnsuccessfulLogin {
+-(void) testUnsuccessfulLogin {
 
     [restAuthModule login:@"johnny" password:@"likeAboss" success:^(id object) {
         STFail(@"should not work...");
@@ -155,7 +155,7 @@
 }
 
 
--(void) XtestLogoff {
+-(void) testLogoff {
     
     [restAuthModule login:@"john" password:@"123" success:^(id object) {
         // after initial login, we issue a logout:
@@ -177,7 +177,7 @@
 }
 
 
--(void) XtestWrongLogoff {
+-(void) testWrongLogoff {
     
     // blank logoff....
     [restAuthModule logout:^{
@@ -194,7 +194,7 @@
 }
 
 // not testing this, need to generate random usernames...
--(void) xytestRegister {
+-(void) NotestRegister {
     // {"firstname":"firstname","lastname":"lastname","email":"mei@ooo.de","username":"dsadsasdas","password":"asdasdasdsa","role":"admin"}
     NSMutableDictionary* registerPayload = [NSMutableDictionary dictionary];
     [registerPayload setValue:@"Matthias" forKey:@"firstname"];
