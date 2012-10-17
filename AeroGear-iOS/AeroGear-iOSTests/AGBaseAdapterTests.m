@@ -26,8 +26,9 @@
 @implementation AGBaseAdapterTests
 
 -(void)testAbstractClass {
+    id adapter;
     @try {
-        id adapter = [[AGBaseAdapter alloc] init];
+        adapter = [[AGBaseAdapter alloc] init];
         STFail(@"should not get here...");
     }
     @catch (NSException *exception) {
