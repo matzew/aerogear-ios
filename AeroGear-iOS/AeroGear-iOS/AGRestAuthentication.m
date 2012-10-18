@@ -178,8 +178,6 @@
     _authToken = [[[operation response] allHeaderFields] valueForKey:@"Auth-Token"];
 }
 
-
-
 // ==============================================================
 // ======== internal API (AGAuthenticationModuleAdapter) ========
 // ==============================================================
@@ -191,5 +189,9 @@
     _authToken = nil;
 }
 
+// general override...
+-(NSString *) description {
+    return [NSString stringWithFormat: @"%@ [type=%@, loginEndpoint=%@, logoutEndpoint=%@, enrollEndpoint=%@]", self.class, _type, _loginEndpoint, _logoutEndpoint, _enrollEndpoint];
+}
 
 @end

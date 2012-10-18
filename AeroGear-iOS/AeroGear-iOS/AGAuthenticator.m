@@ -59,4 +59,8 @@
     return [_modules valueForKey:moduleName];
 }
 
+-(NSString *) description {
+    return [NSString stringWithFormat: @"%@ %@", self.class, _modules];
+}
+
 @end
