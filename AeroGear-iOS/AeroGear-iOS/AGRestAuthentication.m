@@ -24,18 +24,16 @@
     
 }
 
-// public API:
+// =====================================================
+// ======== public API (AGAuthenticationModule) ========
+// =====================================================
 @synthesize type = _type;
 @synthesize baseURL = _baseURL;
 @synthesize loginEndpoint = _loginEndpoint;
 @synthesize logoutEndpoint = _logoutEndpoint;
 @synthesize enrollEndpoint = _enrollEndpoint;
 
-// internal API:
-@synthesize authToken = _authToken;
-
-
-// custom getters for our properties:
+// custom getters for our properties (from AGAuthenticationModule)
 -(NSString*) loginEndpoint {
     return [_baseURL stringByAppendingString:_loginEndpoint];
 }
@@ -48,8 +46,20 @@
     return [_baseURL stringByAppendingString:_enrollEndpoint];
 }
 
+// ==============================================================
+// ======== internal API (AGAuthenticationModuleAdapter) ========
+// ==============================================================
+@synthesize authToken = _authToken;
 
 
+
+// ==============================================
+// ======== 'factory' and 'init' section ========
+// ==============================================
+
++(id) moduleForBaseURL:(NSURL*) baseURL {
+    return [[self alloc] initForBaseURL:baseURL];
+}
 
 - (id)init {
     self = [super init];
@@ -75,12 +85,14 @@
     return self;
 }
 
-+(id) moduleForBaseURL:(NSURL*) baseURL {
-    return [[self alloc] initForBaseURL:baseURL];
+-(void)dealloc {
+    _restClient = nil;
 }
 
 
-// Module (public API)
+// =====================================================
+// ======== public API (AGAuthenticationModule) ========
+// =====================================================
 -(void) enroll:(id) userData
      success:(void (^)(id object))success
      failure:(void (^)(NSError *error))failure {
@@ -103,11 +115,6 @@
         }
     }];
     
-}
-
--(void) readAndStashToken:(AFHTTPRequestOperation*) operation {
-    // TODO: hard-coded header name:
-    _authToken = [[[operation response] allHeaderFields] valueForKey:@"Auth-Token"];
 }
 
 -(void) login:(NSString*) username
@@ -162,8 +169,17 @@
     }];
 }
 
-// Adapter (internal API)
+// private method
+-(void) readAndStashToken:(AFHTTPRequestOperation*) operation {
+    // TODO: hard-coded header name:
+    _authToken = [[[operation response] allHeaderFields] valueForKey:@"Auth-Token"];
+}
 
+
+
+// ==============================================================
+// ======== internal API (AGAuthenticationModuleAdapter) ========
+// ==============================================================
 - (BOOL)isAuthenticated {
     //return !!_authToken;
     return (nil != _authToken);
@@ -171,13 +187,6 @@
 - (void)deauthorize {
     _authToken = nil;
 }
-
-
--(void)dealloc {
-    _restClient = nil;
-}
-
-
 
 
 @end

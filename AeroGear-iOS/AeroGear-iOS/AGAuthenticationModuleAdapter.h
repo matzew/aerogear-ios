@@ -18,12 +18,24 @@
 #import <Foundation/Foundation.h>
 #import "AGAuthenticationModule.h"
 
+/**
+ * AGAuthenticationModuleAdapter represents the INTERNAL authentication module 'interface'
+ */
 @protocol AGAuthenticationModuleAdapter <AGAuthenticationModule>
 
-
+/**
+ * Returns the type of the underlying 'auth module implementation'
+ */
 @property (nonatomic, readonly) NSString* authToken;
 
+/**
+ * Performs a simple check if the user of the module impl. is authenticated.
+ */
 - (BOOL)isAuthenticated;
+
+/**
+ * Performs deauthorization, after logout.
+ */
 - (void)deauthorize;
 
 @end
