@@ -18,6 +18,9 @@
 #import "AGRestAuthentication.h"
 #import "AGHttpClient.h"
 
+
+// TODO: Use #pragma marks to categorize methods and protocol implementations.
+
 @implementation AGRestAuthentication {
     // ivars
     AGHttpClient* _restClient;
