@@ -107,13 +107,13 @@
         [self readAndStashToken:operation];
         
         if (success) {
-            NSLog(@"Invoking successblock....");
+            //TODO: NSLog(@"Invoking successblock....");
             success(responseObject);
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         
         if (failure) {
-            NSLog(@"Invoking failure block....");
+            //TODO: NSLog(@"Invoking failure block....");
             failure(error);
         }
     }];
@@ -133,14 +133,14 @@
         [self readAndStashToken:operation];
         
         if (success) {
-            NSLog(@"Invoking successblock....");
+            //TODO: NSLog(@"Invoking successblock....");
             success(responseObject);
         }
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
 
         if (failure) {
-            NSLog(@"Invoking failure block....");
+            //TODO: NSLog(@"Invoking failure block....");
             failure(error);
         }
     }];
@@ -161,12 +161,12 @@
         [self deauthorize];
         
         if (success) {
-            NSLog(@"Invoking successblock....");
+            //TODO: NSLog(@"Invoking successblock....");
             success();
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         if (failure) {
-            NSLog(@"Invoking failure block....");
+            //TODO: NSLog(@"Invoking failure block....");
             failure(error);
         }
     }];
