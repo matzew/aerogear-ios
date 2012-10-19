@@ -3,22 +3,25 @@ AeroGear iOS API - DRAFT 0.1
 
 API Docs are available [here](http://aerogear.github.com/aerogear-ios/)...
 
-The current key entry points are [AGPipeline](http://aerogear.github.com/aerogear-ios/Classes/AGPipeline.html) and [AGPipe](http://aerogear.github.com/aerogear-ios/Protocols/AGPipe.html).
+There is a [FAQ](http://aerogear.org/docs/guides/FAQ/) that talks about the API in a general fashion.
 
 Below is a simple 'Getting started' section on how-to use the API
 
-## Create a pipeline and get access to an underlying pipe
+## Creating a pipeline and a pipe object
 
 To create a pipeline, you need to use the AGPipeline class. Below is an example: 
 
     // NSURL object:
-    NSURL* projectsURL = [NSURL URLWithString:@"http://todo-aerogear.rhcloud.com/todo-server"];
+    NSURL* serverURL = [NSURL URLWithString:@"http://todo-aerogear.rhcloud.com/todo-server/"];
 
-    // create the 'todo' pipeline, which contains the 'projects' pipe:
-    AGPipeline* todo = [AGPipeline pipelineWithPipe:@"projects" url:projectsURL type:@"REST"];
+    // create the 'todo' pipeline, which points to the baseURL of the REST application
+    AGPipeline* todo = [AGPipeline pipelineWithPipe:serverURL];
+
+    // Add a REST pipe for the 'projects' endpoint
+    id<AGPipe> projects = [pipeline add:@"projects" type:@"REST"];
 
 
-The AGPipeline class offers some simple 'management' APIs to work with containing AGPipe objects, which itself represents a server connection. The AGPipe API is basically an abstraction layer for _any_ server side connection. In the example above the 'projects' pipe points to an RESTful endpoint (_http://todo-aerogear.rhcloud.com/todo-server/projects_). However, technical details like RESTful APIs (e.g. HTTP PUT) are not exposed on the AGPipeline and AGPipe APIs. Below is shown how to get access to an actual pipe:
+The AGPipeline class offers some simple 'management' APIs to work with containing AGPipe objects, which itself represents a server connection. The AGPipe API is basically an abstraction layer for _any_ server side connection. In the example above the 'projects' pipe points to an RESTful endpoint (_http://todo-aerogear.rhcloud.com/todo-server/projects_). However, technical details like RESTful APIs (e.g. HTTP PUT) are not exposed on the AGPipeline and AGPipe APIs. Below is shown how to get access to an actual pipe, from the AGPipeline object:
 
     // get access to the 'projects' pipe
     id<AGPipe> projects = [todo get:@"projects"];
@@ -118,7 +121,94 @@ Since we are pointing to a RESTful endpoint, the API issues a HTTP GET request. 
 Of course the _collection_ behind the responseObject can be stored to a variable...
 
 
-AGDataManager ...
-=================
+AGDataManager
+=============
 
 TDB...
+
+Authentication and User enrollment
+==================================
+
+## Creating an authenticator with an authentication module
+
+To create an authenticator, you need to use the AGAuthenticator class. Below is an example: 
+
+    // create an authenticator object
+    AGAuthenticator* authenticator = [AGAuthenticator manager];
+
+	// add a new auth module and the required 'base url':
+    NSURL* baseURL = [NSURL URLWithString:@"https://todoauth-aerogear.rhcloud.com/todo-server/"];
+    id<AGAuthenticationModule> myMod = [authenticator add:@"authMod" baseURL:baseURL];
+
+
+The AGAuthenticator class offers some simple 'management' APIs to work with containing AGAuthenticationModule objects. The API provides an authentication and enrollment API. The default implementation uses REST as the auth transport. Similar to the pipe API technical details of the underlying system are not exposed.
+
+## Register a user
+
+The _enroll_ function of the AGAuthenticationModule protocol is used to register new users with the backend:
+
+    // assemble the dictionary that has all the data for THIS particular user:
+    NSMutableDictionary* userData = [NSMutableDictionary dictionary];
+    [userData setValue:@"john" forKey:@"username"];
+    [userData setValue:@"123" forKey:@"password"];
+    [userData setValue:@"me@you.com" forKey:@"email"];
+    [userData setValue:@"21sda812sad24" forKey:@"betaAccountToken"];
+    
+
+    // register a new user
+    [myMod enroll:userData success:^(id data) {
+        // after a successful _registration_, we can work
+        // with the returned data...
+        NSLog(@"We got: %@", data);
+    } failure:^(NSError *error) {
+        // when an error occurs... at least log it to the console..
+        NSLog(@"SAVE: An error occured! \n%@", error);
+    }];
+
+The _enroll_ function submits a generic map object with contains all the information about the new user, that the server endpoint requires. The default (REST) auth module issues for the above a request against _https://todoauth-aerogear.rhcloud.com/todo-server/auth/register_. Besides the NSDictionary the function accepts two simple blocks that are invoked on success or in case of an failure.
+
+## Login 
+
+Once you have a _valid_ user you can use that information to issue a login against the server, to start accessing protected endpoints:
+
+    // issuing a login
+    [myMod login:@"john" password:@"123" success:^(id object) {
+        // after a successful _login_, we can work
+        // with the returned data...
+    } failure:^(NSError *error) {
+        // when an error occurs... at least log it to the console..
+        NSLog(@"SAVE: An error occured! \n%@", error);
+    }];
+
+The default (REST) auth module issues for the above a request against _https://todoauth-aerogear.rhcloud.com/todo-server/auth/login_. Besides the _username_ and the _password_, the function accepts two simple blocks that are invoked on success or in case of an failure.
+
+## Pass the auth module to a pipe
+
+After running a successful login, you can start using the _AGAuthenticationModule_ object on a _AGPipe_ object to access protected endpoints:
+
+    ...
+    id<AGPipe> tasks = [pipeline add:@"tasks" baseURL:serverURL authModule:myMod];
+
+    [tasks read:^(id responseObject) {
+        // LOG the JSON response, returned from the server:
+        NSLog(@"READ RESPONSE\n%@", [responseObject description]);
+    } failure:^(NSError *error) {
+        // when an error occurs... at least log it to the console..
+        NSLog(@"Read: An error occured! \n%@", error);
+    }];
+
+When creating a pipe you need to use the _authModule_ argument in order to pass in an _AGAuthenticationModule_ object.
+
+## Logout
+
+The logout from the server can be archived by using the _logout_ function:
+
+    // logout:
+    [myMod logout:^{
+        // after a successful _logout_, when can notify the application
+    } failure:^(NSError *error) {
+        // when an error occurs... at least log it to the console..
+        NSLog(@"SAVE: An error occured! \n%@", error);
+    }];
+
+The default (REST) auth module issues for the above a request against _https://todoauth-aerogear.rhcloud.com/todo-server/auth/logout_. The function accepts two simple blocks that are invoked on success or in case of an failure.
