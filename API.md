@@ -134,7 +134,7 @@ Authentication and User enrollment
 To create an authenticator, you need to use the AGAuthenticator class. Below is an example: 
 
     // create an authenticator object
-    AGAuthenticator* authenticator = [AGAuthenticator manager];
+    AGAuthenticator* authenticator = [AGAuthenticator authenticator];
 
 	// add a new auth module and the required 'base url':
     NSURL* baseURL = [NSURL URLWithString:@"https://todoauth-aerogear.rhcloud.com/todo-server/"];
