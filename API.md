@@ -124,7 +124,94 @@ Of course the _collection_ behind the responseObject can be stored to a variable
 AGDataManager
 =============
 
-TDB...
+## Create a datamanager with store object:
+
+After receiving data from the server, your application may want to keep the data around. The AGDataManager API allows you to create AGStore instances. To create a datamanager, you need to use the AGDataManager class. Below is an example: 
+
+	// create the datamanager
+    AGDataManager* dm = [AGDataManager manager];
+    // add a new (default) store object:
+    id<AGStore> myStore = [dm add:@"tasks"];
+
+The AGDataManager class offers some simple 'management' APIs to work with containing AGStore objects. The API offers read and write functionality. The default implementation represents an "in-memory" store. Similar to the pipe API technical details of the underlying system are not exposed.
+
+## Save data to the Store
+
+When using a pipe to read all entries of a endpoint, you can use the AGStore to save the received objects:
+
+    ....
+    id<AGPipe> tasksPipe = [todo get:@"tasks"];
+    ...
+
+    [tasksPipe read:^(id responseObject) {
+	    // the response object represents an NSArray,
+	    // containing multile 'Tasks' (as NSDictionary objects)
+	    [myStore save:responseObject success:^(id object) {
+
+            // Indicate that the save operation was successful
+
+        } failure:	^(NSError *error) {
+            // when an error occurs... at least log it to the console..
+            NSLog(@"Read: An error occured! \n%@", error);
+		}];    
+
+    } failure:^(NSError *error) {
+        // when an error occurs... at least log it to the console..
+        NSLog(@"Read: An error occured! \n%@", error);
+    }];
+
+When loading all tasks from the server, the AGStore object is used inside of the _read_ block from the AGPipe object. The returned collection of tasks is stored inside our in-memory store, from where the data can be accessed.
+
+## Read an object from the AGStore
+
+    id taskObject;
+    // read the task with the '0' ID:
+    [myStore read:@"0" success:^(id object) {
+        taskObject = object;
+    } failure:^(NSError *error) {
+        // when an error occurs... at least log it to the console..
+        NSLog(@"Read: An error occured! \n%@", error);
+    }];
+
+The read accepts the _recordID_ and two simple blocks that are invoked on success or in case of an failure. The _readAll_ allows you to read the entire store, it accepts two simple blocks that are invoked on success or in case of an failure:
+
+    // read all object from the store
+    [myStore readAll:^(NSArray *objects) {
+
+	    // work with the received collection, containing all objects
+
+    } failure:^(NSError *error) {
+        // when an error occurs... at least log it to the console..
+        NSLog(@"Read: An error occured! \n%@", error);
+    }];
+
+## Remove one object
+
+The remove function allows you to delete a single entry in the collection, if present:
+
+    // remove the task with the '0' ID:
+    [myStore remove:@"0" success:^(id object) {
+        taskObject = object;
+    } failure:^(NSError *error) {
+        // when an error occurs... at least log it to the console..
+        NSLog(@"Read: An error occured! \n%@", error);
+    }];
+
+The remove method accepts the _recordID_ and two simple blocks that are invoked on success or in case of an failure.
+
+## Reset the entire store
+
+The reset function allows you the erase all data available in the used AGStore object:
+
+    // clears the entire store
+    [myStore reset:^{
+        // nope...
+    } failure:^(NSError *error) {
+        // when an error occurs... at least log it to the console..
+        NSLog(@"Read: An error occured! \n%@", error);
+    }];
+
+The reset method accepts two simple blocks that are invoked on success or in case of an failure.
 
 Authentication and User enrollment
 ==================================
