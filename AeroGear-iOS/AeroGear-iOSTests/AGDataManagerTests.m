@@ -25,8 +25,9 @@
 @implementation AGDataManagerTests
 
 -(void) testCreateDataManagerWithOneStore {
-    AGDataManager* mgr = [AGDataManager store:@"tasks"];
+    AGDataManager* mgr = [AGDataManager manager];
     STAssertNotNil(mgr, @"storage could not be null");
+    [mgr add:@"tasks"];
     
     id<AGStore> taskStore = [mgr get:@"tasks"];
     STAssertNotNil(taskStore, @"actual store could not be null");
@@ -36,7 +37,8 @@
 }
 
 -(void) testCreateDataManagerAndAddStores {
-    AGDataManager* mgr = [AGDataManager store:@"tasks"];
+    AGDataManager* mgr = [AGDataManager manager];
+    [mgr add:@"tasks"];
     [mgr add:@"projects" type:@"MEMORY"];
     [mgr add:@"tags"];
     
@@ -50,7 +52,8 @@
 }
     
 -(void) testCreateDataManagerAndAddAndRemoveStores {
-    AGDataManager* mgr = [AGDataManager store:@"tasks"];
+    AGDataManager* mgr = [AGDataManager manager];
+    [mgr add:@"tasks"];
     [mgr add:@"projects" type:@"MEMORY"];
     [mgr add:@"tags"];
     
@@ -70,7 +73,7 @@
 }
 
 -(void) testCreateDataManagerAndAddWrongStoreType {
-    AGDataManager* mgr = [AGDataManager store:@"tasks"];
+    AGDataManager* mgr = [AGDataManager manager];
     id<AGStore> noStore = [mgr add:@"projects" type:@"FOOBAR"];
     STAssertNil(noStore, @"actual store should be null");
 }
