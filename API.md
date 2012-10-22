@@ -15,7 +15,7 @@ To create a pipeline, you need to use the AGPipeline class. Below is an example:
     NSURL* serverURL = [NSURL URLWithString:@"http://todo-aerogear.rhcloud.com/todo-server/"];
 
     // create the 'todo' pipeline, which points to the baseURL of the REST application
-    AGPipeline* todo = [AGPipeline pipelineWithPipe:serverURL];
+    AGPipeline* todo = [AGPipeline pipeline:serverURL];
 
     // Add a REST pipe for the 'projects' endpoint
     id<AGPipe> projects = [pipeline add:@"projects" type:@"REST"];
