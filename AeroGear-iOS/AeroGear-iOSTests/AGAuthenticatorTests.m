@@ -25,12 +25,12 @@
 @implementation AGAuthenticatorTests
 
 -(void) testCreateEmptyAuthenticator {
-    AGAuthenticator* authenticator = [AGAuthenticator manager];
+    AGAuthenticator* authenticator = [AGAuthenticator authenticator];
     STAssertNotNil(authenticator, @"authenticator not nil");
 }
 
 -(void) testCreateAuthenticatorWithOneModule {
-    AGAuthenticator* authenticator = [AGAuthenticator manager];
+    AGAuthenticator* authenticator = [AGAuthenticator authenticator];
     STAssertNotNil(authenticator, @"authenticator not nil");
     
     id<AGAuthenticationModule> module = [authenticator add:@"SomeModule" baseURL:[NSURL URLWithString:@"https://server:8080/application/"]];
@@ -51,7 +51,7 @@
 }
 
 -(void) testEndpointURLs {
-    AGAuthenticator* authenticator = [AGAuthenticator manager];
+    AGAuthenticator* authenticator = [AGAuthenticator authenticator];
     STAssertNotNil(authenticator, @"authenticator not nil");
     
     id<AGAuthenticationModule> module = [authenticator add:@"SomeModule" baseURL:[NSURL URLWithString:@"https://server:8080/application/subcontext/"]];
@@ -64,7 +64,7 @@
 }
 
 -(void) testCreateAuthenticatorAndAddModules {
-    AGAuthenticator* authenticator = [AGAuthenticator manager];
+    AGAuthenticator* authenticator = [AGAuthenticator authenticator];
     STAssertNotNil(authenticator, @"authenticator not nil");
     
     id<AGAuthenticationModule> module = [authenticator add:@"SomeModule" baseURL:[NSURL URLWithString:@"https://server:8080/application/"]];
@@ -88,7 +88,7 @@
 }
 
 -(void) testCreateAuthenticatorAndAddAndRemoveModules {
-    AGAuthenticator* authenticator = [AGAuthenticator manager];
+    AGAuthenticator* authenticator = [AGAuthenticator authenticator];
     STAssertNotNil(authenticator, @"authenticator not nil");
     
     id<AGAuthenticationModule> module = [authenticator add:@"SomeModule" baseURL:[NSURL URLWithString:@"https://server:8080/application/"]];
@@ -104,7 +104,7 @@
 }
 
 -(void) testCreateAuthenticatorAndAddWrongModuleType {
-    AGAuthenticator* authenticator = [AGAuthenticator manager];
+    AGAuthenticator* authenticator = [AGAuthenticator authenticator];
     STAssertNotNil(authenticator, @"authenticator not nil");
     
     id<AGAuthenticationModule> module = [authenticator add:@"SomeModule" baseURL:[NSURL URLWithString:@"https://server:8080/application/"] type:@"INVALID"];
