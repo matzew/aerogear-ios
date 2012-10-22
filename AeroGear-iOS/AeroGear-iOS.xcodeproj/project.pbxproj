@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		08D43362329A46488E585071 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 65D1DA06FAB24A18AB6A5963 /* libPods.a */; };
 		1D0A1358119648AFB949959A /* libPods-AeroGear-iOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E065C8DDD305422BBB3237D5 /* libPods-AeroGear-iOSTests.a */; };
+		5707E0F316351E3B0083949C /* AGAuthenticator.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 573B709B161DA2AE009F0452 /* AGAuthenticator.h */; };
+		5707E0F516351E4B0083949C /* AGAuthenticationModule.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 573B709A161DA29A009F0452 /* AGAuthenticationModule.h */; };
 		570B908616231D1100426BA7 /* AGRestAuthenticationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 570B908516231D1100426BA7 /* AGRestAuthenticationTests.m */; };
 		570B908A1624360600426BA7 /* AGAuthenticatorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 570B90891624360600426BA7 /* AGAuthenticatorTests.m */; };
 		571DBACB1610715800A0A3A6 /* AGMemoryStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 571DBACA1610715800A0A3A6 /* AGMemoryStorage.m */; };
@@ -59,6 +61,8 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				5707E0F516351E4B0083949C /* AGAuthenticationModule.h in CopyFiles */,
+				5707E0F316351E3B0083949C /* AGAuthenticator.h in CopyFiles */,
 				57ED1458160B70DC00881924 /* AGDataManager.h in CopyFiles */,
 				57ED1457160B70CF00881924 /* AGStore.h in CopyFiles */,
 				57F095D115EE4CB400B2C6B0 /* AGPipe.h in CopyFiles */,
