@@ -20,8 +20,7 @@
 #import "AGAuthenticationModule.h"
 
 /**
- * AGPipeline represents a 'collection' of server connections (pipes) and
- * their corresponding data models. This object provides a standard way to
+ * AGPipeline represents a 'collection' of server connections (pipes). This object provides a standard way to
  * communicate with the server no matter the data format or transport expected.
  *
  * A pipeline must have at least one pipe.
