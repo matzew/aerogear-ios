@@ -1,7 +1,7 @@
 AeroGear iOS API - DRAFT 0.1
 ============================
 
-API Docs are available [here](http://aerogear.github.com/aerogear-ios/)...
+API Docs are available [here](http://staging.aerogear.org/docs/specs/aerogear-ios/)...
 
 There is a [FAQ](http://aerogear.org/docs/guides/FAQ/) that talks about the API in a general fashion.
 
