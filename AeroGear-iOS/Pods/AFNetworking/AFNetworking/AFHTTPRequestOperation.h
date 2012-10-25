@@ -1,4 +1,4 @@
-// AFHTTPRequestOperation.h
+// AFHTTPOperation.h
 //
 // Copyright (c) 2011 Gowalla (http://gowalla.com/)
 // 
@@ -24,6 +24,13 @@
 #import "AFURLConnectionOperation.h"
 
 /**
+ Returns a set of MIME types detected in an HTTP `Accept` or `Content-Type` header.
+ */
+extern NSSet * AFContentTypesFromHTTPHeader(NSString *string);
+
+extern NSString * AFCreateIncompleteDownloadDirectoryPath(void);
+
+/**
  `AFHTTPRequestOperation` is a subclass of `AFURLConnectionOperation` for requests using the HTTP or HTTPS protocols. It encapsulates the concept of acceptable status codes and content types, which determine the success or failure of a request.
  */
 @interface AFHTTPRequestOperation : AFURLConnectionOperation
@@ -35,7 +42,31 @@
 /**
  The last HTTP response received by the operation's connection.
  */
-@property (readonly, nonatomic, strong) NSHTTPURLResponse *response;
+@property (readonly, nonatomic, retain) NSHTTPURLResponse *response;
+
+/**
+ Set a target file for the response, will stream directly into this destination.
+ Defaults to nil, which will use a memory stream. Will create a new outputStream on change.
+
+ Note: Changing this while the request is not in ready state will be ignored.
+ */
+@property (nonatomic, copy) NSString *responseFilePath;
+
+
+/** 
+ Expected total length. This is different than expectedContentLength if the file is resumed.
+ On regular requests, this is equal to self.response.expectedContentLength unless we resume a request.
+ 
+ Note: this can also be -1 if the file size is not sent (*)
+ */
+@property (assign, readonly) long long totalContentLength;
+
+/** 
+ Indicator for the file offset on partial/resumed downloads.
+ This is greater than zero if the file download is resumed.
+ */
+@property (assign, readonly) long long offsetContentLength;
+
 
 ///----------------------------------------------------------
 /// @name Managing And Checking For Acceptable HTTP Responses
@@ -54,16 +85,16 @@
 /** 
  The callback dispatch queue on success. If `NULL` (default), the main queue is used.
  */
-@property (nonatomic, assign) dispatch_queue_t successCallbackQueue;
+@property (nonatomic) dispatch_queue_t successCallbackQueue;
 
 /** 
  The callback dispatch queue on failure. If `NULL` (default), the main queue is used.
  */
-@property (nonatomic, assign) dispatch_queue_t failureCallbackQueue;
+@property (nonatomic) dispatch_queue_t failureCallbackQueue;
 
-///------------------------------------------------------------
-/// @name Managing Acceptable HTTP Status Codes & Content Types
-///------------------------------------------------------------
+///-------------------------------------------------------------
+/// @name Managing Accceptable HTTP Status Codes & Content Types
+///-------------------------------------------------------------
 
 /**
  Returns an `NSIndexSet` object containing the ranges of acceptable HTTP status codes. When non-`nil`, the operation will set the `error` property to an error in `AFErrorDomain`. See http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
@@ -73,7 +104,7 @@
 + (NSIndexSet *)acceptableStatusCodes;
 
 /**
- Adds status codes to the set of acceptable HTTP status codes returned by `+acceptableStatusCodes` in subsequent calls by this class and its descendants.
+ Adds status codes to the set of acceptable HTTP status codes returned by `+acceptableStatusCodes` in subsequent calls by this class and its descendents.
  
  @param statusCodes The status codes to be added to the set of acceptable HTTP status codes
  */
@@ -87,7 +118,7 @@
 + (NSSet *)acceptableContentTypes;
 
 /**
- Adds content types to the set of acceptable MIME types returned by `+acceptableContentTypes` in subsequent calls by this class and its descendants.
+ Adds content types to the set of acceptable MIME types returned by `+acceptableContentTypes` in subsequent calls by this class and its descendents. 
 
  @param contentTypes The content types to be added to the set of acceptable MIME types
  */
@@ -113,7 +144,7 @@
  Sets the `completionBlock` property with a block that executes either the specified success or failure block, depending on the state of the request on completion. If `error` returns a value, which can be caused by an unacceptable status code or content type, then `failure` is executed. Otherwise, `success` is executed.
  
  @param success The block to be executed on the completion of a successful request. This block has no return value and takes two arguments: the receiver operation and the object constructed from the response data of the request.
- @param failure The block to be executed on the completion of an unsuccessful request. This block has no return value and takes two arguments: the receiver operation and the error that occurred during the request.
+ @param failure The block to be executed on the completion of an unsuccessful request. This block has no return value and takes two arguments: the receiver operation and the error that occured during the request.
  
  @discussion This method should be overridden in subclasses in order to specify the response object passed into the success block.
  */
@@ -121,13 +152,3 @@
                               failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure;
 
 @end
-
-///----------------
-/// @name Functions
-///----------------
-
-/**
- Returns a set of MIME types detected in an HTTP `Accept` or `Content-Type` header.
- */
-extern NSSet * AFContentTypesFromHTTPHeader(NSString *string);
-

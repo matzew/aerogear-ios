@@ -22,7 +22,7 @@ Pod::Spec.new do |s|
   s.license      = 'Apache License, Version 2.0'
   s.author       = "Red Hat, Inc."
   s.source       = { :git => 'https://github.com/aerogear/aerogear-ios.git', :tag => '1.0.0.M1' }
-  s.platform     = :ios
+  s.platform     = :ios, '5.0'
   s.source_files = 'AeroGear-iOS/AeroGear-iOS'
 s.public_header_files = 'AeroGear-iOS/AeroGear-iOS/AeroGear.h', 'AeroGear-iOS/AeroGear-iOS/AGPipe.h', 'AeroGear-iOS/AeroGear-iOS/AGPipeline.h', 'AeroGear-iOS/AeroGear-iOS/AGStore.h', 'AeroGear-iOS/AeroGear-iOS/AGDataManager.h', 'AeroGear-iOS/AeroGear-iOS/AGAuthenticationModule.h', 'AeroGear-iOS/AeroGear-iOS/AGAuthenticator.h'
   s.requires_arc = true

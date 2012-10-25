@@ -59,11 +59,10 @@ static char kAFImageRequestOperationObjectKey;
 + (NSOperationQueue *)af_sharedImageRequestOperationQueue {
     static NSOperationQueue *_af_imageRequestOperationQueue = nil;
     
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
+    if (!_af_imageRequestOperationQueue) {
         _af_imageRequestOperationQueue = [[NSOperationQueue alloc] init];
-        [_af_imageRequestOperationQueue setMaxConcurrentOperationCount:NSOperationQueueDefaultMaxConcurrentOperationCount];
-    });
+        [_af_imageRequestOperationQueue setMaxConcurrentOperationCount:8];
+    }
     
     return _af_imageRequestOperationQueue;
 }
@@ -87,10 +86,9 @@ static char kAFImageRequestOperationObjectKey;
 - (void)setImageWithURL:(NSURL *)url 
        placeholderImage:(UIImage *)placeholderImage
 {
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:30.0];
     [request setHTTPShouldHandleCookies:NO];
     [request setHTTPShouldUsePipelining:YES];
-    [request addValue:@"image/*" forHTTPHeaderField:@"Accept"];
     
     [self setImageWithURLRequest:request placeholderImage:placeholderImage success:nil failure:nil];
 }
@@ -113,7 +111,7 @@ static char kAFImageRequestOperationObjectKey;
     } else {
         self.image = placeholderImage;
         
-        AFImageRequestOperation *requestOperation = [[AFImageRequestOperation alloc] initWithRequest:urlRequest];
+        AFImageRequestOperation *requestOperation = [[[AFImageRequestOperation alloc] initWithRequest:urlRequest] autorelease];
         [requestOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
             if ([[urlRequest URL] isEqual:[[self.af_imageRequestOperation request] URL]]) {
                 self.image = responseObject;
