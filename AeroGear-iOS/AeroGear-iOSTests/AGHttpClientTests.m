@@ -19,6 +19,8 @@
 #import <SenTestingKit/SenTestingKit.h>
 #import "AGHttpClient.h"
 
+#import "AGPipeline.h"
+
 @interface AGHttpClientTests : SenTestCase
 
 @end

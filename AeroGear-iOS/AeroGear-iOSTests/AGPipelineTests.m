@@ -153,7 +153,7 @@
     
     id<AGPipe> fooPipe = [pipeline get:@"tasks"];
     
-    STAssertEqualObjects(@"http://server.com/context/tasks/", fooPipe.url, @"verifying the given URL");
+    STAssertEqualObjects(@"http://server.com/context/tasks", fooPipe.url, @"verifying the given URL");
 }
 
 
@@ -167,7 +167,7 @@
     
     id<AGPipe> myPipe = [pipeline get:@"bad name"];
     
-    STAssertEqualObjects(@"http://server.com/context/projects/", myPipe.url, @"verifying the given URL");
+    STAssertEqualObjects(@"http://server.com/context/projects", myPipe.url, @"verifying the given URL");
 }
 
 -(void) testEndpointURLWithType {
@@ -178,7 +178,7 @@
     
     id<AGPipe> myPipe = [pipeline get:@"bad name"];
     
-    STAssertEqualObjects(@"http://server.com/context/projects/", myPipe.url, @"verifying the given URL");
+    STAssertEqualObjects(@"http://server.com/context/projects", myPipe.url, @"verifying the given URL");
 }
 
 
@@ -190,14 +190,14 @@
     
     id<AGPipe> myPipe = [pipeline get:@"projects"];
     
-    STAssertEqualObjects(@"http://server.com/context/projects/", myPipe.url, @"verifying the given URL");
+    STAssertEqualObjects(@"http://server.com/context/projects", myPipe.url, @"verifying the given URL");
     
     
     NSURL* newPipeBaseURL = [NSURL URLWithString:@"http://server.com/otherContext/"];
     [pipeline add:@"bad name" baseURL:newPipeBaseURL endpoint:@"foo"];
     
     id<AGPipe> newPipe = [pipeline get:@"bad name"];
-    STAssertEqualObjects(@"http://server.com/otherContext/foo/", newPipe.url, @"verifying the given URL");
+    STAssertEqualObjects(@"http://server.com/otherContext/foo", newPipe.url, @"verifying the given URL");
 }
 
 -(void) testAddWithRestType {
@@ -223,7 +223,7 @@
 
     id<AGPipe> newPipe = [pipeline get:@"foo"];
     STAssertEqualObjects(@"REST", newPipe.type, @"verifying the type");
-    STAssertEqualObjects(@"http://server.com/context/bar/", newPipe.url, @"verifying the given URL");
+    STAssertEqualObjects(@"http://server.com/context/bar", newPipe.url, @"verifying the given URL");
 }
 
 -(void) testAddPipeWithoutEndpoint {
@@ -234,14 +234,14 @@
     
     id<AGPipe> myPipe = [pipeline get:@"projects"];
     
-    STAssertEqualObjects(@"http://server.com/context/projects/", myPipe.url, @"verifying the given URL");
+    STAssertEqualObjects(@"http://server.com/context/projects", myPipe.url, @"verifying the given URL");
     
     
     NSURL* newPipeBaseURL = [NSURL URLWithString:@"http://server.com/otherContext/"];
     [pipeline add:@"foo" baseURL:newPipeBaseURL];
     
     id<AGPipe> newPipe = [pipeline get:@"foo"];
-    STAssertEqualObjects(@"http://server.com/otherContext/foo/", newPipe.url, @"verifying the given URL");
+    STAssertEqualObjects(@"http://server.com/otherContext/foo", newPipe.url, @"verifying the given URL");
 }
 
 -(void) testAddPipeWithoutEndpointAndWithoutBaseURL {
@@ -253,12 +253,12 @@
     
     id<AGPipe> myPipe = [pipeline get:@"projects"];
     
-    STAssertEqualObjects(@"http://server.com/context/projects/", myPipe.url, @"verifying the given URL");
+    STAssertEqualObjects(@"http://server.com/context/projects", myPipe.url, @"verifying the given URL");
     
     [pipeline add:@"foo"];
     
     id<AGPipe> newPipe = [pipeline get:@"foo"];
-    STAssertEqualObjects(@"http://server.com/context/foo/", newPipe.url, @"verifying the given URL");
+    STAssertEqualObjects(@"http://server.com/context/foo", newPipe.url, @"verifying the given URL");
 }
 
 @end

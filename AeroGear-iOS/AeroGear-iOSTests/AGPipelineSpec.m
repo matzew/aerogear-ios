@@ -60,7 +60,7 @@ describe(@"AGPipeline", ^{
             [pipeline shouldNotBeNil];
             
             id<AGPipe> pipe = [pipeline get:@"tests"];
-            [[pipe.url should] equal:@"http://server.com/tests/"];
+            [[pipe.url should] equal:@"http://server.com/tests"];
         });
         
         it(@"with name and baseURL and endpoint", ^{
@@ -70,7 +70,7 @@ describe(@"AGPipeline", ^{
             [pipeline shouldNotBeNil];
             
             id<AGPipe> pipe = [pipeline get:@"some bad name"];
-            [[pipe.url should] equal:@"http://server.com/tests/"];
+            [[pipe.url should] equal:@"http://server.com/tests"];
         });
         
         it(@"with name and baseURL and endpoint and (known) type", ^{
@@ -79,7 +79,7 @@ describe(@"AGPipeline", ^{
             [pipeline shouldNotBeNil];
             
             id<AGPipe> pipe = [pipeline get:@"some bad name"];
-            [[pipe.url should] equal:@"http://server.com/tests/"];
+            [[pipe.url should] equal:@"http://server.com/tests"];
         });
         
         it(@"with name and baseURL and (known) type", ^{
@@ -88,7 +88,7 @@ describe(@"AGPipeline", ^{
             [pipeline shouldNotBeNil];
             
             id<AGPipe> pipe = [pipeline get:@"tests"];
-            [[pipe.url should] equal:@"http://server.com/tests/"];
+            [[pipe.url should] equal:@"http://server.com/tests"];
         });
         
     });

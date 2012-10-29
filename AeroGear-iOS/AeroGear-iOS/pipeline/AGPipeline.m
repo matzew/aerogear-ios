@@ -132,12 +132,6 @@
         return nil;
     }
     
-    // work-around for AFNetworking (for now) we need to append an ending '/'...
-    if (! [url.absoluteString hasSuffix:@"/"]) {
-        // this basically marks the ending of the current URI as a directory..
-        // TODO: see how to improve directly in AFNetworking
-        url = [url URLByAppendingPathComponent:@""];
-    }
     
     id<AGPipe> pipe = [AGRestAdapter pipeForURL:url authModule:authModule];
     [_pipes setValue:pipe forKey:name];
