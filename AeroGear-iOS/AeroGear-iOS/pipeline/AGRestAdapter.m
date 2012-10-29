@@ -22,7 +22,7 @@
 
 @implementation AGRestAdapter {
     AGHttpClient* _restClient;
-    AGRestAuthentication* _authModule;
+    id<AGAuthenticationModuleAdapter> _authModule;
 }
 
 @synthesize type = _type;
