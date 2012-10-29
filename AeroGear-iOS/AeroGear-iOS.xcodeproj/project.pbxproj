@@ -76,29 +76,29 @@
 /* Begin PBXFileReference section */
 		570B908516231D1100426BA7 /* AGRestAuthenticationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGRestAuthenticationTests.m; sourceTree = "<group>"; };
 		570B90891624360600426BA7 /* AGAuthenticatorTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGAuthenticatorTests.m; sourceTree = "<group>"; };
-		571DBAC91610715800A0A3A6 /* AGMemoryStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGMemoryStorage.h; sourceTree = "<group>"; };
-		571DBACA1610715800A0A3A6 /* AGMemoryStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGMemoryStorage.m; sourceTree = "<group>"; };
-		571DBACD161071BF00A0A3A6 /* AGBaseStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGBaseStorage.h; sourceTree = "<group>"; };
-		571DBACE161071BF00A0A3A6 /* AGBaseStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGBaseStorage.m; sourceTree = "<group>"; };
+		571DBAC91610715800A0A3A6 /* AGMemoryStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AGMemoryStorage.h; path = datamanager/AGMemoryStorage.h; sourceTree = "<group>"; };
+		571DBACA1610715800A0A3A6 /* AGMemoryStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AGMemoryStorage.m; path = datamanager/AGMemoryStorage.m; sourceTree = "<group>"; };
+		571DBACD161071BF00A0A3A6 /* AGBaseStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AGBaseStorage.h; path = datamanager/AGBaseStorage.h; sourceTree = "<group>"; };
+		571DBACE161071BF00A0A3A6 /* AGBaseStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AGBaseStorage.m; path = datamanager/AGBaseStorage.m; sourceTree = "<group>"; };
 		571DBAD41610C3D700A0A3A6 /* AGMemoryStorageSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGMemoryStorageSpec.m; sourceTree = "<group>"; };
-		57345BD615E3D18600B74FEB /* AGHttpClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGHttpClient.h; sourceTree = "<group>"; };
-		57345BD715E3D18600B74FEB /* AGHttpClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGHttpClient.m; sourceTree = "<group>"; };
+		57345BD615E3D18600B74FEB /* AGHttpClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AGHttpClient.h; path = core/AGHttpClient.h; sourceTree = "<group>"; };
+		57345BD715E3D18600B74FEB /* AGHttpClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AGHttpClient.m; path = core/AGHttpClient.m; sourceTree = "<group>"; };
 		57345BDB15E3D1DF00B74FEB /* AGHttpClientTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGHttpClientTests.m; sourceTree = "<group>"; };
-		573B709A161DA29A009F0452 /* AGAuthenticationModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGAuthenticationModule.h; sourceTree = "<group>"; };
-		573B709B161DA2AE009F0452 /* AGAuthenticator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGAuthenticator.h; sourceTree = "<group>"; };
-		573B709C161DA2AE009F0452 /* AGAuthenticator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGAuthenticator.m; sourceTree = "<group>"; };
-		573B709E161DDB5E009F0452 /* AGAuthenticationModuleAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGAuthenticationModuleAdapter.h; sourceTree = "<group>"; };
-		573B709F161DDD1C009F0452 /* AGRestAuthentication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGRestAuthentication.h; sourceTree = "<group>"; };
-		573B70A0161DDD1C009F0452 /* AGRestAuthentication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGRestAuthentication.m; sourceTree = "<group>"; };
-		573CBD9615E3ECA80071E7A6 /* AGPipe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGPipe.h; sourceTree = "<group>"; };
-		573CBD9815E3ECB60071E7A6 /* AGPipeline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGPipeline.h; sourceTree = "<group>"; };
-		573CBD9915E3ECB60071E7A6 /* AGPipeline.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGPipeline.m; sourceTree = "<group>"; };
-		573CBD9B15E3ED7F0071E7A6 /* AGRestAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGRestAdapter.h; sourceTree = "<group>"; };
-		573CBD9C15E3ED7F0071E7A6 /* AGRestAdapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGRestAdapter.m; sourceTree = "<group>"; };
+		573B709A161DA29A009F0452 /* AGAuthenticationModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AGAuthenticationModule.h; path = security/AGAuthenticationModule.h; sourceTree = "<group>"; };
+		573B709B161DA2AE009F0452 /* AGAuthenticator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AGAuthenticator.h; path = security/AGAuthenticator.h; sourceTree = "<group>"; };
+		573B709C161DA2AE009F0452 /* AGAuthenticator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AGAuthenticator.m; path = security/AGAuthenticator.m; sourceTree = "<group>"; };
+		573B709E161DDB5E009F0452 /* AGAuthenticationModuleAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AGAuthenticationModuleAdapter.h; path = security/AGAuthenticationModuleAdapter.h; sourceTree = "<group>"; };
+		573B709F161DDD1C009F0452 /* AGRestAuthentication.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AGRestAuthentication.h; path = security/AGRestAuthentication.h; sourceTree = "<group>"; };
+		573B70A0161DDD1C009F0452 /* AGRestAuthentication.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AGRestAuthentication.m; path = security/AGRestAuthentication.m; sourceTree = "<group>"; };
+		573CBD9615E3ECA80071E7A6 /* AGPipe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AGPipe.h; path = pipeline/AGPipe.h; sourceTree = "<group>"; };
+		573CBD9815E3ECB60071E7A6 /* AGPipeline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AGPipeline.h; path = pipeline/AGPipeline.h; sourceTree = "<group>"; };
+		573CBD9915E3ECB60071E7A6 /* AGPipeline.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AGPipeline.m; path = pipeline/AGPipeline.m; sourceTree = "<group>"; };
+		573CBD9B15E3ED7F0071E7A6 /* AGRestAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AGRestAdapter.h; path = pipeline/AGRestAdapter.h; sourceTree = "<group>"; };
+		573CBD9C15E3ED7F0071E7A6 /* AGRestAdapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AGRestAdapter.m; path = pipeline/AGRestAdapter.m; sourceTree = "<group>"; };
 		573CBD9E15E3EE1F0071E7A6 /* AeroGear.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AeroGear.h; sourceTree = "<group>"; };
 		573CBDA015E4CEDD0071E7A6 /* AGPipelineTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGPipelineTests.m; sourceTree = "<group>"; };
 		573CBDA315E4F31B0071E7A6 /* AGPipelineSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGPipelineSpec.m; sourceTree = "<group>"; };
-		573CBDA715E51C120071E7A6 /* AGAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGAdapter.h; sourceTree = "<group>"; };
+		573CBDA715E51C120071E7A6 /* AGAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AGAdapter.h; path = utils/AGAdapter.h; sourceTree = "<group>"; };
 		573CBDA915E546A20071E7A6 /* AGRestAdapterTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGRestAdapterTests.m; sourceTree = "<group>"; };
 		573CBDAC15E546B70071E7A6 /* AGRestAdapterSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGRestAdapterSpec.m; sourceTree = "<group>"; };
 		57737FD915E3D01D006B97BB /* libAeroGear-iOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libAeroGear-iOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -109,13 +109,13 @@
 		57737FED15E3D01D006B97BB /* UIKit.framework */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
 		57737FF515E3D01D006B97BB /* AeroGear-iOSTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "AeroGear-iOSTests-Info.plist"; sourceTree = "<group>"; };
 		57737FF715E3D01D006B97BB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		57DCDB8215F20E4800289EA4 /* AGBaseAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGBaseAdapter.h; sourceTree = "<group>"; };
-		57DCDB8315F20E4800289EA4 /* AGBaseAdapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGBaseAdapter.m; sourceTree = "<group>"; };
+		57DCDB8215F20E4800289EA4 /* AGBaseAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AGBaseAdapter.h; path = utils/AGBaseAdapter.h; sourceTree = "<group>"; };
+		57DCDB8315F20E4800289EA4 /* AGBaseAdapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AGBaseAdapter.m; path = utils/AGBaseAdapter.m; sourceTree = "<group>"; };
 		57DCDB8715F20FB700289EA4 /* AGBaseAdapterTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGBaseAdapterTests.m; sourceTree = "<group>"; };
-		57ED144C160B490F00881924 /* AGDataManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGDataManager.h; sourceTree = "<group>"; };
-		57ED144D160B490F00881924 /* AGDataManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGDataManager.m; sourceTree = "<group>"; };
+		57ED144C160B490F00881924 /* AGDataManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AGDataManager.h; path = datamanager/AGDataManager.h; sourceTree = "<group>"; };
+		57ED144D160B490F00881924 /* AGDataManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AGDataManager.m; path = datamanager/AGDataManager.m; sourceTree = "<group>"; };
 		57ED1451160B492B00881924 /* AGDataManagerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGDataManagerTests.m; sourceTree = "<group>"; };
-		57ED1453160B566200881924 /* AGStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGStore.h; sourceTree = "<group>"; };
+		57ED1453160B566200881924 /* AGStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AGStore.h; path = datamanager/AGStore.h; sourceTree = "<group>"; };
 		57F24DFB1601F91600A3EAD8 /* AGPipeSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGPipeSpec.m; sourceTree = "<group>"; };
 		65D1DA06FAB24A18AB6A5963 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8AB37EC1AA3464892D758C1 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
@@ -227,8 +227,9 @@
 				57737FDF15E3D01D006B97BB /* Supporting Files */,
 				57ED1456160B569500881924 /* Core */,
 				57ED1455160B568800881924 /* DataManager */,
-				573B7099161D9D51009F0452 /* Security */,
 				57ED1454160B568000881924 /* Pipeline */,
+				573B7099161D9D51009F0452 /* Security */,
+				57F428C6163E770F00832D75 /* Utils */,
 				573CBD9E15E3EE1F0071E7A6 /* AeroGear.h */,
 			);
 			path = "AeroGear-iOS";
@@ -269,9 +270,6 @@
 				573CBD9915E3ECB60071E7A6 /* AGPipeline.m */,
 				573CBD9B15E3ED7F0071E7A6 /* AGRestAdapter.h */,
 				573CBD9C15E3ED7F0071E7A6 /* AGRestAdapter.m */,
-				573CBDA715E51C120071E7A6 /* AGAdapter.h */,
-				57DCDB8215F20E4800289EA4 /* AGBaseAdapter.h */,
-				57DCDB8315F20E4800289EA4 /* AGBaseAdapter.m */,
 			);
 			name = Pipeline;
 			sourceTree = "<group>";
@@ -297,6 +295,16 @@
 				57345BD715E3D18600B74FEB /* AGHttpClient.m */,
 			);
 			name = Core;
+			sourceTree = "<group>";
+		};
+		57F428C6163E770F00832D75 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				573CBDA715E51C120071E7A6 /* AGAdapter.h */,
+				57DCDB8215F20E4800289EA4 /* AGBaseAdapter.h */,
+				57DCDB8315F20E4800289EA4 /* AGBaseAdapter.m */,
+			);
+			name = Utils;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
