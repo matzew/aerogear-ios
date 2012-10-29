@@ -17,7 +17,7 @@
  */
 
 #import "AGRestAdapter.h"
-#import "AGRestAuthentication.h"
+#import "AGAuthenticationModuleAdapter.h"
 #import "AGHttpClient.h"
 
 @implementation AGRestAdapter {
@@ -44,7 +44,7 @@
         _restClient = [AGHttpClient clientFor:url];
         _restClient.parameterEncoding = AFJSONParameterEncoding;
         
-        _authModule = (AGRestAuthentication*) authModule;
+        _authModule = (id<AGAuthenticationModuleAdapter>) authModule;
     }
     return self;
 }
