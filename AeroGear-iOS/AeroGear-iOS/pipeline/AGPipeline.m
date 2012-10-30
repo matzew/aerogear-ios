@@ -17,6 +17,7 @@
  */
 
 #import "AGPipeline.h"
+#import "AGPipeConfiguration.h"
 #import "AGRestAdapter.h"
 
 // category
@@ -58,69 +59,28 @@
     return [[self alloc] init:baseURL];
 }
 
--(id<AGPipe>) add:(NSString*) name {
-    return [self add:name baseURL:_baseURL endpoint:name type:@"REST" authModule:nil];
-}
 
--(id<AGPipe>) add:(NSString*) name authModule:(id<AGAuthenticationModule>) authModule {
-    return [self add:name baseURL:_baseURL endpoint:name type:@"REST" authModule:authModule];
-}
+-(id<AGPipe>) add:(void (^)(id<AGPipeConfig> config)) config {
 
+    AGPipeConfiguration* pipeConfig = [[AGPipeConfiguration alloc] init];
 
--(id<AGPipe>) add:(NSString*) name endpoint:(NSString*)endpoint {
-    return [self add:name baseURL:_baseURL endpoint:endpoint type:@"REST" authModule:nil];
-}
+    // applying the defaults:
+    [pipeConfig baseURL:_baseURL];
 
--(id<AGPipe>) add:(NSString*) name endpoint:(NSString*)endpoint authModule:(id<AGAuthenticationModule>) authModule {
-    return [self add:name baseURL:_baseURL endpoint:endpoint type:@"REST" authModule:authModule];
-}
-
--(id<AGPipe>) add:(NSString*) name type:(NSString*)type {
-    return [self add:name baseURL:_baseURL endpoint:name type:type authModule:nil];
-}
-
--(id<AGPipe>) add:(NSString*) name type:(NSString*)type authModule:(id<AGAuthenticationModule>) authModule {
-    return [self add:name baseURL:_baseURL endpoint:name type:type authModule:authModule];
-}
-
--(id<AGPipe>) add:(NSString*) name endpoint:(NSString*)endpoint type:(NSString*)type {
-    return [self add:name baseURL:_baseURL endpoint:endpoint type:type authModule:nil];
-}
-
--(id<AGPipe>) add:(NSString*) name endpoint:(NSString*)endpoint type:(NSString*)type authModule:(id<AGAuthenticationModule>) authModule {
-    return [self add:name baseURL:_baseURL endpoint:endpoint type:type authModule:authModule];
-}
-
--(id<AGPipe>) add:(NSString*) name baseURL:(NSURL*)baseURL {
-    return [self add:name baseURL:baseURL endpoint:name type:@"REST" authModule:nil];
-}
--(id<AGPipe>) add:(NSString*) name baseURL:(NSURL*)baseURL authModule:(id<AGAuthenticationModule>) authModule {
-    return [self add:name baseURL:baseURL endpoint:name type:@"REST" authModule:authModule];
-}
-
--(id<AGPipe>) add:(NSString*) name baseURL:(NSURL*)baseURL endpoint:(NSString*)endpoint {
-    return [self add:name baseURL:baseURL endpoint:endpoint type:@"REST" authModule:nil];
-}
-
--(id<AGPipe>) add:(NSString*) name baseURL:(NSURL*)baseURL endpoint:(NSString*)endpoint authModule:(id<AGAuthenticationModule>) authModule {
-    return [self add:name baseURL:baseURL endpoint:endpoint type:@"REST" authModule:authModule];
-}
-
--(id<AGPipe>) add:(NSString*) name baseURL:(NSURL*)baseURL type:(NSString*)type {
-    return [self add:name baseURL:baseURL endpoint:name type:type authModule:nil];
-}
-
--(id<AGPipe>) add:(NSString*) name baseURL:(NSURL*)baseURL type:(NSString*)type authModule:(id<AGAuthenticationModule>) authModule {
-    return [self add:name baseURL:baseURL endpoint:name type:type authModule:authModule];
-}
-
--(id<AGPipe>) add:(NSString*) name baseURL:(NSURL*)baseURL endpoint:(NSString*)endpoint type:(NSString*)type {
-    return [self add:name baseURL:baseURL endpoint:endpoint type:type authModule:nil];
-}
-
--(id<AGPipe>) add:(NSString*) name baseURL:(NSURL*)baseURL endpoint:(NSString*)endpoint type:(NSString*)type authModule:(id<AGAuthenticationModule>) authModule {
+    if (config) {
+        config(pipeConfig);
+    }
     
-    // append the endpoint name and use it as the final URL
+    NSString* name  = [pipeConfig name];
+    NSString* type = [pipeConfig type];
+    NSURL* baseURL = [pipeConfig baseURL];
+    NSString* endpoint = [pipeConfig endpoint];
+    if (endpoint == nil || [endpoint isEqualToString:@""])
+        endpoint = name;
+    id<AGAuthenticationModule> authModule = [pipeConfig authModule];
+    
+    
+    // append the endpoint/name and use it as the final URL
     NSURL* finalURL = [self appendEndpoint:endpoint toURL:baseURL];
     return [self add:name url:finalURL type:type authModule:authModule];
 }

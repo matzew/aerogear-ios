@@ -31,7 +31,10 @@ describe(@"AGPipeline", ^{
         beforeEach(^{
             NSURL* baseURL = [NSURL URLWithString:@"http://server.com/"];
             pipeline = [AGPipeline pipeline];
-            [pipeline add:@"tests" baseURL:baseURL];
+            [pipeline add:^(id<AGPipeConfig> config) {
+                [config name:@"tests"];
+                [config baseURL:baseURL];
+            }];
         });
         
         it(@"should not be nil", ^{
@@ -56,7 +59,10 @@ describe(@"AGPipeline", ^{
         
         it(@"with name and baseURL", ^{
             pipeline = [AGPipeline pipeline];
-            [pipeline add:@"tests" baseURL:baseURL];
+            [pipeline add:^(id<AGPipeConfig> config) {
+                [config name:@"tests"];
+                [config baseURL:baseURL];
+            }];
             [pipeline shouldNotBeNil];
             
             id<AGPipe> pipe = [pipeline get:@"tests"];
@@ -65,7 +71,11 @@ describe(@"AGPipeline", ^{
         
         it(@"with name and baseURL and endpoint", ^{
             pipeline = [AGPipeline pipeline];
-            [pipeline add:@"some bad name" baseURL:baseURL endpoint:@"tests"];
+            [pipeline add:^(id<AGPipeConfig> config) {
+                [config name:@"some bad name"];
+                [config baseURL:baseURL];
+                [config endpoint:@"tests"];
+            }];
 
             [pipeline shouldNotBeNil];
             
@@ -75,7 +85,12 @@ describe(@"AGPipeline", ^{
         
         it(@"with name and baseURL and endpoint and (known) type", ^{
             pipeline = [AGPipeline pipeline];
-            [pipeline add:@"some bad name" baseURL:baseURL endpoint:@"tests" type:@"REST"];
+            [pipeline add:^(id<AGPipeConfig> config) {
+                [config name:@"some bad name"];
+                [config baseURL:baseURL];
+                [config endpoint:@"tests"];
+                [config type:@"REST"];
+            }];
             [pipeline shouldNotBeNil];
             
             id<AGPipe> pipe = [pipeline get:@"some bad name"];
@@ -84,7 +99,11 @@ describe(@"AGPipeline", ^{
         
         it(@"with name and baseURL and (known) type", ^{
             pipeline = [AGPipeline pipeline];
-            [pipeline add:@"tests" baseURL:baseURL type:@"REST"];
+            [pipeline add:^(id<AGPipeConfig> config) {
+                [config name:@"tests"];
+                [config baseURL:baseURL];
+                [config type:@"REST"];
+            }];
             [pipeline shouldNotBeNil];
             
             id<AGPipe> pipe = [pipeline get:@"tests"];

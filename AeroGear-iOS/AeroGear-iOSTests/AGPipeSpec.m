@@ -33,7 +33,11 @@ describe(@"AGPipe", ^{
             NSURL* baseURL = [NSURL URLWithString:@"http://server.com/"];
             //pipeline = [AGPipeline pipeline];
             pipeline = [AGPipeline pipeline:baseURL];
-            [pipeline add:@"tests" baseURL:baseURL];
+            [pipeline add:^(id<AGPipeConfig> config) {
+                [config name:@"tests"];
+                [config baseURL:baseURL];
+            }];
+
         });
 
         it(@"AGPipe should have an expected URL", ^{
@@ -46,16 +50,27 @@ describe(@"AGPipe", ^{
         
         it(@"AGPipeline should allow add a new AGPipe object", ^{
             
-            [pipeline add:@"tasks"];
+            [pipeline add:^(id<AGPipeConfig> config) {
+                [config name:@"tasks"];
+            }];
+
             
             id<AGPipe> newPipe = [pipeline get:@"tasks"];
+            NSLog(@"%@", newPipe);
+            NSLog(@"%@", newPipe.url);
+            
+            
             [[theValue(newPipe.url) shouldNot] equal:nil];
             [[newPipe.url should] equal:@"http://server.com/tasks"];
         });
 
         it(@"AGPipeline should allow add a new AGPipe object with an endpoint ", ^{
             
-            [pipeline add:@"tasks" endpoint:@"mytasks"];
+            [pipeline add:^(id<AGPipeConfig> config) {
+                [config name:@"tasks"];
+                [config endpoint:@"mytasks"];
+            }];
+
             
             id<AGPipe> newPipe = [pipeline get:@"tasks"];
             [[theValue(newPipe.url) shouldNot] equal:nil];
@@ -64,7 +79,12 @@ describe(@"AGPipe", ^{
 
         it(@"AGPipeline should allow add a new AGPipe object with an endpoint and a (known) type", ^{
             
-            [pipeline add:@"tasks" endpoint:@"mytasks" type:@"REST"];
+            [pipeline add:^(id<AGPipeConfig> config) {
+                [config name:@"tasks"];
+                [config type:@"REST"];
+                [config endpoint:@"mytasks"];
+            }];
+
             
             id<AGPipe> newPipe = [pipeline get:@"tasks"];
             [[theValue(newPipe.url) shouldNot] equal:nil];
@@ -73,7 +93,11 @@ describe(@"AGPipe", ^{
 
         it(@"AGPipeline should allow add a new AGPipe object with a (known) type", ^{
             
-            [pipeline add:@"tasks" type:@"REST"];
+            [pipeline add:^(id<AGPipeConfig> config) {
+                [config name:@"tasks"];
+                [config type:@"REST"];
+            }];
+
             
             id<AGPipe> newPipe = [pipeline get:@"tasks"];
             [[theValue(newPipe.url) shouldNot] equal:nil];
@@ -83,7 +107,11 @@ describe(@"AGPipe", ^{
         it(@"AGPipeline should allow add a new AGPipe object with a different baseURL", ^{
             
             NSURL* newBaseURL = [NSURL URLWithString:@"http://blah.com/context"];
-            [pipeline add:@"tasks" baseURL:newBaseURL];
+            [pipeline add:^(id<AGPipeConfig> config) {
+                [config name:@"tasks"];
+                [config baseURL:newBaseURL];
+            }];
+            
             
             id<AGPipe> newPipe = [pipeline get:@"tasks"];
             [[theValue(newPipe.url) shouldNot] equal:nil];
@@ -93,8 +121,12 @@ describe(@"AGPipe", ^{
         it(@"AGPipeline should allow add a new AGPipe object with a different baseURL and an endpoint", ^{
             
             NSURL* newBaseURL = [NSURL URLWithString:@"http://blah.com/context"];
-            [pipeline add:@"tasks" baseURL:newBaseURL endpoint:@"myTasks"];
-            
+            [pipeline add:^(id<AGPipeConfig> config) {
+                [config name:@"tasks"];
+                [config baseURL:newBaseURL];
+                [config endpoint:@"myTasks"];
+            }];
+
             id<AGPipe> newPipe = [pipeline get:@"tasks"];
             [[theValue(newPipe.url) shouldNot] equal:nil];
             [[newPipe.url should] equal:@"http://blah.com/context/myTasks"];
@@ -103,7 +135,12 @@ describe(@"AGPipe", ^{
         it(@"AGPipeline should allow add a new AGPipe object with a different baseURL and an endpoint and a (known) type", ^{
             
             NSURL* newBaseURL = [NSURL URLWithString:@"http://blah.com/context"];
-            [pipeline add:@"tasks" baseURL:newBaseURL endpoint:@"myTasks" type:@"REST"];
+            [pipeline add:^(id<AGPipeConfig> config) {
+                [config name:@"tasks"];
+                [config baseURL:newBaseURL];
+                [config endpoint:@"myTasks"];
+                [config type:@"REST"];
+            }];
             
             id<AGPipe> newPipe = [pipeline get:@"tasks"];
             [[theValue(newPipe.url) shouldNot] equal:nil];
@@ -113,7 +150,13 @@ describe(@"AGPipe", ^{
         it(@"AGPipeline should allow add a new AGPipe object with a different baseURL and a (known) type", ^{
             
             NSURL* newBaseURL = [NSURL URLWithString:@"http://blah.com/context"];
-            [pipeline add:@"tasks" baseURL:newBaseURL type:@"REST"];
+            [pipeline add:^(id<AGPipeConfig> config) {
+                [config name:@"tasks"];
+                [config baseURL:newBaseURL];
+                [config type:@"REST"];
+            }];
+            
+
             
             id<AGPipe> newPipe = [pipeline get:@"tasks"];
             [[theValue(newPipe.url) shouldNot] equal:nil];
@@ -123,7 +166,9 @@ describe(@"AGPipe", ^{
         it(@"AGPipeline should allow to add multiple AGPipe objects with different baseURLs", ^{
             
             // vanilla
-            [pipeline add:@"tasks"];
+            [pipeline add:^(id<AGPipeConfig> config) {
+                [config name:@"tasks"];
+            }];
             
             id<AGPipe> newPipe = [pipeline get:@"tasks"];
             [[theValue(newPipe.url) shouldNot] equal:nil];
@@ -133,7 +178,11 @@ describe(@"AGPipe", ^{
             
             // new pipe, with different baseURL:
             NSURL* newBaseURL = [NSURL URLWithString:@"http://blah.com/context"];
-            [pipeline add:@"projects" baseURL:newBaseURL];
+            [pipeline add:^(id<AGPipeConfig> config) {
+                [config name:@"projects"];
+                [config baseURL:newBaseURL];
+            }];
+
             
             id<AGPipe> otherPipe = [pipeline get:@"projects"];
             [[theValue(otherPipe.url) shouldNot] equal:nil];
@@ -142,7 +191,10 @@ describe(@"AGPipe", ^{
             
             // yet another new pipe, with another different baseURL:
             NSURL* secondBaseURL = [NSURL URLWithString:@"http://blah.com/somecontext"];
-            [pipeline add:@"tags" baseURL:secondBaseURL];
+            [pipeline add:^(id<AGPipeConfig> config) {
+                [config name:@"tags"];
+                [config baseURL:secondBaseURL];
+            }];
             
             id<AGPipe> newestPipe = [pipeline get:@"tags"];
             [[theValue(newestPipe.url) shouldNot] equal:nil];
@@ -153,7 +205,10 @@ describe(@"AGPipe", ^{
         it(@"AGPipeline should allow to add multiple AGPipe objects with different baseURLs and replace previous ones", ^{
             
             // vanilla
-            [pipeline add:@"tasks"];
+            [pipeline add:^(id<AGPipeConfig> config) {
+                [config name:@"tasks"];
+            }];
+            
             
             id<AGPipe> newPipe = [pipeline get:@"tasks"];
             [[theValue(newPipe.url) shouldNot] equal:nil];
@@ -163,7 +218,11 @@ describe(@"AGPipe", ^{
             
             // new pipe, with different baseURL:
             NSURL* newBaseURL = [NSURL URLWithString:@"http://blah.com/context"];
-            [pipeline add:@"projects" baseURL:newBaseURL];
+            [pipeline add:^(id<AGPipeConfig> config) {
+                [config name:@"projects"];
+                [config baseURL:newBaseURL];
+            }];
+
             
             id<AGPipe> otherPipe = [pipeline get:@"projects"];
             [[theValue(otherPipe.url) shouldNot] equal:nil];
@@ -172,7 +231,12 @@ describe(@"AGPipe", ^{
             
             // yet another new pipe, but replace the 'tasks' pipe (even it has a different URL):
             NSURL* secondBaseURL = [NSURL URLWithString:@"http://blah.com/somecontext"];
-            [pipeline add:@"tasks" baseURL:secondBaseURL endpoint:@"tags"];
+            [pipeline add:^(id<AGPipeConfig> config) {
+                [config name:@"tasks"];
+                [config baseURL:secondBaseURL];
+                [config endpoint:@"tags"];
+            }];
+
             
             id<AGPipe> newestPipe = [pipeline get:@"tasks"];
             [[theValue(newestPipe.url) shouldNot] equal:nil];
