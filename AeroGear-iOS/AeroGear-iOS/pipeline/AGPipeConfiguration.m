@@ -53,7 +53,14 @@
     return [_config valueForKey:@"baseURL"];
 }
 -(NSString*) endpoint {
-    return [_config valueForKey:@"endpoint"];
+    NSString* endpoint = [_config valueForKey:@"endpoint"];
+
+    // use the name as endpoint, if not specified:
+    if (endpoint == nil) {
+        endpoint = [self name];
+    }
+    
+    return endpoint;
 }
 -(id<AGAuthenticationModule>) authModule {
     return [_config valueForKey:@"authModule"];

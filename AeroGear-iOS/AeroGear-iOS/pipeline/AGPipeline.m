@@ -75,10 +75,7 @@
     NSString* type = [pipeConfig type];
     NSURL* baseURL = [pipeConfig baseURL];
     NSString* endpoint = [pipeConfig endpoint];
-    if (endpoint == nil || [endpoint isEqualToString:@""])
-        endpoint = name;
     id<AGAuthenticationModule> authModule = [pipeConfig authModule];
-    
     
     // append the endpoint/name and use it as the final URL
     NSURL* finalURL = [self appendEndpoint:endpoint toURL:baseURL];
