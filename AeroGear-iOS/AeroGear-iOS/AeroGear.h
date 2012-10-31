@@ -35,7 +35,7 @@
 // Security
 #import "AGAuthenticationModule.h"
 #import "AGAuthenticator.h"
-#import "AGAuthonfig.h"
+#import "AGAuthConfig.h"
 
 #endif /* _AEROGEAR_ */
 
