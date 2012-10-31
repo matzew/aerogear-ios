@@ -20,10 +20,31 @@
 #import "AGConfig.h"
 #import "AGAuthenticationModule.h"
 
+/**
+ * Represents the public API to configure AGPipe objects.
+ */
 @protocol AGPipeConfig <AGConfig>
 
+/**
+ * Applies the baseURL to the configuration.
+ *
+ * @param baseURL The baseURL of the actual AGPipe object.
+ */
 -(void) baseURL:(NSURL*) baseURL;
+
+/**
+ * Applies the baseURL to the configuration.
+ * If no endpoint is specified, the name will be used as its value.
+ *
+ * @param endpoint The baseURL of the actual AGPipe object.
+ */
 -(void) endpoint:(NSString*) endpoint;
+
+/**
+ * Applies the AGAuthenticationModule object to the configuration.
+ *
+ * @param authModule The AGAuthenticationModule of the actual AGPipe object.
+ */
 -(void) authModule:(id<AGAuthenticationModule>) authModule;
 
 @end

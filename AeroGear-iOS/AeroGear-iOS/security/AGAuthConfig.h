@@ -19,8 +19,16 @@
 #import <Foundation/Foundation.h>
 #import "AGConfig.h"
 
+/**
+ * Represents the public API to configure AGAuthenticationModule objects.
+ */
 @protocol AGAuthConfig <AGConfig>
 
+/**
+ * Applies the baseURL to the configuration.
+ *
+ * @param baseURL The baseURL of the actual AGAuthenticationModule object.
+ */
 -(void) baseURL:(NSURL*) baseURL;
 
 @end

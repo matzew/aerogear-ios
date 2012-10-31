@@ -18,9 +18,23 @@
 
 #import <Foundation/Foundation.h>
 
+/**
+ * Represents the base for all configuration objects.
+ */
 @protocol AGConfig <NSObject>
 
+/**
+ * Applies the logical name to the configuration.
+ *
+ * @param name The name of the actual object.
+ */
 -(void) name:(NSString*) name;
+
+/**
+ * Applies the type to the configuration.
+ *
+ * @param type The type of the actual object.
+ */
 -(void) type:(NSString*) type;
 
 @end

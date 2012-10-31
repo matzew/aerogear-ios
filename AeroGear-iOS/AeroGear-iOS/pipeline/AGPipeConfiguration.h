@@ -9,6 +9,9 @@
 #import <Foundation/Foundation.h>
 #import "AGPipeConfig.h"
 
+/**
+ * The internal implementation of the AGPipeConfig to configure AGPipe objects.
+ */
 @interface AGPipeConfiguration : NSObject <AGPipeConfig>
 
 

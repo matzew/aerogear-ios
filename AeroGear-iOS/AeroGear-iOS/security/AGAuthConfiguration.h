@@ -19,6 +19,9 @@
 #import <Foundation/Foundation.h>
 #import "AGAuthConfig.h"
 
+/**
+ * The internal implementation of the AGAuthConfig to configure AGAuthenticationModule objects.
+ */
 @interface AGAuthConfiguration : NSObject<AGAuthConfig>
 
 // private getters...

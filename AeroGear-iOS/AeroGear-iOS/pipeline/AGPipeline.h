@@ -59,15 +59,15 @@
  */
 +(id) pipeline:(NSURL*) baseURL;
 
-// =====================================
-// Adds that leverage the given base URL
-// =====================================
-
+/**
+ * Adds a new AGPipe object, based on the give configuration object.
+ *
+ * @param config A block object which passes in an implementation of the AGPipeConfig protocol.
+ * the object is used to configure the AGPipe object.
+ *
+ * @return the newly created AGPipe object
+ */
 -(id<AGPipe>) add:(void (^)(id<AGPipeConfig> config)) config;
-
-// ============================
-// remove and get functionality
-// ============================
 
 /**
  * Removes a pipe from the AGPipeline object

@@ -37,8 +37,12 @@
 +(id) manager;
 
 /**
- * Creates AGStore implemention....
+ * Adds a new AGStore object, based on the give configuration object.
  *
+ * @param config A block object which passes in an implementation of the AGStoreConfig protocol.
+ * the object is used to configure the AGStore object.
+ *
+ * @return the newly created AGStore object
  */
 -(id<AGStore>) add:(void (^)(id<AGStoreConfig> config)) config;
 

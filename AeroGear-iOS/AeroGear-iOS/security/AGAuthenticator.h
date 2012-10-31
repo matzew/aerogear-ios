@@ -37,8 +37,12 @@
 +(id) authenticator;
 
 /**
- * Creates a new default (REST) AGAuthenticationModule implemention.
+ * Adds a new AGAuthenticationModule object, based on the give configuration object.
  *
+ * @param config A block object which passes in an implementation of the AGAuthConfig protocol.
+ * the object is used to configure the AGAuthenticationModule object.
+ *
+ * @return the newly created AGAuthenticationModule object
  */
 -(id<AGAuthenticationModule>) add:(void (^)(id<AGAuthConfig> config)) config;
 

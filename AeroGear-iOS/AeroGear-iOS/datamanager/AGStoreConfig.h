@@ -19,6 +19,9 @@
 #import <Foundation/Foundation.h>
 #import "AGConfig.h"
 
+/**
+ * Represents the public API to configure AGStore objects.
+ */
 @protocol AGStoreConfig <AGConfig>
 
 @end

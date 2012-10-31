@@ -19,6 +19,9 @@
 #import <Foundation/Foundation.h>
 #import "AGStoreConfig.h"
 
+/**
+ * The internal implementation of the AGStoreConfig to configure AGStore objects.
+ */
 @interface AGStoreConfiguration : NSObject<AGStoreConfig>
 
 // private getters...
