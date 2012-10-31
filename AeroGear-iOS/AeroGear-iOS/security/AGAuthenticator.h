@@ -18,6 +18,7 @@
 
 #import <Foundation/Foundation.h>
 #import "AGAuthenticationModule.h"
+#import "AGAuthConfig.h"
 
 /**
  * AGAuthenticator manages different AGAuthenticationModule implementations. It is basically a
@@ -38,19 +39,8 @@
 /**
  * Creates a new default (REST) AGAuthenticationModule implemention.
  *
- * @param moduleName The name of the actual auth module object.
- * @param baseURL the base url for the server.
  */
--(id<AGAuthenticationModule>)add:(NSString*) moduleName baseURL:(NSURL*)baseURL;
-
-/**
- * Creates a new AGAuthenticationModule implemention. The actual type is determined by the type argument.
- *
- * @param moduleName The name of the actual auth module object.
- * @param baseURL the base url for the server.
- * @param type The type of the new auth module object.
- */
--(id<AGAuthenticationModule>)add:(NSString*) moduleName baseURL:(NSURL*)baseURL type:(NSString*) type;
+-(id<AGAuthenticationModule>) add:(void (^)(id<AGAuthConfig> config)) config;
 
 /**
  * Removes a AGAuthenticationModule implemention from the AGAuthenticator. The auth module,
