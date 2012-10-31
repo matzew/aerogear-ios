@@ -19,17 +19,23 @@
 #ifndef _AEROGEAR_
 #define _AEROGEAR_
 
+// base
+#import "AGConfig.h"
+
 // Pipeline
 #import "AGPipe.h"
 #import "AGPipeline.h"
+#import "AGPipeConfig.h"
 
 // DataManager
 #import "AGStore.h"
 #import "AGDataManager.h"
+#import "AGStoreConfig.h"
 
 // Security
 #import "AGAuthenticationModule.h"
 #import "AGAuthenticator.h"
+#import "AGAuthonfig.h"
 
 #endif /* _AEROGEAR_ */
 
