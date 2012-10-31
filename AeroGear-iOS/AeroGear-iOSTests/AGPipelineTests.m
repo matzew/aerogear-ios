@@ -365,10 +365,12 @@
     NSURL* baseURL = [NSURL URLWithString:@"http://server.com/context/"];
     AGPipeline* pipeline = [AGPipeline pipeline:baseURL];
     
-    id<AGPipe> myPipe = [pipeline add:^(id<AGPipeConfig> config) {
+    [pipeline add:^(id<AGPipeConfig> config) {
         [config name:@"projects"];
         [config type:@"REST"];
     }];
+    id<AGPipe> newPipe = [pipeline get:@"projects"];
+    STAssertEqualObjects(@"http://server.com/context/projects", newPipe.url, @"verifying the given URL");
 }
 
 
