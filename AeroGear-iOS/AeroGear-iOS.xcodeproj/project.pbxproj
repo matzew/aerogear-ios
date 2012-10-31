@@ -16,6 +16,7 @@
 		571DBACB1610715800A0A3A6 /* AGMemoryStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 571DBACA1610715800A0A3A6 /* AGMemoryStorage.m */; };
 		571DBACF161071BF00A0A3A6 /* AGBaseStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 571DBACE161071BF00A0A3A6 /* AGBaseStorage.m */; };
 		571DBAD51610C3D700A0A3A6 /* AGMemoryStorageSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 571DBAD41610C3D700A0A3A6 /* AGMemoryStorageSpec.m */; };
+		57277DFF164131FA00C50DC5 /* AGStoreConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 57277DFE164131FA00C50DC5 /* AGStoreConfiguration.m */; };
 		57345BD815E3D18600B74FEB /* AGHttpClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 57345BD715E3D18600B74FEB /* AGHttpClient.m */; };
 		57345BDC15E3D1DF00B74FEB /* AGHttpClientTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 57345BDB15E3D1DF00B74FEB /* AGHttpClientTests.m */; };
 		573B709D161DA2AE009F0452 /* AGAuthenticator.m in Sources */ = {isa = PBXBuildFile; fileRef = 573B709C161DA2AE009F0452 /* AGAuthenticator.m */; };
@@ -82,6 +83,9 @@
 		571DBACD161071BF00A0A3A6 /* AGBaseStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AGBaseStorage.h; path = datamanager/AGBaseStorage.h; sourceTree = "<group>"; };
 		571DBACE161071BF00A0A3A6 /* AGBaseStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AGBaseStorage.m; path = datamanager/AGBaseStorage.m; sourceTree = "<group>"; };
 		571DBAD41610C3D700A0A3A6 /* AGMemoryStorageSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGMemoryStorageSpec.m; sourceTree = "<group>"; };
+		57277DF51641317100C50DC5 /* AGStoreConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AGStoreConfig.h; path = datamanager/AGStoreConfig.h; sourceTree = "<group>"; };
+		57277DFD164131FA00C50DC5 /* AGStoreConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AGStoreConfiguration.h; path = datamanager/AGStoreConfiguration.h; sourceTree = "<group>"; };
+		57277DFE164131FA00C50DC5 /* AGStoreConfiguration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AGStoreConfiguration.m; path = datamanager/AGStoreConfiguration.m; sourceTree = "<group>"; };
 		57345BD615E3D18600B74FEB /* AGHttpClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AGHttpClient.h; path = core/AGHttpClient.h; sourceTree = "<group>"; };
 		57345BD715E3D18600B74FEB /* AGHttpClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AGHttpClient.m; path = core/AGHttpClient.m; sourceTree = "<group>"; };
 		57345BDB15E3D1DF00B74FEB /* AGHttpClientTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGHttpClientTests.m; sourceTree = "<group>"; };
@@ -301,6 +305,9 @@
 				571DBACA1610715800A0A3A6 /* AGMemoryStorage.m */,
 				571DBACD161071BF00A0A3A6 /* AGBaseStorage.h */,
 				571DBACE161071BF00A0A3A6 /* AGBaseStorage.m */,
+				57277DF51641317100C50DC5 /* AGStoreConfig.h */,
+				57277DFD164131FA00C50DC5 /* AGStoreConfiguration.h */,
+				57277DFE164131FA00C50DC5 /* AGStoreConfiguration.m */,
 			);
 			name = DataManager;
 			sourceTree = "<group>";
@@ -464,6 +471,7 @@
 				573B709D161DA2AE009F0452 /* AGAuthenticator.m in Sources */,
 				573B70A1161DDD1C009F0452 /* AGRestAuthentication.m in Sources */,
 				57C2616516402B8900793C0F /* AGPipeConfiguration.m in Sources */,
+				57277DFF164131FA00C50DC5 /* AGStoreConfiguration.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

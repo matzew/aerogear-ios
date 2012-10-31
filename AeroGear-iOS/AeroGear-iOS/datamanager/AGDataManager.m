@@ -18,6 +18,7 @@
 
 #import "AGDataManager.h"
 #import "AGMemoryStorage.h"
+#import "AGStoreConfiguration.h"
 
 @implementation AGDataManager {
     NSMutableDictionary* _stores;
@@ -35,16 +36,28 @@
     return [[self alloc] init];
 }
 
--(id<AGStore>)add:(NSString*) storeName {
-    return [self add:storeName type:@"MEMORY"];
+
+-(id<AGStore>) add:(void (^)(id<AGStoreConfig> config)) config {
+    
+    AGStoreConfiguration* storeConfig = [[AGStoreConfiguration alloc] init];
+    
+    if (config) {
+        config(storeConfig);
+    }
+    
+    NSString* name  = [storeConfig name];
+    NSString* type = [storeConfig type];
+    
+    return [self add:name type:type];
 }
 
+
+// private add
 -(id<AGStore>)add:(NSString*) storeName type:(NSString*) type {
     // TODO check ALL supported types...
     if (! [type isEqualToString:@"MEMORY"]) {
         return nil;
     }
-    
     
     id<AGStore> store = [[AGMemoryStorage alloc] init];;
     [_stores setValue:store forKey:storeName];

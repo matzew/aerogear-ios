@@ -18,6 +18,7 @@
 
 #import <Foundation/Foundation.h>
 #import "AGStore.h"
+#import "AGStoreConfig.h"
 
 /**
  * AGDataManager manages different AGStore implementations. It is basically a
@@ -36,19 +37,10 @@
 +(id) manager;
 
 /**
- * Creates a new default (in memory) AGStore implemention.
+ * Creates AGStore implemention....
  *
- * @param storeName The name of the actual data store object.
  */
--(id<AGStore>)add:(NSString*) storeName;
-
-/**
- * Creates a new AGStore implemention. The actual type is determined by the type argument.
- *
- * @param storeName The name of the actual data store object.
- * @param type The type of the new data store object.
- */
--(id<AGStore>)add:(NSString*) storeName type:(NSString*) type;
+-(id<AGStore>) add:(void (^)(id<AGStoreConfig> config)) config;
 
 /**
  * Removes a AGStore implemention from the AGDataManager. The store to be removed
