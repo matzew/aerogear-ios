@@ -350,6 +350,10 @@
     
     STAssertEqualObjects(@"http://server.com/context/projects", myPipe.url, @"verifying the given URL");
     
+    // check default type:
+    STAssertEqualObjects(@"REST", myPipe.type, @"has expected REST type");
+
+    
     [pipeline add:^(id<AGPipeConfig> config) {
         [config name:@"foo"];
     }];

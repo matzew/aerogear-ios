@@ -73,15 +73,18 @@
         [config name:@"tags"];
     }];
     
-    
     id<AGStore> taskStore = [mgr get:@"tasks"];
     STAssertNotNil(taskStore, @"actual store could not be null");
+    // check default type:
+    STAssertEqualObjects(@"MEMORY", taskStore.type, @"has expected MEMORY type");
+    
     id<AGStore> tagStore = [mgr get:@"tags"];
     STAssertNotNil(tagStore, @"actual store could not be null");
     id<AGStore> projectStore = [mgr get:@"projects"];
     STAssertNotNil(projectStore, @"actual store could not be null");
-    
-    
+    // check type:
+    STAssertEqualObjects(@"MEMORY", projectStore.type, @"has expected MEMORY type");
+
     projectStore = [mgr remove:@"projects"];
     STAssertNotNil(projectStore, @"actual store could not be null");
     projectStore = [mgr get:@"projects"];
