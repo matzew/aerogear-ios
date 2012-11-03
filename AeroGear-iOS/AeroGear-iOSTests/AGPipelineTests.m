@@ -17,7 +17,8 @@
  */
 
 #import <SenTestingKit/SenTestingKit.h>
-#import "AGPipeline.h"
+//#import "AGPipeline.h"
+#import "AeroGear.h"
 
 @interface AGPipelineTests : SenTestCase
 

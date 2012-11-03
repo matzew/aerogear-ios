@@ -9,8 +9,6 @@
 /* Begin PBXBuildFile section */
 		08D43362329A46488E585071 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 65D1DA06FAB24A18AB6A5963 /* libPods.a */; };
 		1D0A1358119648AFB949959A /* libPods-AeroGear-iOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E065C8DDD305422BBB3237D5 /* libPods-AeroGear-iOSTests.a */; };
-		5707E0F316351E3B0083949C /* AGAuthenticator.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 573B709B161DA2AE009F0452 /* AGAuthenticator.h */; };
-		5707E0F516351E4B0083949C /* AGAuthenticationModule.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 573B709A161DA29A009F0452 /* AGAuthenticationModule.h */; };
 		570B908616231D1100426BA7 /* AGRestAuthenticationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 570B908516231D1100426BA7 /* AGRestAuthenticationTests.m */; };
 		570B908A1624360600426BA7 /* AGAuthenticatorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 570B90891624360600426BA7 /* AGAuthenticatorTests.m */; };
 		571DBACB1610715800A0A3A6 /* AGMemoryStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 571DBACA1610715800A0A3A6 /* AGMemoryStorage.m */; };
@@ -18,10 +16,17 @@
 		571DBAD51610C3D700A0A3A6 /* AGMemoryStorageSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 571DBAD41610C3D700A0A3A6 /* AGMemoryStorageSpec.m */; };
 		57277DFF164131FA00C50DC5 /* AGStoreConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 57277DFE164131FA00C50DC5 /* AGStoreConfiguration.m */; };
 		57277E111641364300C50DC5 /* AGAuthConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 57277E101641364300C50DC5 /* AGAuthConfiguration.m */; };
-		573214191645153700836D8E /* AGConfig.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 57C2616116402B2D00793C0F /* AGConfig.h */; };
-		5732141B1645154000836D8E /* AGStoreConfig.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 57277DF51641317100C50DC5 /* AGStoreConfig.h */; };
-		5732141C1645154500836D8E /* AGPipeConfig.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 57C2616216402B3C00793C0F /* AGPipeConfig.h */; };
-		5732141D1645155100836D8E /* AGAuthConfig.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 57277E0D1641362D00C50DC5 /* AGAuthConfig.h */; };
+		5732142B16451B5E00836D8E /* AGConfig.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 57C2616116402B2D00793C0F /* AGConfig.h */; };
+		5732142C16451B6400836D8E /* AGStore.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 57ED1453160B566200881924 /* AGStore.h */; };
+		5732142D16451B6800836D8E /* AGDataManager.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 57ED144C160B490F00881924 /* AGDataManager.h */; };
+		5732142E16451B7300836D8E /* AGStoreConfig.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 57277DF51641317100C50DC5 /* AGStoreConfig.h */; };
+		5732142F16451B7C00836D8E /* AGPipe.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 573CBD9615E3ECA80071E7A6 /* AGPipe.h */; };
+		5732143016451B8100836D8E /* AGPipeline.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 573CBD9815E3ECB60071E7A6 /* AGPipeline.h */; };
+		5732143116451B8700836D8E /* AGPipeConfig.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 57C2616216402B3C00793C0F /* AGPipeConfig.h */; };
+		5732143216451B8F00836D8E /* AGAuthenticator.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 573B709B161DA2AE009F0452 /* AGAuthenticator.h */; };
+		5732143316451B9600836D8E /* AGAuthenticationModule.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 573B709A161DA29A009F0452 /* AGAuthenticationModule.h */; };
+		5732143416451BA200836D8E /* AGAuthConfig.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 57277E0D1641362D00C50DC5 /* AGAuthConfig.h */; };
+		5732143516451BB400836D8E /* AeroGear.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 573CBD9E15E3EE1F0071E7A6 /* AeroGear.h */; };
 		57345BD815E3D18600B74FEB /* AGHttpClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 57345BD715E3D18600B74FEB /* AGHttpClient.m */; };
 		57345BDC15E3D1DF00B74FEB /* AGHttpClientTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 57345BDB15E3D1DF00B74FEB /* AGHttpClientTests.m */; };
 		573B709D161DA2AE009F0452 /* AGAuthenticator.m in Sources */ = {isa = PBXBuildFile; fileRef = 573B709C161DA2AE009F0452 /* AGAuthenticator.m */; };
@@ -43,11 +48,6 @@
 		57DCDB8815F20FB700289EA4 /* AGBaseAdapterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 57DCDB8715F20FB700289EA4 /* AGBaseAdapterTests.m */; };
 		57ED144E160B490F00881924 /* AGDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 57ED144D160B490F00881924 /* AGDataManager.m */; };
 		57ED1452160B492B00881924 /* AGDataManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 57ED1451160B492B00881924 /* AGDataManagerTests.m */; };
-		57ED1457160B70CF00881924 /* AGStore.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 57ED1453160B566200881924 /* AGStore.h */; };
-		57ED1458160B70DC00881924 /* AGDataManager.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 57ED144C160B490F00881924 /* AGDataManager.h */; };
-		57F095D115EE4CB400B2C6B0 /* AGPipe.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 573CBD9615E3ECA80071E7A6 /* AGPipe.h */; };
-		57F095D215EE4CB400B2C6B0 /* AGPipeline.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 573CBD9815E3ECB60071E7A6 /* AGPipeline.h */; };
-		57F095D315EE4CB400B2C6B0 /* AeroGear.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 573CBD9E15E3EE1F0071E7A6 /* AeroGear.h */; };
 		57F24DFC1601F91600A3EAD8 /* AGPipeSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 57F24DFB1601F91600A3EAD8 /* AGPipeSpec.m */; };
 /* End PBXBuildFile section */
 
@@ -68,17 +68,17 @@
 			dstPath = "include/${PRODUCT_NAME}";
 			dstSubfolderSpec = 16;
 			files = (
-				5732141D1645155100836D8E /* AGAuthConfig.h in CopyFiles */,
-				5732141C1645154500836D8E /* AGPipeConfig.h in CopyFiles */,
-				5732141B1645154000836D8E /* AGStoreConfig.h in CopyFiles */,
-				573214191645153700836D8E /* AGConfig.h in CopyFiles */,
-				5707E0F516351E4B0083949C /* AGAuthenticationModule.h in CopyFiles */,
-				5707E0F316351E3B0083949C /* AGAuthenticator.h in CopyFiles */,
-				57ED1458160B70DC00881924 /* AGDataManager.h in CopyFiles */,
-				57ED1457160B70CF00881924 /* AGStore.h in CopyFiles */,
-				57F095D115EE4CB400B2C6B0 /* AGPipe.h in CopyFiles */,
-				57F095D215EE4CB400B2C6B0 /* AGPipeline.h in CopyFiles */,
-				57F095D315EE4CB400B2C6B0 /* AeroGear.h in CopyFiles */,
+				5732143516451BB400836D8E /* AeroGear.h in CopyFiles */,
+				5732143416451BA200836D8E /* AGAuthConfig.h in CopyFiles */,
+				5732143316451B9600836D8E /* AGAuthenticationModule.h in CopyFiles */,
+				5732143216451B8F00836D8E /* AGAuthenticator.h in CopyFiles */,
+				5732143116451B8700836D8E /* AGPipeConfig.h in CopyFiles */,
+				5732143016451B8100836D8E /* AGPipeline.h in CopyFiles */,
+				5732142F16451B7C00836D8E /* AGPipe.h in CopyFiles */,
+				5732142E16451B7300836D8E /* AGStoreConfig.h in CopyFiles */,
+				5732142D16451B6800836D8E /* AGDataManager.h in CopyFiles */,
+				5732142C16451B6400836D8E /* AGStore.h in CopyFiles */,
+				5732142B16451B5E00836D8E /* AGConfig.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
