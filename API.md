@@ -281,7 +281,12 @@ The default (REST) auth module issues for the above a request against _https://t
 After running a successful login, you can start using the _AGAuthenticationModule_ object on a _AGPipe_ object to access protected endpoints:
 
     ...
-    id<AGPipe> tasks = [pipeline add:@"tasks" baseURL:serverURL authModule:myMod];
+    id<AGPipe> tasks =  [pipeline add:^(id<AGPipeConfig> config) {
+	        [config name:@"projects"];
+	        [config authModule:myMod];
+	        [config type:@"REST"];
+	    }];
+
 
     [tasks read:^(id responseObject) {
         // LOG the JSON response, returned from the server:
