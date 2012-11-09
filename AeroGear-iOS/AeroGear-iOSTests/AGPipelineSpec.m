@@ -31,7 +31,7 @@ describe(@"AGPipeline", ^{
         beforeEach(^{
             NSURL* baseURL = [NSURL URLWithString:@"http://server.com/"];
             pipeline = [AGPipeline pipeline];
-            [pipeline add:^(id<AGPipeConfig> config) {
+            [pipeline pipe:^(id<AGPipeConfig> config) {
                 [config name:@"tests"];
                 [config baseURL:baseURL];
             }];
@@ -59,7 +59,7 @@ describe(@"AGPipeline", ^{
         
         it(@"with name and baseURL", ^{
             pipeline = [AGPipeline pipeline];
-            [pipeline add:^(id<AGPipeConfig> config) {
+            [pipeline pipe:^(id<AGPipeConfig> config) {
                 [config name:@"tests"];
                 [config baseURL:baseURL];
             }];
@@ -71,7 +71,7 @@ describe(@"AGPipeline", ^{
         
         it(@"with name and baseURL and endpoint", ^{
             pipeline = [AGPipeline pipeline];
-            [pipeline add:^(id<AGPipeConfig> config) {
+            [pipeline pipe:^(id<AGPipeConfig> config) {
                 [config name:@"some bad name"];
                 [config baseURL:baseURL];
                 [config endpoint:@"tests"];
@@ -85,7 +85,7 @@ describe(@"AGPipeline", ^{
         
         it(@"with name and baseURL and endpoint and (known) type", ^{
             pipeline = [AGPipeline pipeline];
-            [pipeline add:^(id<AGPipeConfig> config) {
+            [pipeline pipe:^(id<AGPipeConfig> config) {
                 [config name:@"some bad name"];
                 [config baseURL:baseURL];
                 [config endpoint:@"tests"];
@@ -99,7 +99,7 @@ describe(@"AGPipeline", ^{
         
         it(@"with name and baseURL and (known) type", ^{
             pipeline = [AGPipeline pipeline];
-            [pipeline add:^(id<AGPipeConfig> config) {
+            [pipeline pipe:^(id<AGPipeConfig> config) {
                 [config name:@"tests"];
                 [config baseURL:baseURL];
                 [config type:@"REST"];

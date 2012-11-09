@@ -67,7 +67,7 @@
  *
  * @return the newly created AGPipe object
  */
--(id<AGPipe>) add:(void (^)(id<AGPipeConfig> config)) config;
+-(id<AGPipe>) pipe:(void (^)(id<AGPipeConfig> config)) config;
 
 /**
  * Removes a pipe from the AGPipeline object
