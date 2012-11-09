@@ -37,29 +37,19 @@
 }
 
 -(id<AGAuthenticationModule>) add:(void (^)(id<AGAuthConfig> config)) config {
-    
     AGAuthConfiguration* pipeConfig = [[AGAuthConfiguration alloc] init];
     
     if (config) {
         config(pipeConfig);
     }
-    
-    NSString* name  = [pipeConfig name];
-    NSString* type = [pipeConfig type];
-    NSURL* baseURL = [pipeConfig baseURL];
-    
-    return [self add:name baseURL:baseURL type:type];
-}
 
-// private helper
--(id<AGAuthenticationModule>)add:(NSString*) moduleName baseURL:(NSURL*)baseURL type:(NSString*) type {
     // TODO check ALL supported types...
-    if (! [type isEqualToString:@"REST"]) {
+    if (! [[pipeConfig type] isEqualToString:@"REST"]) {
         return nil;
     }
-
-    id<AGAuthenticationModule> module = [AGRestAuthentication moduleForBaseURL:baseURL];
-    [_modules setValue:module forKey:moduleName];
+    
+    id<AGAuthenticationModule> module = [AGRestAuthentication moduleWithConfig:pipeConfig];
+    [_modules setValue:module forKey:[pipeConfig name]];
     return module;
 }
 
