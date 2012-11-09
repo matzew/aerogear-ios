@@ -31,4 +31,9 @@
  */
 -(void) baseURL:(NSURL*) baseURL;
 
+-(void) loginEndpoint:(NSString*) loginEndpoint;
+-(void) logoutEndpoint:(NSString*) logoutEndpoint;
+-(void) enrollEndpoint:(NSString*) enrollEndpoint;
+-(void) authToken:(NSString*) authToken;
+
 @end
