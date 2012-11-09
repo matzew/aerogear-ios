@@ -31,9 +31,32 @@
  */
 -(void) baseURL:(NSURL*) baseURL;
 
+/**
+ * Applies the "login endpoint" to the configuration.
+ *
+ * @param loginEndpoint The login endpoint of the actual AGAuthenticationModule object.
+ */
 -(void) loginEndpoint:(NSString*) loginEndpoint;
+
+/**
+ * Applies the "logout endpoint" to the configuration.
+ *
+ * @param logoutEndpoint The logout endpoint of the actual AGAuthenticationModule object.
+ */
 -(void) logoutEndpoint:(NSString*) logoutEndpoint;
+
+/**
+ * Applies the "enroll endpoint" to the configuration.
+ *
+ * @param enrollEndpoint The enroll endpoint of the actual AGAuthenticationModule object.
+ */
 -(void) enrollEndpoint:(NSString*) enrollEndpoint;
+
+/**
+ * Applies the authToken header name to the configuration.
+ *
+ * @param authToken The authToken header name of the actual AGAuthenticationModule object.
+ */
 -(void) authToken:(NSString*) authToken;
 
 @end
