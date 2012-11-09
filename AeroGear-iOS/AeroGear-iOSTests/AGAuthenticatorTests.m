@@ -34,7 +34,7 @@
     AGAuthenticator* authenticator = [AGAuthenticator authenticator];
     STAssertNotNil(authenticator, @"authenticator not nil");
     
-    id<AGAuthenticationModule> module = [authenticator add:^(id<AGAuthConfig> config) {
+    id<AGAuthenticationModule> module = [authenticator auth:^(id<AGAuthConfig> config) {
         [config name:@"SomeModule"];
         [config baseURL:[NSURL URLWithString:@"https://server:8080/application/"]];
     }];
@@ -58,7 +58,7 @@
     AGAuthenticator* authenticator = [AGAuthenticator authenticator];
     STAssertNotNil(authenticator, @"authenticator not nil");
     
-    id<AGAuthenticationModule> module =  [authenticator add:^(id<AGAuthConfig> config) {
+    id<AGAuthenticationModule> module =  [authenticator auth:^(id<AGAuthConfig> config) {
         [config name:@"SomeModule"];
         [config baseURL:[NSURL URLWithString:@"https://server:8080/application/subcontext/"]];
         [config enrollEndpoint:@"auth/register"];
@@ -76,7 +76,7 @@
     AGAuthenticator* authenticator = [AGAuthenticator authenticator];
     STAssertNotNil(authenticator, @"authenticator not nil");
     
-    id<AGAuthenticationModule> module = [authenticator add:^(id<AGAuthConfig> config) {
+    id<AGAuthenticationModule> module = [authenticator auth:^(id<AGAuthConfig> config) {
         [config name:@"SomeModule"];
         [config baseURL:[NSURL URLWithString:@"https://server:8080/application/"]];
     }];
@@ -88,7 +88,7 @@
     STAssertEqualObjects(@"https://server:8080/application/auth/enroll", [module enrollEndpoint], @"has expected login endpoint URL");
     
     
-    id<AGAuthenticationModule> otherModule = [authenticator add:^(id<AGAuthConfig> config) {
+    id<AGAuthenticationModule> otherModule = [authenticator auth:^(id<AGAuthConfig> config) {
         [config name:@"OtherModule"];
         [config baseURL:[NSURL URLWithString:@"https://server:8080/other-application/"]];
         [config enrollEndpoint:@"auth/register"];
@@ -113,7 +113,7 @@
     AGAuthenticator* authenticator = [AGAuthenticator authenticator];
     STAssertNotNil(authenticator, @"authenticator not nil");
     
-    id<AGAuthenticationModule> module = [authenticator add:^(id<AGAuthConfig> config) {
+    id<AGAuthenticationModule> module = [authenticator auth:^(id<AGAuthConfig> config) {
         [config name:@"SomeModule"];
         [config baseURL:[NSURL URLWithString:@"https://server:8080/application/"]];
     }];
@@ -133,7 +133,7 @@
     AGAuthenticator* authenticator = [AGAuthenticator authenticator];
     STAssertNotNil(authenticator, @"authenticator not nil");
     
-    id<AGAuthenticationModule> module = [authenticator add:^(id<AGAuthConfig> config) {
+    id<AGAuthenticationModule> module = [authenticator auth:^(id<AGAuthConfig> config) {
         [config name:@"SomeModule"];
         [config baseURL:[NSURL URLWithString:@"https://server:8080/application/"]];
         [config type:@"INVALID"];
