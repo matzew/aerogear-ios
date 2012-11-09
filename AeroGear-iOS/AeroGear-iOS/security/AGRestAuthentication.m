@@ -17,6 +17,7 @@
  */
 
 #import "AGRestAuthentication.h"
+#import "AGAuthConfiguration.h"
 #import "AGHttpClient.h"
 
 
@@ -25,6 +26,11 @@
 @implementation AGRestAuthentication {
     // ivars
     AGHttpClient* _restClient;
+    
+    
+    
+    //TODO:
+    NSString* _tokenHeaderName;
     
 }
 
@@ -61,33 +67,34 @@
 // ======== 'factory' and 'init' section ========
 // ==============================================
 
-+(id) moduleForBaseURL:(NSURL*) baseURL {
-    return [[self alloc] initForBaseURL:baseURL];
++(id) moduleWithConfig:(id<AGAuthConfig>) authConfig {
+    return [[self alloc] initWithConfig:authConfig];
 }
 
-- (id)init {
+-(id) initWithConfig:(id<AGAuthConfig>) authConfig {
     self = [super init];
     if (self) {
-        // defaults:
-        _type = @"REST";
-        _loginEndpoint  = @"auth/login";
-        _logoutEndpoint = @"auth/logout";
-        _enrollEndpoint = @"auth/register";
+        // set all the things:
+        AGAuthConfiguration* config = (AGAuthConfiguration*) authConfig;
+        _type = [config type];
+        _loginEndpoint = [config loginEndpoint];
+        _logoutEndpoint = [config logoutEndpoint];
+        _enrollEndpoint = [config enrollEndpoint];
+        _baseURL = [config baseURL].absoluteString;
+
+        // TODO
+        _tokenHeaderName = [config authToken];
         
-        
+        _restClient = [AGHttpClient clientFor:[config baseURL]];
+        _restClient.parameterEncoding = AFJSONParameterEncoding;
     }
+
     return self;
 }
 
--(id) initForBaseURL:(NSURL*) baseURL {
-    self = [self init];
-    if (self) {
-        _baseURL = baseURL.absoluteString;
-        _restClient = [AGHttpClient clientFor:baseURL];
-        _restClient.parameterEncoding = AFJSONParameterEncoding;
-    }
-    return self;
-}
+
+
+
 
 -(void)dealloc {
     _restClient = nil;
@@ -153,7 +160,7 @@
      failure:(void (^)(NSError *error))failure {
     
     // stash the token to the header:
-    [_restClient setDefaultHeader:@"Auth-Token" value:_authToken];
+    [_restClient setDefaultHeader:_tokenHeaderName value:_authToken];
     
     // logoff:
     [_restClient postPath:_logoutEndpoint parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
@@ -176,7 +183,7 @@
 // private method
 -(void) readAndStashToken:(AFHTTPRequestOperation*) operation {
     // TODO: hard-coded header name:
-    _authToken = [[[operation response] allHeaderFields] valueForKey:@"Auth-Token"];
+    _authToken = [[[operation response] allHeaderFields] valueForKey:_tokenHeaderName];
 }
 
 // ==============================================================

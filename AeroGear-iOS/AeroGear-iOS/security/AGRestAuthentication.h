@@ -17,13 +17,14 @@
  */
 
 #import <Foundation/Foundation.h>
+#import "AGAuthConfig.h"
 #import "AGAuthenticationModuleAdapter.h"
 
 @interface AGRestAuthentication : NSObject <AGAuthenticationModuleAdapter>
 
 
--(id) initForBaseURL:(NSURL*) baseURL;
-+(id) moduleForBaseURL:(NSURL*) baseURL;
+-(id) initWithConfig:(id<AGAuthConfig>) authConfig;
++(id) moduleWithConfig:(id<AGAuthConfig>) authConfig;
 
 
 @end
