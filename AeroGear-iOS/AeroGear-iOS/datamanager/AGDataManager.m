@@ -37,7 +37,7 @@
 }
 
 
--(id<AGStore>) add:(void (^)(id<AGStoreConfig> config)) config {
+-(id<AGStore>) store:(void (^)(id<AGStoreConfig> config)) config {
     
     AGStoreConfiguration* storeConfig = [[AGStoreConfiguration alloc] init];
     
