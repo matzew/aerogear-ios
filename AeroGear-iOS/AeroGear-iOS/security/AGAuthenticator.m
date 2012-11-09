@@ -36,7 +36,7 @@
     return [[self alloc] init];
 }
 
--(id<AGAuthenticationModule>) add:(void (^)(id<AGAuthConfig> config)) config {
+-(id<AGAuthenticationModule>) auth:(void (^)(id<AGAuthConfig> config)) config {
     AGAuthConfiguration* pipeConfig = [[AGAuthConfiguration alloc] init];
     
     if (config) {

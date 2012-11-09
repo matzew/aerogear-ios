@@ -59,7 +59,7 @@
         
         
         AGPipeline* pipeline = [AGPipeline pipeline];
-        id<AGPipe> projects = [pipeline add:^(id<AGPipeConfig> config) {
+        id<AGPipe> projects = [pipeline pipe:^(id<AGPipeConfig> config) {
             [config name:@"projects"];
             [config baseURL:baseURL];
             [config authModule:restAuthModule];
@@ -104,7 +104,7 @@
         //        _finishedFlag = YES;
         [restAuthModule logout:^{
             AGPipeline* pipeline = [AGPipeline pipeline];
-            id<AGPipe> tasks = [pipeline add:^(id<AGPipeConfig> config) {
+            id<AGPipe> tasks = [pipeline pipe:^(id<AGPipeConfig> config) {
                 [config name:@"tasks"];
                 [config baseURL:baseURL];
                 [config authModule:restAuthModule];

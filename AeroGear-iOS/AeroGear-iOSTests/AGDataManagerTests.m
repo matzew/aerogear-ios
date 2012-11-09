@@ -28,7 +28,7 @@
 -(void) testCreateDataManagerWithOneStore {
     AGDataManager* mgr = [AGDataManager manager];
     STAssertNotNil(mgr, @"storage could not be null");
-    [mgr add:^(id<AGStoreConfig> config) {
+    [mgr store:^(id<AGStoreConfig> config) {
         [config name:@"tasks"];
     }];
     
@@ -41,14 +41,14 @@
 
 -(void) testCreateDataManagerAndAddStores {
     AGDataManager* mgr = [AGDataManager manager];
-    [mgr add:^(id<AGStoreConfig> config) {
+    [mgr store:^(id<AGStoreConfig> config) {
         [config name:@"tasks"];
     }];
-    [mgr add:^(id<AGStoreConfig> config) {
+    [mgr store:^(id<AGStoreConfig> config) {
         [config name:@"projects"];
         [config type:@"MEMORY"];
     }];
-    [mgr add:^(id<AGStoreConfig> config) {
+    [mgr store:^(id<AGStoreConfig> config) {
         [config name:@"tags"];
     }];
     
@@ -62,14 +62,14 @@
     
 -(void) testCreateDataManagerAndAddAndRemoveStores {
     AGDataManager* mgr = [AGDataManager manager];
-    [mgr add:^(id<AGStoreConfig> config) {
+    [mgr store:^(id<AGStoreConfig> config) {
         [config name:@"tasks"];
     }];
-    [mgr add:^(id<AGStoreConfig> config) {
+    [mgr store:^(id<AGStoreConfig> config) {
         [config name:@"projects"];
         [config type:@"MEMORY"];
     }];
-    [mgr add:^(id<AGStoreConfig> config) {
+    [mgr store:^(id<AGStoreConfig> config) {
         [config name:@"tags"];
     }];
     
@@ -93,7 +93,7 @@
 
 -(void) testCreateDataManagerAndAddWrongStoreType {
     AGDataManager* mgr = [AGDataManager manager];
-    id<AGStore> noStore = [mgr add:^(id<AGStoreConfig> config) {
+    id<AGStore> noStore = [mgr store:^(id<AGStoreConfig> config) {
         [config name:@"projects"];
         [config type:@"FOOBAR"];
     }];

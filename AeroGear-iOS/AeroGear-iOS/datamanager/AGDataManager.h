@@ -44,7 +44,7 @@
  *
  * @return the newly created AGStore object
  */
--(id<AGStore>) add:(void (^)(id<AGStoreConfig> config)) config;
+-(id<AGStore>) store:(void (^)(id<AGStoreConfig> config)) config;
 
 /**
  * Removes a AGStore implemention from the AGDataManager. The store to be removed

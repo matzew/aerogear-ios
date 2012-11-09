@@ -44,7 +44,7 @@
  *
  * @return the newly created AGAuthenticationModule object
  */
--(id<AGAuthenticationModule>) add:(void (^)(id<AGAuthConfig> config)) config;
+-(id<AGAuthenticationModule>) auth:(void (^)(id<AGAuthConfig> config)) config;
 
 /**
  * Removes a AGAuthenticationModule implemention from the AGAuthenticator. The auth module,

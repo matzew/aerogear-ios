@@ -60,7 +60,7 @@
 }
 
 
--(id<AGPipe>) add:(void (^)(id<AGPipeConfig> config)) config {
+-(id<AGPipe>) pipe:(void (^)(id<AGPipeConfig> config)) config {
 
     AGPipeConfiguration* pipeConfig = [[AGPipeConfiguration alloc] init];
 
