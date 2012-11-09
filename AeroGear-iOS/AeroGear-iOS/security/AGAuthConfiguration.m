@@ -30,7 +30,7 @@
         
         // default values:
         [_config setValue:@"REST" forKey:@"type"];
-        [_config setValue:@"Auth-Token" forKey:@"authToken"];
+        [_config setValue:@"Auth-Token" forKey:@"tokenHeaderName"];
         [_config setValue:@"auth/login" forKey:@"loginEndpoint"];
         [_config setValue:@"auth/logout" forKey:@"logoutEndpoint"];
         [_config setValue:@"auth/enroll" forKey:@"enrollEndpoint"];
@@ -58,8 +58,8 @@
 -(void) enrollEndpoint:(NSString*) enrollEndpoint {
     [_config setValue:enrollEndpoint forKey:@"enrollEndpoint"];
 }
--(void) authToken:(NSString*) authToken {
-    [_config setValue:authToken forKey:@"authToken"];
+-(void) tokenHeaderName:(NSString*) tokenHeaderName {
+    [_config setValue:tokenHeaderName forKey:@"tokenHeaderName"];
 }
 
 
@@ -83,8 +83,8 @@
 -(NSString*) enrollEndpoint {
     return [_config valueForKey:@"enrollEndpoint"];
 }
--(NSString*) authToken {
-    return [_config valueForKey:@"authToken"];   
+-(NSString*) tokenHeaderName {
+    return [_config valueForKey:@"tokenHeaderName"];   
 }
 
 @end

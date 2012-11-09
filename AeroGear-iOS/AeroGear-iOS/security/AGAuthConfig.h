@@ -53,10 +53,10 @@
 -(void) enrollEndpoint:(NSString*) enrollEndpoint;
 
 /**
- * Applies the authToken header name to the configuration.
+ * Applies the tokenHeaderName header name to the configuration.
  *
- * @param authToken The authToken header name of the actual AGAuthenticationModule object.
+ * @param tokenHeaderName The token-header-name of the actual AGAuthenticationModule object.
  */
--(void) authToken:(NSString*) authToken;
+-(void) tokenHeaderName:(NSString*) tokenHeaderName;
 
 @end

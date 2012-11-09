@@ -31,7 +31,7 @@
 -(NSString*) loginEndpoint;
 -(NSString*) logoutEndpoint;
 -(NSString*) enrollEndpoint;
--(NSString*) authToken;
+-(NSString*) tokenHeaderName;
 
 
 @end

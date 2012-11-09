@@ -77,7 +77,7 @@
         _logoutEndpoint = [config logoutEndpoint];
         _enrollEndpoint = [config enrollEndpoint];
         _baseURL = [config baseURL].absoluteString;
-        _tokenHeaderName = [config authToken];
+        _tokenHeaderName = [config tokenHeaderName];
         
         _restClient = [AGHttpClient clientFor:[config baseURL]];
         _restClient.parameterEncoding = AFJSONParameterEncoding;
