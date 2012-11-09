@@ -18,7 +18,7 @@ To create a pipeline, you need to use the AGPipeline class. Below is an example:
     AGPipeline* todo = [AGPipeline pipeline:serverURL];
 
     // Add a REST pipe for the 'projects' endpoint
-    id<AGPipe> projects = [pipeline add:^(id<AGPipeConfig> config) {
+    id<AGPipe> projects = [pipeline pipe:^(id<AGPipeConfig> config) {
 	        [config name:@"projects"];
 	        [config type:@"REST"];
 	    }];
@@ -134,7 +134,7 @@ After receiving data from the server, your application may want to keep the data
 	// create the datamanager
     AGDataManager* dm = [AGDataManager manager];
     // add a new (default) store object:
-    id<AGStore> myStore = [dm add:^(id<AGStoreConfig> config) {
+    id<AGStore> myStore = [dm store:^(id<AGStoreConfig> config) {
 	        [config name:@"tasks"];
 	    }];
 
@@ -230,7 +230,7 @@ To create an authenticator, you need to use the AGAuthenticator class. Below is 
 
 	// add a new auth module and the required 'base url':
     NSURL* baseURL = [NSURL URLWithString:@"https://todoauth-aerogear.rhcloud.com/todo-server/"];
-    id<AGAuthenticationModule> myMod = [authenticator add:^(id<AGAuthConfig> config) {
+    id<AGAuthenticationModule> myMod = [authenticator auth:^(id<AGAuthConfig> config) {
 	        [config name:@"authMod"];
 	        [config baseURL:baseURL];
 	    }];
@@ -259,7 +259,7 @@ The _enroll_ function of the AGAuthenticationModule protocol is used to register
         NSLog(@"SAVE: An error occured! \n%@", error);
     }];
 
-The _enroll_ function submits a generic map object with contains all the information about the new user, that the server endpoint requires. The default (REST) auth module issues for the above a request against _https://todoauth-aerogear.rhcloud.com/todo-server/auth/register_. Besides the NSDictionary the function accepts two simple blocks that are invoked on success or in case of an failure.
+The _enroll_ function submits a generic map object with contains all the information about the new user, that the server endpoint requires. The default (REST) auth module issues for the above a request against _https://todoauth-aerogear.rhcloud.com/todo-server/auth/enroll_. Besides the NSDictionary the function accepts two simple blocks that are invoked on success or in case of an failure.
 
 ## Login 
 
@@ -281,12 +281,7 @@ The default (REST) auth module issues for the above a request against _https://t
 After running a successful login, you can start using the _AGAuthenticationModule_ object on a _AGPipe_ object to access protected endpoints:
 
     ...
-    id<AGPipe> tasks =  [pipeline add:^(id<AGPipeConfig> config) {
-	        [config name:@"projects"];
-	        [config authModule:myMod];
-	        [config type:@"REST"];
-	    }];
-
+    id<AGPipe> tasks = [pipeline pipe:@"tasks" baseURL:serverURL authModule:myMod];
 
     [tasks read:^(id responseObject) {
         // LOG the JSON response, returned from the server:
