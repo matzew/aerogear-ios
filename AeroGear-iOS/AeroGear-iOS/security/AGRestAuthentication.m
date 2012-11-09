@@ -26,10 +26,6 @@
 @implementation AGRestAuthentication {
     // ivars
     AGHttpClient* _restClient;
-    
-    
-    
-    //TODO:
     NSString* _tokenHeaderName;
     
 }
@@ -81,8 +77,6 @@
         _logoutEndpoint = [config logoutEndpoint];
         _enrollEndpoint = [config enrollEndpoint];
         _baseURL = [config baseURL].absoluteString;
-
-        // TODO
         _tokenHeaderName = [config authToken];
         
         _restClient = [AGHttpClient clientFor:[config baseURL]];
@@ -92,12 +86,9 @@
     return self;
 }
 
-
-
-
-
 -(void)dealloc {
     _restClient = nil;
+    _tokenHeaderName = nil;
 }
 
 
