@@ -43,7 +43,7 @@
     // check endpoint URLs:
     STAssertEqualObjects(@"https://server:8080/application/auth/login", [module loginEndpoint], @"has expected login endpoint URL");
     STAssertEqualObjects(@"https://server:8080/application/auth/logout", [module logoutEndpoint], @"has expected login endpoint URL");
-    STAssertEqualObjects(@"https://server:8080/application/auth/register", [module enrollEndpoint], @"has expected login endpoint URL");
+    STAssertEqualObjects(@"https://server:8080/application/auth/enroll", [module enrollEndpoint], @"has expected login endpoint URL");
     
     
     module = [authenticator get:@"SomeModule"];
@@ -61,6 +61,7 @@
     id<AGAuthenticationModule> module =  [authenticator add:^(id<AGAuthConfig> config) {
         [config name:@"SomeModule"];
         [config baseURL:[NSURL URLWithString:@"https://server:8080/application/subcontext/"]];
+        [config enrollEndpoint:@"auth/register"];
     }];
 
     STAssertNotNil(module, @"module not nil");
@@ -84,12 +85,13 @@
     // check endpoint URLs:
     STAssertEqualObjects(@"https://server:8080/application/auth/login", [module loginEndpoint], @"has expected login endpoint URL");
     STAssertEqualObjects(@"https://server:8080/application/auth/logout", [module logoutEndpoint], @"has expected login endpoint URL");
-    STAssertEqualObjects(@"https://server:8080/application/auth/register", [module enrollEndpoint], @"has expected login endpoint URL");
+    STAssertEqualObjects(@"https://server:8080/application/auth/enroll", [module enrollEndpoint], @"has expected login endpoint URL");
     
     
     id<AGAuthenticationModule> otherModule = [authenticator add:^(id<AGAuthConfig> config) {
         [config name:@"OtherModule"];
         [config baseURL:[NSURL URLWithString:@"https://server:8080/other-application/"]];
+        [config enrollEndpoint:@"auth/register"];
     }];
 
     STAssertNotNil(otherModule, @"module not nil");

@@ -18,6 +18,7 @@
 
 #import <SenTestingKit/SenTestingKit.h>
 #import "AGRestAuthentication.h"
+#import "AGAuthConfiguration.h"
 #import "AGPipeline.h"
 
 @interface AGRestAuthenticationTests : SenTestCase
@@ -33,7 +34,12 @@
     [super setUp];
     // create a shared client for the demo app:
     baseURL = [NSURL URLWithString:@"https://todoauth-aerogear.rhcloud.com/todo-server/"];
-    restAuthModule = [AGRestAuthentication moduleForBaseURL:baseURL];
+    
+    AGAuthConfiguration* config = [[AGAuthConfiguration alloc] init];
+    [config baseURL:baseURL];
+    [config enrollEndpoint:@"auth/register"];
+    
+    restAuthModule = [AGRestAuthentication moduleWithConfig:config];
 
     _finishedFlag = NO;
 }
