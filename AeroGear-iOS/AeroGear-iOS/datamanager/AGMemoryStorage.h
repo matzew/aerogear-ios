@@ -21,4 +21,6 @@
 
 @interface AGMemoryStorage : NSObject <AGStore>
 
+-(id) initWithRecordId:(NSString*) recordId;
+
 @end

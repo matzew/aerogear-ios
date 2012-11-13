@@ -21,6 +21,7 @@
 @implementation AGMemoryStorage {
     // ivars
     NSMutableArray* _array;
+    NSString* _recordId;
 }
 
 @synthesize type = _type;
@@ -30,7 +31,16 @@
     if (self) {
         // base inits:
         _type = @"MEMORY";
+        
         _array = [NSMutableArray array];
+    }
+    return self;
+}
+
+-(id) initWithRecordId:(NSString*) recordId {
+    self = [self init];
+    if (self) {
+        _recordId = recordId;
     }
     return self;
 }
@@ -65,7 +75,7 @@
     @try {
         for (id record in _array) {
             // check the 'id':
-            if ([record objectForKey:@"id"] == recordId) {
+            if ([record objectForKey:_recordId] == recordId) {
                 // replace/update it:
                 retVal = record;
                 break;
@@ -135,7 +145,7 @@
         BOOL _objFound = NO;
         for (id record in _array) {
             // check the 'id':
-            if ([record objectForKey:@"id"] == [data objectForKey:@"id"]) {
+            if ([record objectForKey:_recordId] == [data objectForKey:_recordId]) {
                 // replace/update it:
                 NSUInteger index = [_array indexOfObject:record];
                 [_array removeObjectAtIndex:index];
@@ -195,7 +205,7 @@
     @try {
         for (id record in _array) {
             // check the 'id':
-            if ([record objectForKey:@"id"] == recordId) {
+            if ([record objectForKey:_recordId] == recordId) {
                 // replace/update it:
                 objectToDelete = record;
                 NSUInteger index = [_array indexOfObject:record];

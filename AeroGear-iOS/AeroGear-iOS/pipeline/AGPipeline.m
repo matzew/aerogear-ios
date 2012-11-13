@@ -75,22 +75,24 @@
     NSString* type = [pipeConfig type];
     NSURL* baseURL = [pipeConfig baseURL];
     NSString* endpoint = [pipeConfig endpoint];
+    NSString* recordId = [pipeConfig recordId];
+    
     id<AGAuthenticationModule> authModule = [pipeConfig authModule];
     
     // append the endpoint/name and use it as the final URL
     NSURL* finalURL = [self appendEndpoint:endpoint toURL:baseURL];
-    return [self add:name url:finalURL type:type authModule:authModule];
+    return [self add:name url:finalURL recordId:recordId type:type authModule:authModule];
 }
 
 // a private add, since we really don't have a 'baseURL' on the final URL...
--(id<AGPipe>) add:(NSString*) name url:(NSURL*)url type:(NSString*)type authModule:(id<AGAuthenticationModule>) authModule {
+-(id<AGPipe>) add:(NSString*) name url:(NSURL*)url recordId:(NSString*)recordId type:(NSString*)type authModule:(id<AGAuthenticationModule>) authModule {
     // TODO check ALL supported types...
     if (! [AGRestAdapter accepts:type]) {
         return nil;
     }
     
     
-    id<AGPipe> pipe = [AGRestAdapter pipeForURL:url authModule:authModule];
+    id<AGPipe> pipe = [AGRestAdapter pipeForURL:url recordId:recordId authModule:authModule];
     [_pipes setValue:pipe forKey:name];
     return pipe;
     

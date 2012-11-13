@@ -47,19 +47,20 @@
     
     NSString* name  = [storeConfig name];
     NSString* type = [storeConfig type];
+    NSString* recordId = [storeConfig recordId];
     
-    return [self add:name type:type];
+    return [self add:name type:type recordId:recordId];
 }
 
 
 // private add
--(id<AGStore>)add:(NSString*) storeName type:(NSString*) type {
+-(id<AGStore>)add:(NSString*) storeName type:(NSString*) type recordId:(NSString*) recordId  {
     // TODO check ALL supported types...
     if (! [type isEqualToString:@"MEMORY"]) {
         return nil;
     }
     
-    id<AGStore> store = [[AGMemoryStorage alloc] init];;
+    id<AGStore> store = [[AGMemoryStorage alloc] initWithRecordId:recordId];
     [_stores setValue:store forKey:storeName];
     return store;
 }

@@ -23,6 +23,8 @@
 @implementation AGRestAdapter {
     AGHttpClient* _restClient;
     id<AGAuthenticationModuleAdapter> _authModule;
+    
+    NSString* _recordId;
 }
 
 @synthesize type = _type;
@@ -37,20 +39,21 @@
     return self;
 }
 
--(id) initForURL:(NSURL*) url authModule:(id<AGAuthenticationModule>) authModule{
+-(id) initForURL:(NSURL*) url recordId:(NSString*) recordId authModule:(id<AGAuthenticationModule>) authModule{
     self = [self init];
     if (self) {
         _url = url.absoluteString;
         _restClient = [AGHttpClient clientFor:url];
         _restClient.parameterEncoding = AFJSONParameterEncoding;
         
+        _recordId = recordId;
         _authModule = (id<AGAuthenticationModuleAdapter>) authModule;
     }
     return self;
 }
 
-+(id) pipeForURL:(NSURL*) url authModule:(id<AGAuthenticationModule>) authModule{
-    return [[self alloc] initForURL:url authModule:authModule];
++(id) pipeForURL:(NSURL*) url recordId:(NSString*)recordId authModule:(id<AGAuthenticationModule>) authModule{
+    return [[self alloc] initForURL:url recordId:recordId authModule:authModule];
 }
 
 // read all, via HTTP GET
@@ -111,9 +114,9 @@
     };
     
     
-    if ([object objectForKey:@"id"]) {
+    if ([object objectForKey:_recordId]) {
         //TODO: NSLog(@"HTTP PUT to update the given object");
-        NSString* updateIdPath = [object objectForKey:@"id"];
+        NSString* updateIdPath = [object objectForKey:_recordId];
         [_restClient putPath:updateIdPath parameters:object success:successCallback failure:failureCallback];
         return;
     }

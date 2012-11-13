@@ -25,7 +25,7 @@
 
 
 // todo: move to an 'adapter' protocol
--(id) initForURL:(NSURL*) url authModule:(id<AGAuthenticationModule>) authModule;
-+(id) pipeForURL:(NSURL*) url authModule:(id<AGAuthenticationModule>) authModule;
+-(id) initForURL:(NSURL*) url recordId:(NSString*)recordId authModule:(id<AGAuthenticationModule>) authModule;
++(id) pipeForURL:(NSURL*) url recordId:(NSString*)recordId authModule:(id<AGAuthenticationModule>) authModule;
 
 @end

@@ -39,13 +39,13 @@
 
 -(void) testCreateRESTfulPipe {
     NSURL* dummyURL = [NSURL URLWithString:@"http://server.com/projects/"];
-    id<AGPipe> restPipe = [AGRestAdapter pipeForURL:dummyURL authModule:nil];
+    id<AGPipe> restPipe = [AGRestAdapter pipeForURL:dummyURL recordId:@"id" authModule:nil];
     STAssertNotNil(restPipe, @"pipe creation");
 }
 
 -(void) testPipeTypeProperty {
     NSURL* dummyURL = [NSURL URLWithString:@"http://server.com/projects/"];
-    id<AGPipe> restPipe = [AGRestAdapter pipeForURL:dummyURL authModule:nil];
+    id<AGPipe> restPipe = [AGRestAdapter pipeForURL:dummyURL recordId:@"id" authModule:nil];
     STAssertNotNil(restPipe, @"pipe creation");
     
     STAssertEqualObjects(@"REST", restPipe.type, @"verifying the (default) type");
@@ -53,7 +53,7 @@
 
 -(void) testPipeURLProperty {
     NSURL* dummyURL = [NSURL URLWithString:@"http://server.com/projects/"];
-    id<AGPipe> restPipe = [AGRestAdapter pipeForURL:dummyURL authModule:nil];
+    id<AGPipe> restPipe = [AGRestAdapter pipeForURL:dummyURL recordId:@"id" authModule:nil];
     STAssertNotNil(restPipe, @"pipe creation");
     
     STAssertEqualObjects(@"http://server.com/projects/", restPipe.url, @"verifying the given URL");

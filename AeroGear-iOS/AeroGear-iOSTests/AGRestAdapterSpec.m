@@ -30,7 +30,7 @@ describe(@"AGRestAdapter", ^{
         
         beforeEach(^{
             NSURL* dummyURL = [NSURL URLWithString:@"http://server.com/project"];
-            restPipe = [AGRestAdapter pipeForURL:dummyURL authModule:nil];
+            restPipe = [AGRestAdapter pipeForURL:dummyURL recordId:@"id" authModule:nil];
         });
         
         
