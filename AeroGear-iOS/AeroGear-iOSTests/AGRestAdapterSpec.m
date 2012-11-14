@@ -29,8 +29,13 @@ describe(@"AGRestAdapter", ^{
         
         
         beforeEach(^{
-            NSURL* dummyURL = [NSURL URLWithString:@"http://server.com/project"];
-            restPipe = [AGRestAdapter pipeForURL:dummyURL recordId:@"id" authModule:nil];
+            NSURL* baseURL = [NSURL URLWithString:@"http://server.com"];
+            
+            AGPipeConfiguration* config = [[AGPipeConfiguration alloc] init];
+            [config baseURL:baseURL];
+            [config name:@"projects"];
+            
+            restPipe = [AGRestAdapter pipeWithConfig:config];
         });
         
         
@@ -39,7 +44,7 @@ describe(@"AGRestAdapter", ^{
         });
         
         it(@"should have an expected url", ^{
-            [[[restPipe url] should] equal:@"http://server.com/project"];
+            [[[restPipe url] should] equal:@"http://server.com/projects"];
         });
         
     });

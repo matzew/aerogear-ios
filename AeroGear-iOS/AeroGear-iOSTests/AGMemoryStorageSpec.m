@@ -29,7 +29,10 @@ describe(@"AGMemoryStorage", ^{
         
         
         beforeEach(^{
-            memStore = [[AGMemoryStorage alloc] initWithRecordId:@"id"];
+            AGStoreConfiguration* config = [[AGStoreConfiguration alloc] init];
+            [config recordId:@"id"];
+            
+            memStore = [AGMemoryStorage storeWithConfig:config];
         });
 
 

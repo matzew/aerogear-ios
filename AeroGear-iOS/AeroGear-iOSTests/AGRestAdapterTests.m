@@ -38,25 +38,40 @@
 }
 
 -(void) testCreateRESTfulPipe {
-    NSURL* dummyURL = [NSURL URLWithString:@"http://server.com/projects/"];
-    id<AGPipe> restPipe = [AGRestAdapter pipeForURL:dummyURL recordId:@"id" authModule:nil];
+    NSURL* baseURL = [NSURL URLWithString:@"http://server.com"];
+    
+    AGPipeConfiguration* config = [[AGPipeConfiguration alloc]init];
+    [config baseURL:baseURL];
+    [config name:@"projects"];
+
+    id<AGPipe> restPipe = [AGRestAdapter pipeWithConfig:config];
     STAssertNotNil(restPipe, @"pipe creation");
 }
 
 -(void) testPipeTypeProperty {
-    NSURL* dummyURL = [NSURL URLWithString:@"http://server.com/projects/"];
-    id<AGPipe> restPipe = [AGRestAdapter pipeForURL:dummyURL recordId:@"id" authModule:nil];
+    NSURL* baseURL = [NSURL URLWithString:@"http://server.com"];
+    
+    AGPipeConfiguration* config = [[AGPipeConfiguration alloc]init];
+    [config baseURL:baseURL];
+    [config name:@"projects"];
+    
+    id<AGPipe> restPipe = [AGRestAdapter pipeWithConfig:config];
     STAssertNotNil(restPipe, @"pipe creation");
     
     STAssertEqualObjects(@"REST", restPipe.type, @"verifying the (default) type");
 }
 
 -(void) testPipeURLProperty {
-    NSURL* dummyURL = [NSURL URLWithString:@"http://server.com/projects/"];
-    id<AGPipe> restPipe = [AGRestAdapter pipeForURL:dummyURL recordId:@"id" authModule:nil];
+    NSURL* baseURL = [NSURL URLWithString:@"http://server.com"];
+    
+    AGPipeConfiguration* config = [[AGPipeConfiguration alloc]init];
+    [config baseURL:baseURL];
+    [config name:@"projects"];
+    
+    id<AGPipe> restPipe = [AGRestAdapter pipeWithConfig:config];
     STAssertNotNil(restPipe, @"pipe creation");
     
-    STAssertEqualObjects(@"http://server.com/projects/", restPipe.url, @"verifying the given URL");
+    STAssertEqualObjects(@"http://server.com/projects", restPipe.url, @"verifying the given URL");
 }
 
 -(void) testAccepts {
