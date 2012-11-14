@@ -18,9 +18,11 @@
 
 #import <Foundation/Foundation.h>
 #import "AGStore.h"
+#import "AGStoreConfiguration.h"
 
 @interface AGMemoryStorage : NSObject <AGStore>
 
--(id) initWithRecordId:(NSString*) recordId;
++(id) storeWithConfig:(id<AGStoreConfig>) storeConfig;
+-(id) initWithConfig:(id<AGStoreConfig>) storeConfig;
 
 @end

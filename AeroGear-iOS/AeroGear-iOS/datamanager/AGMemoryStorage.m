@@ -26,24 +26,31 @@
 
 @synthesize type = _type;
 
-- (id)init {
+// ==============================================
+// ======== 'factory' and 'init' section ========
+// ==============================================
+
++(id) storeWithConfig:(id<AGStoreConfig>) storeConfig {
+    return [[self alloc] initWithConfig:storeConfig];
+}
+
+-(id) initWithConfig:(id<AGStoreConfig>) storeConfig {
     self = [super init];
     if (self) {
         // base inits:
         _type = @"MEMORY";
-        
         _array = [NSMutableArray array];
+
+        AGStoreConfiguration *config = (AGStoreConfiguration*) storeConfig;
+        _recordId = [config recordId];
     }
+    
     return self;
 }
 
--(id) initWithRecordId:(NSString*) recordId {
-    self = [self init];
-    if (self) {
-        _recordId = recordId;
-    }
-    return self;
-}
+// =====================================================
+// ======== public API (AGStore) ========
+// =====================================================
 
 -(void) readAll:(void (^)(NSArray* objects))success
         failure:(void (^)(NSError *error))failure {
