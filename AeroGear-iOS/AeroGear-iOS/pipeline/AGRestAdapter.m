@@ -18,6 +18,7 @@
 
 #import "AGRestAdapter.h"
 #import "AGAuthenticationModuleAdapter.h"
+
 #import "AGHttpClient.h"
 
 @implementation AGRestAdapter {
@@ -27,34 +28,58 @@
     NSString* _recordId;
 }
 
+// =====================================================
+// ================ public API (AGPipe) ================
+// =====================================================
+
 @synthesize type = _type;
 @synthesize url = _url;
 
-- (id)init {
+// ==============================================
+// ======== 'factory' and 'init' section ========
+// ==============================================
+
++(id) pipeWithConfig:(id<AGPipeConfig>) pipeConfig {
+    return [[self alloc] initWithConfig:pipeConfig];
+}
+
+-(id) initWithConfig:(id<AGPipeConfig>) pipeConfig {
     self = [super init];
     if (self) {
-        // base inits:
         _type = @"REST";
-    }
-    return self;
-}
 
--(id) initForURL:(NSURL*) url recordId:(NSString*) recordId authModule:(id<AGAuthenticationModule>) authModule{
-    self = [self init];
-    if (self) {
-        _url = url.absoluteString;
-        _restClient = [AGHttpClient clientFor:url];
-        _restClient.parameterEncoding = AFJSONParameterEncoding;
+        // set all the things:
+        AGPipeConfiguration* config = (AGPipeConfiguration*) pipeConfig;
+     
+        NSURL* baseURL = [config baseURL];
+        NSString* endpoint = [config endpoint];
+        // append the endpoint/name and use it as the final URL
+        NSURL* finalURL = [self appendEndpoint:endpoint toURL:baseURL];
         
-        _recordId = recordId;
-        _authModule = (id<AGAuthenticationModuleAdapter>) authModule;
+        _url = finalURL.absoluteString;
+        _recordId = [config recordId];
+        _authModule = (id<AGAuthenticationModuleAdapter>) [config authModule];
+        
+        _restClient = [AGHttpClient clientFor:finalURL];
+        _restClient.parameterEncoding = AFJSONParameterEncoding;
     }
+    
     return self;
 }
 
-+(id) pipeForURL:(NSURL*) url recordId:(NSString*)recordId authModule:(id<AGAuthenticationModule>) authModule{
-    return [[self alloc] initForURL:url recordId:recordId authModule:authModule];
+// private helper to append the endpoint
+-(NSURL*) appendEndpoint:(NSString*)endpoint toURL:(NSURL*)baseURL {
+    if (endpoint == nil) {
+        endpoint = @"";
+    }
+    
+    // append the endpoint name and use it as the final URL
+    return [baseURL URLByAppendingPathComponent:endpoint];
 }
+
+// =====================================================
+// ======== public API (AGPipe) ========
+// =====================================================
 
 // read all, via HTTP GET
 -(void) read:(void (^)(id responseObject))success
@@ -63,7 +88,6 @@
     // try to add auth.token:
     [self applyAuthToken];
     
-
     // TODO: better Endpoints....
     [_restClient getPath:@"" parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
         
