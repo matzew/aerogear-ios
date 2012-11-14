@@ -208,6 +208,21 @@
     STAssertEqualObjects(@"http://server.com/context/tasks", fooPipe.url, @"verifying the given URL");
 }
 
+-(void) testPipeURLPropertyFromEndpoint {
+    NSURL* baseURL = [NSURL URLWithString:@"http://us.battle.net/api/wow"];
+    AGPipeline* pipeline = [AGPipeline pipeline:baseURL];
+    [pipeline pipe:^(id<AGPipeConfig> config) {
+        [config name:@"status"];
+        [config endpoint: @"realm/status"]; //endpoint with no trailing slash
+        [config type:@"REST"];
+    }];
+    STAssertNotNil(pipeline, @"pipeline creation");
+    
+    id<AGPipe> fooPipe = [pipeline get:@"status"];
+    
+    STAssertEqualObjects(@"http://us.battle.net/api/wow/realm/status", fooPipe.url, @"verifying the given URL");
+}
+
 
 // some endpoint tests
 
