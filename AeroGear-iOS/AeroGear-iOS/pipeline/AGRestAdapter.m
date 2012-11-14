@@ -116,7 +116,16 @@
     
     if ([object objectForKey:_recordId]) {
         //TODO: NSLog(@"HTTP PUT to update the given object");
-        NSString* updateIdPath = [object objectForKey:_recordId];
+        
+        id key = [object objectForKey:_recordId];
+        
+        NSString* updateIdPath;
+        if ([key isKindOfClass:[NSString class]]) {
+            updateIdPath = key;
+        } else {
+            updateIdPath = [key stringValue];
+        }
+        
         [_restClient putPath:updateIdPath parameters:object success:successCallback failure:failureCallback];
         return;
     }
@@ -154,7 +163,6 @@
             failure(error);
         }
     } ];
-
 }
 
 // helper method:
