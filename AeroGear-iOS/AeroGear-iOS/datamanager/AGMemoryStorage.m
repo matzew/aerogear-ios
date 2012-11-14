@@ -75,7 +75,7 @@
     @try {
         for (id record in _array) {
             // check the 'id':
-            if ([record objectForKey:_recordId] == recordId) {
+            if ([[record objectForKey:_recordId] isEqual:recordId]) {
                 // replace/update it:
                 retVal = record;
                 break;
@@ -145,7 +145,7 @@
         BOOL _objFound = NO;
         for (id record in _array) {
             // check the 'id':
-            if ([record objectForKey:_recordId] == [data objectForKey:_recordId]) {
+            if ([[record objectForKey:_recordId] isEqual:[data objectForKey:_recordId]]) {
                 // replace/update it:
                 NSUInteger index = [_array indexOfObject:record];
                 [_array removeObjectAtIndex:index];
@@ -205,7 +205,7 @@
     @try {
         for (id record in _array) {
             // check the 'id':
-            if ([record objectForKey:_recordId] == recordId) {
+            if ([[record objectForKey:_recordId] isEqual:recordId]) {
                 // replace/update it:
                 objectToDelete = record;
                 NSUInteger index = [_array indexOfObject:record];
