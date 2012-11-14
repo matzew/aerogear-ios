@@ -89,7 +89,7 @@
     [self applyAuthToken];
     
     // TODO: better Endpoints....
-    [_restClient getPath:@"" parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    [_restClient getPath:_url parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
         
         if (success) {
             //TODO: NSLog(@"Invoking successblock....");
@@ -143,19 +143,19 @@
         
         id key = [object objectForKey:_recordId];
         
-        NSString* updateIdPath;
+        NSString* updateId;
         if ([key isKindOfClass:[NSString class]]) {
-            updateIdPath = key;
+            updateId = key;
         } else {
-            updateIdPath = [key stringValue];
+            updateId = [key stringValue];
         }
         
-        [_restClient putPath:updateIdPath parameters:object success:successCallback failure:failureCallback];
+        [_restClient putPath:[self appendObjectPath:updateId] parameters:object success:successCallback failure:failureCallback];
         return;
     }
     else {
         //TODO: NSLog(@"HTTP POST to create the given object");
-        [_restClient postPath:@"" parameters:object success:successCallback failure:failureCallback];
+        [_restClient postPath:_url parameters:object success:successCallback failure:failureCallback];
         return;
     }
 }
@@ -174,7 +174,7 @@
         deleteKey = [key stringValue];
     }
 
-    [_restClient deletePath:deleteKey parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    [_restClient deletePath:[self appendObjectPath:deleteKey] parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
         
         if (success) {
             //TODO: NSLog(@"Invoking successblock....");
@@ -187,6 +187,11 @@
             failure(error);
         }
     } ];
+}
+
+// appends the path for delete/updates to the URL
+-(NSString*) appendObjectPath:(NSString*)path {
+    return [NSString stringWithFormat:@"%@/%@", _url, path];
 }
 
 // helper method:
