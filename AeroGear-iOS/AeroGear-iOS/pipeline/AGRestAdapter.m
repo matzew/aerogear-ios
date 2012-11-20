@@ -137,25 +137,23 @@
         }
     };
     
+    id objectKey = [object objectForKey:_recordId];
     
-    if ([object objectForKey:_recordId]) {
-        //TODO: NSLog(@"HTTP PUT to update the given object");
-        
-        id key = [object objectForKey:_recordId];
-        
-        NSString* updateId;
-        if ([key isKindOfClass:[NSString class]]) {
-            updateId = key;
-        } else {
-            updateId = [key stringValue];
-        }
-        
-        [_restClient putPath:[self appendObjectPath:updateId] parameters:object success:successCallback failure:failureCallback];
-        return;
-    }
-    else {
+    // we need to check if the map representation contains the "recordID" and its value is actually set:
+    if (objectKey == nil || [objectKey isKindOfClass:[NSNull class]]) {
         //TODO: NSLog(@"HTTP POST to create the given object");
         [_restClient postPath:_url parameters:object success:successCallback failure:failureCallback];
+        return;
+    } else {
+        NSString* updateId;
+        if ([objectKey isKindOfClass:[NSString class]]) {
+            updateId = objectKey;
+        } else {
+            updateId = [objectKey stringValue];
+        }
+        
+        //TODO: NSLog(@"HTTP PUT to update the given object");
+        [_restClient putPath:[self appendObjectPath:updateId] parameters:object success:successCallback failure:failureCallback];
         return;
     }
 }
