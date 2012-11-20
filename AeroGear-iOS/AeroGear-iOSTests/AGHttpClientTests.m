@@ -19,6 +19,8 @@
 #import <SenTestingKit/SenTestingKit.h>
 #import "AGHttpClient.h"
 
+#import "AGPipeline.h"
+
 @interface AGHttpClientTests : SenTestCase
 
 @end
@@ -67,5 +69,33 @@
         [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
     }
 }
+
+// todo: use mocking... perhaps also have this test on the integration test...
+-(void) testNSNullValue {
+    NSURL* baseURL = [NSURL URLWithString:@"https://todo-aerogear.rhcloud.com/todo-server/"];
+    AGPipeline* pipeline = [AGPipeline pipeline:baseURL];
+    
+    [pipeline pipe:^(id<AGPipeConfig> config) {
+        [config name:@"tags"];
+        [config type:@"REST"];
+    }];
+    id<AGPipe> tagsPipe = [pipeline get:@"tags"];
+    
+    //fake Tag: id + title
+    NSDictionary* fakeTag = [NSDictionary dictionaryWithObjectsAndKeys:[NSNull null], @"id", @"Fake TAG", @"title", nil];
+    
+    [tagsPipe save:fakeTag success:^(id responseObject) {
+        _finishedFlag = YES;
+    } failure:^(NSError *error) {
+    }];
+    
+    // keep the run loop going
+    while(!_finishedFlag) {
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+    }
+
+}
+
+
 
 @end
