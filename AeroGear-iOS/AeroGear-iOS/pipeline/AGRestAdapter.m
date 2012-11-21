@@ -22,9 +22,7 @@
 #import "AGHttpClient.h"
 
 @implementation AGRestAdapter {
-    AGHttpClient* _restClient;
     id<AGAuthenticationModuleAdapter> _authModule;
-    
     NSString* _recordId;
 }
 

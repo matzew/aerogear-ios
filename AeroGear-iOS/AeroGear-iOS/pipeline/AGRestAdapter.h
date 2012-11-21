@@ -17,11 +17,17 @@
  */
 
 #import <Foundation/Foundation.h>
+#import "AGHttpClient.h"
 #import "AGPipe.h"
 #import "AGBaseAdapter.h"
 #import "AGPipeConfiguration.h"
 
-@interface AGRestAdapter : AGBaseAdapter <AGPipe>
+
+@interface AGRestAdapter : AGBaseAdapter <AGPipe> {
+    // now subclasses can see the 'ivar':
+    @protected
+    AGHttpClient* _restClient;
+}
 
 +(id) pipeWithConfig:(id<AGPipeConfig>) pipeConfig;
 -(id) initWithConfig:(id<AGPipeConfig>) pipeConfig;
