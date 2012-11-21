@@ -22,7 +22,7 @@
 
 /**
  * AGDataManager manages different AGStore implementations. It is basically a
- * factory that hides the concrete instanciation of a specific AGStore implementation.
+ * factory that hides the concrete instantiations of a specific AGStore implementation.
  * The class offers simple APIs to add, remove or get access to a 'data store'.
  *
  * NOTE: Right now, there is NO automatic data sync. This is up to the user.
@@ -37,7 +37,7 @@
 +(id) manager;
 
 /**
- * Adds a new AGStore object, based on the give configuration object.
+ * Adds a new AGStore object, based on the given configuration object.
  *
  * @param config A block object which passes in an implementation of the AGStoreConfig protocol.
  * the object is used to configure the AGStore object.
@@ -47,7 +47,7 @@
 -(id<AGStore>) store:(void (^)(id<AGStoreConfig> config)) config;
 
 /**
- * Removes a AGStore implemention from the AGDataManager. The store to be removed
+ * Removes a AGStore implementation from the AGDataManager. The store to be removed
  * is determined by the storeName argument.
  *
  * @param storeName The name of the actual data store object.
@@ -55,7 +55,7 @@
 -(id<AGStore>)remove:(NSString*) storeName;
 
 /**
- * Loads a given AGStore implemention, based on the given storeName argument.
+ * Loads a given AGStore implementation, based on the given storeName argument.
  *
  * @param storeName The name of the actual data store object.
  */

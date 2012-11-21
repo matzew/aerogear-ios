@@ -22,8 +22,8 @@
 
 /**
  * AGAuthenticator manages different AGAuthenticationModule implementations. It is basically a
- * factory that hides the concrete instanciation of a specific AGAuthenticationModule implementation.
- * The class offers simple APIs to add, remove or get access to a 'authentication module'.
+ * factory that hides the concrete instantiation of a specific AGAuthenticationModule implementation.
+ * The class offers simple APIs to add, remove, or get access to a 'authentication module'.
  *
  */
 @interface AGAuthenticator : NSObject
@@ -37,7 +37,7 @@
 +(id) authenticator;
 
 /**
- * Adds a new AGAuthenticationModule object, based on the give configuration object.
+ * Adds a new AGAuthenticationModule object, based on the given configuration object.
  *
  * @param config A block object which passes in an implementation of the AGAuthConfig protocol.
  * the object is used to configure the AGAuthenticationModule object.
@@ -47,7 +47,7 @@
 -(id<AGAuthenticationModule>) auth:(void (^)(id<AGAuthConfig> config)) config;
 
 /**
- * Removes a AGAuthenticationModule implemention from the AGAuthenticator. The auth module,
+ * Removes a AGAuthenticationModule implementation from the AGAuthenticator. The auth module,
  * to be removed is determined by the moduleName argument.
  *
  * @param moduleName The name of the actual auth module object.
@@ -55,7 +55,7 @@
 -(id<AGAuthenticationModule>)remove:(NSString*) moduleName;
 
 /**
- * Loads a given AGAuthenticationModule implemention, based on the given moduleName argument.
+ * Loads a given AGAuthenticationModule implementation, based on the given moduleName argument.
  *
  * @param moduleName The name of the actual auth module object.
  */
