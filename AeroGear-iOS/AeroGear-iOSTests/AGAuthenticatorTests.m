@@ -23,124 +23,137 @@
 
 @end
 
-@implementation AGAuthenticatorTests
-
--(void) testCreateEmptyAuthenticator {
-    AGAuthenticator* authenticator = [AGAuthenticator authenticator];
-    STAssertNotNil(authenticator, @"authenticator not nil");
+@implementation AGAuthenticatorTests {
+    AGAuthenticator* _authenticator;
 }
 
--(void) testCreateAuthenticatorWithOneModule {
-    AGAuthenticator* authenticator = [AGAuthenticator authenticator];
-    STAssertNotNil(authenticator, @"authenticator not nil");
+-(void)setUp {
+    [super setUp];
     
-    id<AGAuthenticationModule> module = [authenticator auth:^(id<AGAuthConfig> config) {
+    // create Authenticator
+    _authenticator = [AGAuthenticator authenticator];
+}
+
+-(void)tearDown {
+    [super tearDown];
+    
+    _authenticator = nil;
+}
+
+-(void) testAuthenticatorCreation {
+    STAssertNotNil(_authenticator, @"authenticator should not be nil");
+}
+
+-(void) testAddModule {
+    id<AGAuthenticationModule> module = [_authenticator auth:^(id<AGAuthConfig> config) {
         [config name:@"SomeModule"];
         [config baseURL:[NSURL URLWithString:@"https://server:8080/application/"]];
     }];
-    STAssertNotNil(module, @"module not nil");
-
-    // check endpoint URLs:
-    STAssertEqualObjects(@"https://server:8080/application/auth/login", [module loginEndpoint], @"has expected login endpoint URL");
-    STAssertEqualObjects(@"https://server:8080/application/auth/logout", [module logoutEndpoint], @"has expected login endpoint URL");
-    STAssertEqualObjects(@"https://server:8080/application/auth/enroll", [module enrollEndpoint], @"has expected login endpoint URL");
+    STAssertNotNil(module, @"module should not be nil");
     
-    
-    module = [authenticator get:@"SomeModule"];
-    STAssertNotNil(module, @"module not nil");
-    
-    module = [authenticator get:@"SomeOtherModule"];
-    STAssertNil(module, @"module should be nil");
-
+    // check "default" endpoint URLs:
+    STAssertEqualObjects(@"https://server:8080/application/auth/login",
+                         [module loginEndpoint],
+                         @"has expected login endpoint URL");
+    STAssertEqualObjects(@"https://server:8080/application/auth/logout",
+                         [module logoutEndpoint],
+                         @"has expected logout endpoint URL");
+    STAssertEqualObjects(@"https://server:8080/application/auth/enroll",
+                         [module enrollEndpoint],
+                         @"has expected enroll endpoint URL");
 }
 
--(void) testEndpointURLs {
-    AGAuthenticator* authenticator = [AGAuthenticator authenticator];
-    STAssertNotNil(authenticator, @"authenticator not nil");
-    
-    id<AGAuthenticationModule> module =  [authenticator auth:^(id<AGAuthConfig> config) {
+-(void) testAddModuleWithDifferentEndpoints {
+    id<AGAuthenticationModule> module =  [_authenticator auth:^(id<AGAuthConfig> config) {
         [config name:@"SomeModule"];
         [config baseURL:[NSURL URLWithString:@"https://server:8080/application/subcontext/"]];
+        [config loginEndpoint:@"auth/in"];
+        [config logoutEndpoint:@"auth/out"];
         [config enrollEndpoint:@"auth/register"];
     }];
-
-    STAssertNotNil(module, @"module not nil");
-    // check endpoint URLs:
-    STAssertEqualObjects(@"https://server:8080/application/subcontext/auth/login", [module loginEndpoint], @"has expected login endpoint URL");
-    STAssertEqualObjects(@"https://server:8080/application/subcontext/auth/logout", [module logoutEndpoint], @"has expected login endpoint URL");
-    STAssertEqualObjects(@"https://server:8080/application/subcontext/auth/register", [module enrollEndpoint], @"has expected login endpoint URL");
     
+    STAssertNotNil(module, @"module should not be nil");
+    
+    // check endpoint URLs:
+    STAssertEqualObjects(@"https://server:8080/application/subcontext/auth/in",
+                         [module loginEndpoint],
+                         @"has expected login endpoint URL");
+    STAssertEqualObjects(@"https://server:8080/application/subcontext/auth/out",
+                         [module logoutEndpoint],
+                         @"has expected logout endpoint URL");
+    STAssertEqualObjects(@"https://server:8080/application/subcontext/auth/register",
+                         [module enrollEndpoint],
+                         @"has expected enroll endpoint URL");
 }
 
--(void) testCreateAuthenticatorAndAddModules {
-    AGAuthenticator* authenticator = [AGAuthenticator authenticator];
-    STAssertNotNil(authenticator, @"authenticator not nil");
-    
-    id<AGAuthenticationModule> module = [authenticator auth:^(id<AGAuthConfig> config) {
+-(void) testAddModuleWithDefaultType {
+    id<AGAuthenticationModule> module = [_authenticator auth:^(id<AGAuthConfig> config) {
         [config name:@"SomeModule"];
         [config baseURL:[NSURL URLWithString:@"https://server:8080/application/"]];
     }];
-
-    STAssertNotNil(module, @"module not nil");
-    // check endpoint URLs:
-    STAssertEqualObjects(@"https://server:8080/application/auth/login", [module loginEndpoint], @"has expected login endpoint URL");
-    STAssertEqualObjects(@"https://server:8080/application/auth/logout", [module logoutEndpoint], @"has expected login endpoint URL");
-    STAssertEqualObjects(@"https://server:8080/application/auth/enroll", [module enrollEndpoint], @"has expected login endpoint URL");
+    STAssertNotNil(module, @"module should not be nil");
     
-    
-    id<AGAuthenticationModule> otherModule = [authenticator auth:^(id<AGAuthConfig> config) {
-        [config name:@"OtherModule"];
-        [config baseURL:[NSURL URLWithString:@"https://server:8080/other-application/"]];
-        [config enrollEndpoint:@"auth/register"];
-    }];
-
-    STAssertNotNil(otherModule, @"module not nil");
-    
-    // check type:
-    STAssertEqualObjects(@"REST", otherModule.type, @"has expected REST type");
-    
-    // check endpoint URLs:
-    STAssertEqualObjects(@"https://server:8080/other-application/auth/login", [otherModule loginEndpoint], @"has expected login endpoint URL");
-    STAssertEqualObjects(@"https://server:8080/other-application/auth/logout", [otherModule logoutEndpoint], @"has expected login endpoint URL");
-    STAssertEqualObjects(@"https://server:8080/other-application/auth/register", [otherModule enrollEndpoint], @"has expected login endpoint URL");
-    
-    // look em up:
-    STAssertNotNil([authenticator get:@"SomeModule"], @"module not nil");
-    STAssertNotNil([authenticator get:@"OtherModule"], @"module not nil");
+    //check default type
+    STAssertEqualObjects(@"REST", module.type, @"has expected REST type");
 }
 
--(void) testCreateAuthenticatorAndAddAndRemoveModules {
-    AGAuthenticator* authenticator = [AGAuthenticator authenticator];
-    STAssertNotNil(authenticator, @"authenticator not nil");
-    
-    id<AGAuthenticationModule> module = [authenticator auth:^(id<AGAuthConfig> config) {
-        [config name:@"SomeModule"];
-        [config baseURL:[NSURL URLWithString:@"https://server:8080/application/"]];
-    }];
-
-    STAssertNotNil(module, @"module not nil");
-    
-    // look it up:
-    STAssertNotNil([authenticator get:@"SomeModule"], @"module not nil");
-    
-    [authenticator remove:@"SomeModule"];
-    
-    // look it up:
-    STAssertNil([authenticator get:@"SomeModule"], @"module was already removed");
-}
-
--(void) testCreateAuthenticatorAndAddWrongModuleType {
-    AGAuthenticator* authenticator = [AGAuthenticator authenticator];
-    STAssertNotNil(authenticator, @"authenticator not nil");
-    
-    id<AGAuthenticationModule> module = [authenticator auth:^(id<AGAuthConfig> config) {
+-(void) testAddModuleWithInvalidType {
+    id<AGAuthenticationModule> module = [_authenticator auth:^(id<AGAuthConfig> config) {
         [config name:@"SomeModule"];
         [config baseURL:[NSURL URLWithString:@"https://server:8080/application/"]];
         [config type:@"INVALID"];
     }];
-
+    
     STAssertNil(module, @"module should be nil");
 }
 
+-(void) testAddModules {
+    id<AGAuthenticationModule> module = [_authenticator auth:^(id<AGAuthConfig> config) {
+        [config name:@"SomeModule"];
+        [config baseURL:[NSURL URLWithString:@"https://server:8080/application/"]];
+    }];
+
+    STAssertNotNil(module, @"module should not be nil");
+    
+    id<AGAuthenticationModule> otherModule = [_authenticator auth:^(id<AGAuthConfig> config) {
+        [config name:@"OtherModule"];
+        [config baseURL:[NSURL URLWithString:@"https://server:8080/another-application/"]];
+    }];
+   
+    STAssertNotNil(otherModule, @"other module should not be nil");
+    
+    // look em up:
+    STAssertNotNil([_authenticator get:@"SomeModule"], @"module should not be nil");
+    STAssertNotNil([_authenticator get:@"OtherModule"], @"module should not be nil");
+}
+
+-(void) testAddAndRemoveModule {
+    id<AGAuthenticationModule> module = [_authenticator auth:^(id<AGAuthConfig> config) {
+        [config name:@"SomeModule"];
+        [config baseURL:[NSURL URLWithString:@"https://server:8080/application/"]];
+    }];
+    
+    STAssertNotNil(module, @"module should not be nil");
+    // look it up:
+    STAssertNotNil([_authenticator get:@"SomeModule"], @"module should not be nil");
+ 
+    // remove it
+    [_authenticator remove:@"SomeModule"];
+    // look it up:
+    STAssertNil([_authenticator get:@"SomeModule"], @"module was already removed");
+}
+
+-(void) testRemoveNonExistingModule {
+    id<AGAuthenticationModule> module = [_authenticator auth:^(id<AGAuthConfig> config) {
+        [config name:@"SomeModule"];
+        [config baseURL:[NSURL URLWithString:@"https://server:8080/application/"]];
+    }];
+    
+    STAssertNotNil(module, @"module should not be nil");
+
+    // remove non existant
+    id<AGAuthenticationModule> fooModule = [_authenticator remove:@"FOO"];
+    STAssertNil(fooModule, @"module should be nil");
+}
 
 @end
