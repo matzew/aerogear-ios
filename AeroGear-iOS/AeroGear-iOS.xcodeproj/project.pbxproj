@@ -49,6 +49,7 @@
 		57ED144E160B490F00881924 /* AGDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 57ED144D160B490F00881924 /* AGDataManager.m */; };
 		57ED1452160B492B00881924 /* AGDataManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 57ED1451160B492B00881924 /* AGDataManagerTests.m */; };
 		57F24DFC1601F91600A3EAD8 /* AGPipeSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 57F24DFB1601F91600A3EAD8 /* AGPipeSpec.m */; };
+		6F0E7B98165F7092005E0BE5 /* AGMemoryStorageTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F0E7B97165F7092005E0BE5 /* AGMemoryStorageTests.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -139,6 +140,7 @@
 		57ED1453160B566200881924 /* AGStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AGStore.h; path = datamanager/AGStore.h; sourceTree = "<group>"; };
 		57F24DFB1601F91600A3EAD8 /* AGPipeSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGPipeSpec.m; sourceTree = "<group>"; };
 		65D1DA06FAB24A18AB6A5963 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		6F0E7B97165F7092005E0BE5 /* AGMemoryStorageTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGMemoryStorageTests.m; sourceTree = "<group>"; };
 		B8AB37EC1AA3464892D758C1 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
 		D6A7A8124B23447DA65BC0DE /* Pods-AeroGear-iOSTests.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AeroGear-iOSTests.xcconfig"; path = "Pods/Pods-AeroGear-iOSTests.xcconfig"; sourceTree = SOURCE_ROOT; };
 		DD46252015EF437500A5040C /* common.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = common.xcconfig; sourceTree = "<group>"; };
@@ -195,6 +197,7 @@
 				573CBDA015E4CEDD0071E7A6 /* AGPipelineTests.m */,
 				573CBDA915E546A20071E7A6 /* AGRestAdapterTests.m */,
 				57ED1451160B492B00881924 /* AGDataManagerTests.m */,
+				6F0E7B97165F7092005E0BE5 /* AGMemoryStorageTests.m */,
 				570B908516231D1100426BA7 /* AGRestAuthenticationTests.m */,
 			);
 			name = "Unit Tests";
@@ -506,6 +509,7 @@
 				571DBAD51610C3D700A0A3A6 /* AGMemoryStorageSpec.m in Sources */,
 				570B908616231D1100426BA7 /* AGRestAuthenticationTests.m in Sources */,
 				570B908A1624360600426BA7 /* AGAuthenticatorTests.m in Sources */,
+				6F0E7B98165F7092005E0BE5 /* AGMemoryStorageTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
