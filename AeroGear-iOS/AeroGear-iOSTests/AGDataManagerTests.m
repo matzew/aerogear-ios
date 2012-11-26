@@ -23,81 +23,102 @@
 @interface AGDataManagerTests : SenTestCase
 
 @end
-@implementation AGDataManagerTests
-
--(void) testCreateDataManagerWithOneStore {
-    AGDataManager* mgr = [AGDataManager manager];
-    STAssertNotNil(mgr, @"storage could not be null");
-    [mgr store:^(id<AGStoreConfig> config) {
-        [config name:@"tasks"];
-    }];
-    
-    id<AGStore> taskStore = [mgr get:@"tasks"];
-    STAssertNotNil(taskStore, @"actual store could not be null");
-    
-    id<AGStore> noStore = [mgr get:@"foobar"];
-    STAssertNil(noStore, @"actual store should be nil");
+@implementation AGDataManagerTests {
+    AGDataManager* _manager;
 }
 
--(void) testCreateDataManagerAndAddStores {
-    AGDataManager* mgr = [AGDataManager manager];
-    [mgr store:^(id<AGStoreConfig> config) {
+-(void)setUp {
+    [super setUp];
+    
+    // create DataManager
+    _manager = [AGDataManager manager];
+}
+
+-(void)tearDown {
+    [super tearDown];
+    
+    _manager = nil;
+}
+
+-(void)testDataManagerCreation {
+    STAssertNotNil(_manager, @"manager should not be nil");
+}
+
+-(void)testAddStoreWithDefaultType {
+    id<AGStore> store = [_manager store:^(id<AGStoreConfig> config) {
         [config name:@"tasks"];
     }];
-    [mgr store:^(id<AGStoreConfig> config) {
-        [config name:@"projects"];
+
+    STAssertNotNil(store, @"store should not be nil");
+}
+
+-(void)testAddStoreWithMemoryType {
+    id<AGStore> store = [_manager store:^(id<AGStoreConfig> config) {
+        [config name:@"tasks"];
         [config type:@"MEMORY"];
     }];
-    [mgr store:^(id<AGStoreConfig> config) {
-        [config name:@"tags"];
+    
+    STAssertNotNil(store, @"store should not be nil");
+}
+
+-(void)testAddStoreWithInvalidType {
+    id<AGStore> store = [_manager store:^(id<AGStoreConfig> config) {
+        [config name:@"tasks"];
+        [config type:@"INVALID"];
     }];
     
-    id<AGStore> taskStore = [mgr get:@"tasks"];
-    STAssertNotNil(taskStore, @"actual store could not be null");
-    id<AGStore> tagStore = [mgr get:@"tags"];
-    STAssertNotNil(tagStore, @"actual store could not be null");
-    id<AGStore> projectStore = [mgr get:@"projects"];
-    STAssertNotNil(projectStore, @"actual store could not be null");
+    STAssertNil(store, @"store should be nil");
 }
-    
--(void) testCreateDataManagerAndAddAndRemoveStores {
-    AGDataManager* mgr = [AGDataManager manager];
-    [mgr store:^(id<AGStoreConfig> config) {
+
+-(void) testAddAndRemoveStores {
+    id<AGStore> taskStore = [_manager store:^(id<AGStoreConfig> config) {
         [config name:@"tasks"];
     }];
-    [mgr store:^(id<AGStoreConfig> config) {
+    
+    STAssertNotNil(taskStore, @"store should not be nil");
+    
+    id<AGStore> tagStore = [_manager store:^(id<AGStoreConfig> config) {
         [config name:@"projects"];
-        [config type:@"MEMORY"];
-    }];
-    [mgr store:^(id<AGStoreConfig> config) {
-        [config name:@"tags"];
     }];
     
-    id<AGStore> taskStore = [mgr get:@"tasks"];
-    STAssertNotNil(taskStore, @"actual store could not be null");
-    // check default type:
-    STAssertEqualObjects(@"MEMORY", taskStore.type, @"has expected MEMORY type");
+    STAssertNotNil(tagStore, @"store should not be nil");
     
-    id<AGStore> tagStore = [mgr get:@"tags"];
-    STAssertNotNil(tagStore, @"actual store could not be null");
-    id<AGStore> projectStore = [mgr get:@"projects"];
-    STAssertNotNil(projectStore, @"actual store could not be null");
-    // check type:
-    STAssertEqualObjects(@"MEMORY", projectStore.type, @"has expected MEMORY type");
-
-    projectStore = [mgr remove:@"projects"];
-    STAssertNotNil(projectStore, @"actual store could not be null");
-    projectStore = [mgr get:@"projects"];
-    STAssertNil(projectStore, @"actual store should be null");
+    // look em up:
+    STAssertNotNil([_manager get:@"tasks"], @"store should not be nil");
+    STAssertNotNil([_manager get:@"projects"], @"store should not be nil");
+    
+    // remove it
+    [_manager remove:@"tasks"];
+    // look it up:
+    STAssertNil([_manager get:@"tasks"], @"store was already removed");
+    
+    // remove it
+    [_manager remove:@"projects"];
+    // look it up:
+    STAssertNil([_manager get:@"projects"], @"store was already removed");
 }
 
--(void) testCreateDataManagerAndAddWrongStoreType {
-    AGDataManager* mgr = [AGDataManager manager];
-    id<AGStore> noStore = [mgr store:^(id<AGStoreConfig> config) {
-        [config name:@"projects"];
-        [config type:@"FOOBAR"];
+-(void)testRemoveNonExistingStore {
+    id<AGStore> store = [_manager store:^(id<AGStoreConfig> config) {
+        [config name:@"tasks"];
     }];
-    STAssertNil(noStore, @"actual store should be null");
+    
+    STAssertNotNil(store, @"store should not be nil");
+    
+    // remove non existing store
+    id<AGStore> fooStore = [_manager remove:@"FOO"];
+    STAssertNil(fooStore, @"store should be nil");
 }
 
+-(void)testGetNonExistingStore {
+    id<AGStore> store = [_manager store:^(id<AGStoreConfig> config) {
+        [config name:@"tasks"];
+    }];
+    
+    STAssertNotNil(store, @"store should not be nil");
+    
+    // look up a non existing store
+    id<AGStore> fooStore = [_manager get:@"FOO"];
+    STAssertNil(fooStore, @"store should be nil");
+}
 @end
