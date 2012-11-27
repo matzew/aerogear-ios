@@ -69,7 +69,7 @@
      failure:(void (^)(NSError *error))failure;
 
 /**
- * Performs the login of the give user. Since the data will be send in plaintext, it is IMPORTANT,
+ * Performs the login for the given user. Since the data will be sent in plaintext, it is IMPORTANT,
  * to run the signin via TLS/HTTPS.
  *
  * @param username username
