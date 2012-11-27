@@ -159,6 +159,22 @@
 -(void) remove:(id) key
        success:(void (^)(id responseObject))success
        failure:(void (^)(NSError *error))failure {
+    
+    // when null was provided we try to invoke the failure block
+    if ([key isKindOfClass:[NSNull class]]) {
+        
+        if (failure) {
+            NSError* error = [NSError errorWithDomain:@"org.aerogear.pipes.remove"
+                                                 code:0
+                                             userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"Key was NSNull", NSLocalizedDescriptionKey, nil]];
+            
+            failure(error);
+        }
+        
+        // return on NSNull
+        return;
+    }
+    
 
     // try to add auth.token:
     [self applyAuthToken];
