@@ -120,6 +120,28 @@
     
 }
 
-
+// todo: use mocking... perhaps also have this test on the integration test...
+//-(void) testReadWithFilter {
+//    NSURL* baseURL = [NSURL URLWithString:@"https://todo-aerogear.rhcloud.com/todo-server/"];
+//    AGPipeline* pipeline = [AGPipeline pipeline:baseURL];
+//    
+//    [pipeline pipe:^(id<AGPipeConfig> config) {
+//        [config name:@"tags"];
+//        [config type:@"REST"];
+//    }];
+//    id<AGPipe> tagsPipe = [pipeline get:@"tags"];
+//    
+//    [tagsPipe readWithFilter:@"10" success:^(id responseObject) {
+//        _finishedFlag = YES;
+//    } failure:^(NSError *error) {
+//        STFail(@"no failure expected");
+//    }];
+//    
+//    // keep the run loop going
+//    while(!_finishedFlag) {
+//        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+//    }
+//    
+//}
 
 @end

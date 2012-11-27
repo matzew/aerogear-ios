@@ -105,9 +105,43 @@
 -(void) readWithFilter:(id)filterObject
                success:(void (^)(id responseObject))success
                failure:(void (^)(NSError *error))failure {
-//    // try to add auth.token:
-//    [self applyAuthToken];
-// TODO...
+    // try to add auth.token:
+    [self applyAuthToken];
+    
+    if ([filterObject isKindOfClass:[NSNull class]]) {
+        
+        if (failure) {
+            NSError* error = [NSError errorWithDomain:@"org.aerogear.pipes.readWithFilter"
+                                                 code:0
+                                             userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"Key was NSNull", NSLocalizedDescriptionKey, nil]];
+            
+            failure(error);
+        }
+        
+        // return on NSNull
+        return;
+    }
+    
+    id objectKey;
+    if ([filterObject isKindOfClass:[NSString class]]) {
+        objectKey = filterObject;
+    } else {
+        objectKey = [filterObject stringValue];
+    }
+    
+    [_restClient getPath:[self appendObjectPath:objectKey] parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        
+        if (success) {
+            //TODO: NSLog(@"Invoking successblock....");
+            success(responseObject);
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+        if (failure) {
+            //TODO: NSLog(@"Invoking failure block....");
+            failure(error);
+        }
+    } ];
 }
 
 -(void) save:(NSDictionary*) object
