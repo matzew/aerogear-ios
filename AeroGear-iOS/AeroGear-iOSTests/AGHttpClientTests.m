@@ -108,8 +108,9 @@
     id<AGPipe> tagsPipe = [pipeline get:@"tags"];
     
     [tagsPipe remove:[NSNull null] success:^(id responseObject) {
-        _finishedFlag = YES;
+        STFail(@"no success expected");
     } failure:^(NSError *error) {
+        _finishedFlag = YES;
     }];
     
     // keep the run loop going
