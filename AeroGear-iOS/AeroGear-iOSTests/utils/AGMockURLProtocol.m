@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-#import "AGFakeURLProtocol.h"
+#import "AGMockURLProtocol.h"
 
 @interface NSHTTPURLResponse(UndocumentedInitializer)
 - (id)initWithURL:(NSURL*)URL statusCode:(NSInteger)statusCode headerFields:(NSDictionary*)headerFields requestTime:(double)requestTime;
@@ -28,7 +28,7 @@ static NSInteger sStatusCode = 200;
 static NSError* sError;
 static NSString* sMethod;
 
-@implementation AGFakeURLProtocol
+@implementation AGMockURLProtocol
 
 + (BOOL)canInitWithRequest:(NSURLRequest*)request {
 	return [[[request URL] scheme] isEqualToString:@"http"];

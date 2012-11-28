@@ -18,7 +18,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface AGFakeURLProtocol : NSURLProtocol
+@interface AGMockURLProtocol : NSURLProtocol
 
 + (void)setResponseData:(NSData*)data;
 + (void)setHeaders:(NSDictionary*)headers;

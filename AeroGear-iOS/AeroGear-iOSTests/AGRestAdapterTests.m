@@ -18,7 +18,7 @@
 
 #import <SenTestingKit/SenTestingKit.h>
 #import "AGRestAdapter.h"
-#import "AGFakeURLProtocol.h"
+#import "AGMockURLProtocol.h"
 
 #define PROJECTS @"[{\"id\":1,\"title\":\"First Project\",\"style\":\"project-161-58-58\",\"tasks\":[]},{\"id\":2,\"title\":\"Second Project\",\"style\":\"project-64-144-230\",\"tasks\":[]}]"
 
@@ -38,10 +38,10 @@
     [super setUp];
 
     // register AGFakeURLProtocol to fake HTTP comm.
-    [NSURLProtocol registerClass:[AGFakeURLProtocol class]];
+    [NSURLProtocol registerClass:[AGMockURLProtocol class]];
     // set correct content-type otherwise AFNetworking
     // will complain because it expects JSON response
-    [AGFakeURLProtocol setHeaders:[NSDictionary
+    [AGMockURLProtocol setHeaders:[NSDictionary
                                    dictionaryWithObject:@"application/json; charset=utf-8" forKey:@"Content-Type"]];
 
     NSURL* baseURL = [NSURL URLWithString:@"http://server.com/context/"];
@@ -54,7 +54,7 @@
 }
 
 -(void)tearDown {
-    [NSURLProtocol unregisterClass:[AGFakeURLProtocol class]];
+    [NSURLProtocol unregisterClass:[AGMockURLProtocol class]];
     
     [super tearDown];
 }
@@ -76,7 +76,7 @@
 }
 
 -(void)testRead {
-    [AGFakeURLProtocol setResponseData:[PROJECTS dataUsingEncoding:NSUTF8StringEncoding]];
+    [AGMockURLProtocol setResponseData:[PROJECTS dataUsingEncoding:NSUTF8StringEncoding]];
 
     [_restPipe read:^(id responseObject) {
         STAssertNotNil(responseObject, @"response should not be nil");
@@ -113,7 +113,7 @@
 //}
 
 -(void)testSaveNew {
-    [AGFakeURLProtocol setResponseData:[PROJECT dataUsingEncoding:NSUTF8StringEncoding]];
+    [AGMockURLProtocol setResponseData:[PROJECT dataUsingEncoding:NSUTF8StringEncoding]];
     
     NSMutableDictionary* project = [NSMutableDictionary
                                     dictionaryWithObjectsAndKeys:@"First Project", @"title",
@@ -121,7 +121,7 @@
 
     [_restPipe save:project success:^(id responseObject) {
         STAssertNotNil(responseObject, @"response should not be nil");
-        STAssertEqualObjects(@"POST", [AGFakeURLProtocol methodCalled], @"POST should have been called");
+        STAssertEqualObjects(@"POST", [AGMockURLProtocol methodCalled], @"POST should have been called");
         _finishedFlag = YES;
 
     } failure:^(NSError *error) {
@@ -136,7 +136,7 @@
 }
 
 -(void)testSaveExisting {
-    [AGFakeURLProtocol setResponseData:[PROJECT dataUsingEncoding:NSUTF8StringEncoding]];
+    [AGMockURLProtocol setResponseData:[PROJECT dataUsingEncoding:NSUTF8StringEncoding]];
     
     NSMutableDictionary* project = [NSMutableDictionary
                                     dictionaryWithObjectsAndKeys:@"1", @"id", @"First Project", @"title",
@@ -144,7 +144,7 @@
     
     [_restPipe save:project success:^(id responseObject) {
         STAssertNotNil(responseObject, @"response should not be nil");
-        STAssertEqualObjects(@"PUT", [AGFakeURLProtocol methodCalled], @"PUT should have been called");
+        STAssertEqualObjects(@"PUT", [AGMockURLProtocol methodCalled], @"PUT should have been called");
         _finishedFlag = YES;
         
     } failure:^(NSError *error) {
@@ -159,7 +159,7 @@
 }
 
 -(void)testRemove {
-    [AGFakeURLProtocol setResponseData:[PROJECT dataUsingEncoding:NSUTF8StringEncoding]];
+    [AGMockURLProtocol setResponseData:[PROJECT dataUsingEncoding:NSUTF8StringEncoding]];
     
     [_restPipe remove:@"1" success:^(id responseObject) {
         STAssertNotNil(responseObject, @"response should not be nil");
@@ -177,7 +177,7 @@
 }
 
 -(void)testNSNullValueOnSave {
-    [AGFakeURLProtocol setResponseData:[PROJECT dataUsingEncoding:NSUTF8StringEncoding]];
+    [AGMockURLProtocol setResponseData:[PROJECT dataUsingEncoding:NSUTF8StringEncoding]];
     
     //fake Tag: id + title
     NSDictionary* fakeTag = [NSDictionary dictionaryWithObjectsAndKeys:[NSNull null], @"id", @"Fake TAG", @"title", nil];
