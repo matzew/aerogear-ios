@@ -50,6 +50,7 @@
 		57ED1452160B492B00881924 /* AGDataManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 57ED1451160B492B00881924 /* AGDataManagerTests.m */; };
 		57F24DFC1601F91600A3EAD8 /* AGPipeSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 57F24DFB1601F91600A3EAD8 /* AGPipeSpec.m */; };
 		6F0E7B98165F7092005E0BE5 /* AGMemoryStorageTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F0E7B97165F7092005E0BE5 /* AGMemoryStorageTests.m */; };
+		6F6F23A31665212A00006155 /* AGFakeURLProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F6F23A21665212A00006155 /* AGFakeURLProtocol.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -141,6 +142,8 @@
 		57F24DFB1601F91600A3EAD8 /* AGPipeSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGPipeSpec.m; sourceTree = "<group>"; };
 		65D1DA06FAB24A18AB6A5963 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		6F0E7B97165F7092005E0BE5 /* AGMemoryStorageTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGMemoryStorageTests.m; sourceTree = "<group>"; };
+		6F6F23A11665212A00006155 /* AGFakeURLProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AGFakeURLProtocol.h; path = utils/AGFakeURLProtocol.h; sourceTree = "<group>"; };
+		6F6F23A21665212A00006155 /* AGFakeURLProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AGFakeURLProtocol.m; path = utils/AGFakeURLProtocol.m; sourceTree = "<group>"; };
 		B8AB37EC1AA3464892D758C1 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
 		D6A7A8124B23447DA65BC0DE /* Pods-AeroGear-iOSTests.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AeroGear-iOSTests.xcconfig"; path = "Pods/Pods-AeroGear-iOSTests.xcconfig"; sourceTree = SOURCE_ROOT; };
 		DD46252015EF437500A5040C /* common.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = common.xcconfig; sourceTree = "<group>"; };
@@ -191,6 +194,7 @@
 		573CBDA515E4F9000071E7A6 /* Unit Tests */ = {
 			isa = PBXGroup;
 			children = (
+				6F6F239F1664D16200006155 /* Utils */,
 				570B90891624360600426BA7 /* AGAuthenticatorTests.m */,
 				57DCDB8715F20FB700289EA4 /* AGBaseAdapterTests.m */,
 				57345BDB15E3D1DF00B74FEB /* AGHttpClientTests.m */,
@@ -345,6 +349,15 @@
 				573CBDA715E51C120071E7A6 /* AGAdapter.h */,
 				57DCDB8215F20E4800289EA4 /* AGBaseAdapter.h */,
 				57DCDB8315F20E4800289EA4 /* AGBaseAdapter.m */,
+			);
+			name = Utils;
+			sourceTree = "<group>";
+		};
+		6F6F239F1664D16200006155 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				6F6F23A11665212A00006155 /* AGFakeURLProtocol.h */,
+				6F6F23A21665212A00006155 /* AGFakeURLProtocol.m */,
 			);
 			name = Utils;
 			sourceTree = "<group>";
@@ -510,6 +523,7 @@
 				570B908616231D1100426BA7 /* AGRestAuthenticationTests.m in Sources */,
 				570B908A1624360600426BA7 /* AGAuthenticatorTests.m in Sources */,
 				6F0E7B98165F7092005E0BE5 /* AGMemoryStorageTests.m in Sources */,
+				6F6F23A31665212A00006155 /* AGFakeURLProtocol.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
