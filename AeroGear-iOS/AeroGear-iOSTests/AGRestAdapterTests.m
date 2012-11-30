@@ -20,9 +20,9 @@
 #import "AGRestAdapter.h"
 #import "AGMockURLProtocol.h"
 
-#define PROJECTS @"[{\"id\":1,\"title\":\"First Project\",\"style\":\"project-161-58-58\",\"tasks\":[]},{\"id\":2,\"title\":\"Second Project\",\"style\":\"project-64-144-230\",\"tasks\":[]}]"
+static NSString *const PROJECTS = @"[{\"id\":1,\"title\":\"First Project\",\"style\":\"project-161-58-58\",\"tasks\":[]},{\"id\":                 2,\"title\":\"Second Project\",\"style\":\"project-64-144-230\",\"tasks\":[]}]";
 
-#define PROJECT @"{\"id\":1,\"title\":\"First Project\",\"style\":\"project-161-58-58\",\"tasks\":[]}"
+static NSString *const PROJECT = @"{\"id\":1,\"title\":\"First Project\",\"style\":\"project-161-58-58\",\"tasks\":[]}";
 
 @interface AGRestAdapterTests : SenTestCase
 
@@ -39,6 +39,11 @@
 
     // register AGFakeURLProtocol to fake HTTP comm.
     [NSURLProtocol registerClass:[AGMockURLProtocol class]];
+    [AGMockURLProtocol setStatusCode:200];
+	[AGMockURLProtocol setHeaders:nil];
+	[AGMockURLProtocol setResponseData:nil];
+	[AGMockURLProtocol setError:nil];
+    
     // set correct content-type otherwise AFNetworking
     // will complain because it expects JSON response
     [AGMockURLProtocol setHeaders:[NSDictionary
@@ -55,6 +60,10 @@
 
 -(void)tearDown {
     [NSURLProtocol unregisterClass:[AGMockURLProtocol class]];
+    [AGMockURLProtocol setStatusCode:200];
+	[AGMockURLProtocol setHeaders:nil];
+	[AGMockURLProtocol setResponseData:nil];
+	[AGMockURLProtocol setError:nil];
     
     [super tearDown];
 }
@@ -64,14 +73,10 @@
 }
 
 -(void)testPipeTypeProperty {
-    STAssertNotNil(_restPipe, @"pipe creation");
-    
     STAssertEqualObjects(@"REST", _restPipe.type, @"verifying the (default) type");
 }
 
 -(void)testPipeURLProperty {
-    STAssertNotNil(_restPipe, @"pipe creation");
-    
     STAssertEqualObjects(@"http://server.com/context/projects", _restPipe.url, @"verifying the given URL");
 }
 
