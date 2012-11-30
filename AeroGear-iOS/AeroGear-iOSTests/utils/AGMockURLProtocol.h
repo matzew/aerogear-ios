@@ -16,12 +16,16 @@
  * limitations under the License.
  */
 
+// this implementation was inspired by the blog post
+// found here http://bit.ly/nhJx0A
+
 #import <Foundation/Foundation.h>
 
 @interface AGMockURLProtocol : NSURLProtocol
 
 + (void)setResponseData:(NSData*)data;
 + (void)setHeaders:(NSDictionary*)headers;
++ (void)addHeader:(NSString*)key value:(NSString*)value;
 + (void)setStatusCode:(NSInteger)statusCode;
 + (void)setError:(NSError*)error;
 

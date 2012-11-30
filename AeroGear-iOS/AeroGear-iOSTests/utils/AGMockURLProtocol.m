@@ -22,16 +22,17 @@
 - (id)initWithURL:(NSURL*)URL statusCode:(NSInteger)statusCode headerFields:(NSDictionary*)headerFields requestTime:(double)requestTime;
 @end
 
-static NSData* sResponseData;
-static NSDictionary* sHeaders;
+static NSData* sResponseData = nil;
+static NSMutableDictionary* sHeaders = nil;
 static NSInteger sStatusCode = 200;
-static NSError* sError;
-static NSString* sMethod;
+static NSError* sError = nil;
+static NSString* sMethod = nil;
 
 @implementation AGMockURLProtocol
 
 + (BOOL)canInitWithRequest:(NSURLRequest*)request {
-	return [[[request URL] scheme] isEqualToString:@"http"];
+	return [[[request URL] scheme] isEqualToString:@"http"] ||
+           [[[request URL] scheme] isEqualToString:@"https"] ;
 }
 
 + (NSURLRequest*)canonicalRequestForRequest:(NSURLRequest*)request {
@@ -43,7 +44,14 @@ static NSString* sMethod;
 }
 
 + (void)setHeaders:(NSDictionary*)headers {
-    sHeaders = headers;
+    sHeaders = [NSMutableDictionary dictionaryWithDictionary:headers];
+}
+
++ (void)addHeader:(NSString*)key value:(NSString*)value {
+    if (sHeaders == nil)
+        sHeaders = [[NSMutableDictionary alloc] init];
+    
+    [sHeaders setObject:value forKey:key];
 }
 
 + (void)setStatusCode:(NSInteger)statusCode {
