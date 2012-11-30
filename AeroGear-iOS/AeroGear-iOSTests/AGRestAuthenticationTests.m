@@ -21,131 +21,90 @@
 #import "AGAuthConfiguration.h"
 #import "AGPipeline.h"
 
+#import "AGMockURLProtocol.h"
+
+static NSString *const AUTH_TOKEN = @"f36d937c-28d1-4426-98d2-ddab11e954d6";
+static NSString *const PASSING_USERNAME = @"john";
+
+static NSString *const FAILING_USERNAME = @"fail";
+static NSString *const LOGIN_PASSWORD = @"passwd";
+static NSString *const ENROLL_PASSWORD = @"passwd";
+
+static NSString *const LOGIN_SUCCESS_RESPONSE =  @"{\"username\":\"%@\",\"roles\":[\"admin\"],\"logged\":\"true\"}";
+
 @interface AGRestAuthenticationTests : SenTestCase
 
 @end
 
-@implementation AGRestAuthenticationTests{
+@implementation AGRestAuthenticationTests {
     BOOL _finishedFlag;
-    AGRestAuthentication* restAuthModule;
-    NSURL* baseURL;
+
+    id<AGPipe> _projects;
+    
+    AGRestAuthentication* _restAuthModule;
 }
+
 -(void)setUp {
     [super setUp];
-    // create a shared client for the demo app:
-    baseURL = [NSURL URLWithString:@"https://todoauth-aerogear.rhcloud.com/todo-server/"];
     
+    // register AGFakeURLProtocol to fake HTTP comm.
+    [NSURLProtocol registerClass:[AGMockURLProtocol class]];
+    [AGMockURLProtocol setStatusCode:200];
+	[AGMockURLProtocol setHeaders:nil];
+	[AGMockURLProtocol setResponseData:nil];
+	[AGMockURLProtocol setError:nil];
+    
+    // set correct content-type otherwise AFNetworking
+    // will complain because it expects JSON response
+    [AGMockURLProtocol setHeaders:[NSDictionary
+                                   dictionaryWithObject:@"application/json; charset=utf-8" forKey:@"Content-Type"]];
+    
+    
+    NSURL* baseURL = [NSURL URLWithString:@"https://server.com/context/"];
+    
+    // setup REST Authenticator
     AGAuthConfiguration* config = [[AGAuthConfiguration alloc] init];
     [config baseURL:baseURL];
     [config enrollEndpoint:@"auth/register"];
-    
-    restAuthModule = [AGRestAuthentication moduleWithConfig:config];
 
-    _finishedFlag = NO;
+    _restAuthModule = [AGRestAuthentication moduleWithConfig:config];
+
+    // setup Pipeline
+    AGPipeline* pipeline = [AGPipeline pipeline:baseURL];
+    _projects = [pipeline pipe:^(id<AGPipeConfig> config) {
+        [config name:@"projects"];
+        [config authModule:_restAuthModule];
+    }];
 }
 
 -(void)tearDown {
-    restAuthModule = nil;
+    [NSURLProtocol unregisterClass:[AGMockURLProtocol class]];
+    [AGMockURLProtocol setStatusCode:200];
+	[AGMockURLProtocol setHeaders:nil];
+	[AGMockURLProtocol setResponseData:nil];
+	[AGMockURLProtocol setError:nil];
+    
+    _projects = nil;
+    _restAuthModule = nil;
 }
 
-///////// this is more an integration test......
-
-
-
--(void) testLoginAndProtectedAccess {
-    
-    [restAuthModule login:@"john" password:@"123" success:^(id object) {
-        //        _finishedFlag = YES;
-        
-        
-        AGPipeline* pipeline = [AGPipeline pipeline];
-        id<AGPipe> projects = [pipeline pipe:^(id<AGPipeConfig> config) {
-            [config name:@"projects"];
-            [config baseURL:baseURL];
-            [config authModule:restAuthModule];
-        }];
-
-        
-        [projects read:^(id responseObject) {
-            _finishedFlag = YES;
-            NSLog(@"\n%@", responseObject);
-        } failure:^(NSError *error) {
-            _finishedFlag = YES;
-            STFail(@"no access to server resource: %@", error);
-        }];
-        
-        [projects read:^(id responseObject) {
-            _finishedFlag = YES;
-            NSLog(@"\n%@", responseObject);
-        } failure:^(NSError *error) {
-            _finishedFlag = YES;
-            STFail(@"no access to server resource: %@", error);
-        }];
-        
-        
-    } failure:^(NSError *error) {
-        _finishedFlag = YES;
-        STFail(@"wrong login");
-    }];
-    
-    // keep the run loop going
-    while(!_finishedFlag) {
-        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
-    }
-    
-    
-    
-    
+-(void)testRestAuthenticationCreation {
+    STAssertNotNil(_restAuthModule, @"module should not be nil");
 }
 
--(void) testLoginWithProtectedAccessAndLogout {
-    
-    [restAuthModule login:@"john" password:@"123" success:^(id object) {
-        //        _finishedFlag = YES;
-        [restAuthModule logout:^{
-            AGPipeline* pipeline = [AGPipeline pipeline];
-            id<AGPipe> tasks = [pipeline pipe:^(id<AGPipeConfig> config) {
-                [config name:@"tasks"];
-                [config baseURL:baseURL];
-                [config authModule:restAuthModule];
-            }];
-            
-            [tasks read:^(id responseObject) {
-                _finishedFlag = YES;
-                STFail(@"should have NO access to server resource...");
-            } failure:^(NSError *error) {
-                _finishedFlag = YES;
-            }];
-            
-            
-            
-        } failure:^(NSError *error) {
-            _finishedFlag = YES;
-            STFail(@"wrong login");
-        }];
+-(void) testLoginSuccess {
+    [AGMockURLProtocol addHeader:@"Auth-Token" value:AUTH_TOKEN];
+    [AGMockURLProtocol setResponseData:[[NSString stringWithFormat:LOGIN_SUCCESS_RESPONSE, PASSING_USERNAME]
+                                        dataUsingEncoding:NSUTF8StringEncoding]];
+
+    [_restAuthModule login:PASSING_USERNAME password:LOGIN_PASSWORD success:^(id responseObject) {
+        STAssertEqualObjects(PASSING_USERNAME, [responseObject valueForKey:@"username"], @"should be equal");
+        STAssertEqualObjects([responseObject valueForKey:@"logged"], @"true", @"should be true");
         
-        
-    } failure:^(NSError *error) {
-        _finishedFlag = YES;
-        STFail(@"wrong login");
-    }];
-    
-    // keep the run loop going
-    while(!_finishedFlag) {
-        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
-    }
-    
-}
-
-
-
--(void) testSuccessfulLogin {
-    
-    [restAuthModule login:@"john" password:@"123" success:^(id object) {
         _finishedFlag = YES;
     } failure:^(NSError *error) {
         _finishedFlag = YES;
-        STFail(@"wrong login");
+        STFail(@"should have login", error);
     }];
     
     // keep the run loop going
@@ -154,10 +113,13 @@
     }
 }
 
--(void) testUnsuccessfulLogin {
-
-    [restAuthModule login:@"johnny" password:@"likeAboss" success:^(id object) {
-        STFail(@"should not work...");
+-(void) testLoginFails {
+    [AGMockURLProtocol setError:[NSError errorWithDomain:NSURLErrorDomain
+                                                    code:401 // Unauthorized
+                                                userInfo:nil]];
+    
+    [_restAuthModule login:FAILING_USERNAME password:LOGIN_PASSWORD success:^(id responseObject) {
+        STFail(@"should not work");
         _finishedFlag = YES;
     } failure:^(NSError *error) {
         _finishedFlag = YES;
@@ -169,12 +131,14 @@
     }
 }
 
-
--(void) testLogoff {
+-(void) testLogout {
+    [AGMockURLProtocol addHeader:@"Auth-Token" value:AUTH_TOKEN];
+    [AGMockURLProtocol setResponseData:[[NSString stringWithFormat:LOGIN_SUCCESS_RESPONSE, PASSING_USERNAME]
+                                        dataUsingEncoding:NSUTF8StringEncoding]];
     
-    [restAuthModule login:@"john" password:@"123" success:^(id object) {
+    [_restAuthModule login:PASSING_USERNAME password:LOGIN_PASSWORD success:^(id object) {
         // after initial login, we issue a logout:
-        [restAuthModule logout:^{
+        [_restAuthModule logout:^{
             _finishedFlag = YES;
         } failure:^(NSError *error) {
             _finishedFlag = YES;
@@ -191,41 +155,28 @@
     }
 }
 
-
--(void) testWrongLogoff {
+-(void) testEnrollSuccess {
+    [AGMockURLProtocol addHeader:@"Auth-Token" value:AUTH_TOKEN];
+    [AGMockURLProtocol setResponseData:[[NSString stringWithFormat:LOGIN_SUCCESS_RESPONSE, PASSING_USERNAME]
+                                        dataUsingEncoding:NSUTF8StringEncoding]];
     
-    // blank logoff....
-    [restAuthModule logout:^{
-        _finishedFlag = YES;
-        STFail(@"this should fail, so no success should be invoked");
-    } failure:^(NSError *error) {
-        _finishedFlag = YES;
-    }];
-    
-    // keep the run loop going
-    while(!_finishedFlag) {
-        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
-    }
-}
-
-// not testing this, need to generate random usernames...
--(void) NotestRegister {
-    // {"firstname":"firstname","lastname":"lastname","email":"mei@ooo.de","username":"dsadsasdas","password":"asdasdasdsa","role":"admin"}
     NSMutableDictionary* registerPayload = [NSMutableDictionary dictionary];
+    
     [registerPayload setValue:@"Matthias" forKey:@"firstname"];
     [registerPayload setValue:@"Wessendorf" forKey:@"lastname"];
     [registerPayload setValue:@"emaadsil@mssssse.com" forKey:@"email"];
-    [registerPayload setValue:@"usefhrndasame" forKey:@"username"];
-    [registerPayload setValue:@"secASDret" forKey:@"password"];
+    [registerPayload setValue:PASSING_USERNAME forKey:@"username"];
+    [registerPayload setValue:LOGIN_PASSWORD forKey:@"password"];
     [registerPayload setValue:@"admin" forKey:@"role"];
-    
-    [restAuthModule enroll:registerPayload success:^(id object) {
-        NSLog(@"\n\n%@", object);
+
+    [_restAuthModule enroll:registerPayload success:^(id responseObject) {
+        STAssertEqualObjects(PASSING_USERNAME, [responseObject valueForKey:@"username"], @"should be equal");
+        STAssertEqualObjects([responseObject valueForKey:@"logged"], @"true", @"should be true");
+        
         _finishedFlag = YES;
     } failure:^(NSError *error) {
-        NSLog(@"\n\n%@", error);
         _finishedFlag = YES;
-        STFail(@"broken register");
+        STFail(@"should have enroll", error);
     }];
     
     // keep the run loop going
@@ -233,7 +184,31 @@
         [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
     }
 }
+-(void) testEnrollFails {
+    [AGMockURLProtocol setError:[NSError errorWithDomain:NSURLErrorDomain
+                                                    code:400 // Bad Request
+                                                userInfo:nil]];
 
-
+    NSMutableDictionary* registerPayload = [NSMutableDictionary dictionary];
+    
+    [registerPayload setValue:@"Matthias" forKey:@"firstname"];
+    [registerPayload setValue:@"Wessendorf" forKey:@"lastname"];
+    [registerPayload setValue:@"emaadsil@mssssse.com" forKey:@"email"];
+    [registerPayload setValue:PASSING_USERNAME forKey:@"username"];
+    [registerPayload setValue:LOGIN_PASSWORD forKey:@"password"];
+    [registerPayload setValue:@"admin" forKey:@"role"];
+    
+    [_restAuthModule enroll:registerPayload success:^(id responseObject) {
+        STFail(@"should not work");        
+        _finishedFlag = YES;
+    } failure:^(NSError *error) {
+        _finishedFlag = YES;
+    }];
+    
+    // keep the run loop going
+    while(!_finishedFlag) {
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+    }
+}
 
 @end
