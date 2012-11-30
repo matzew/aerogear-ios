@@ -20,6 +20,9 @@
 #import "AGHttpClient.h"
 
 #import "AGPipeline.h"
+#import "AGMockURLProtocol.h"
+
+static NSString *const PROJECTS = @"[{\"id\":1,\"title\":\"First Project\",\"style\":\"project-161-58-58\",\"tasks\":[]},{\"id\":                 2,\"title\":\"Second Project\",\"style\":\"project-64-144-230\",\"tasks\":[]}]";
 
 @interface AGHttpClientTests : SenTestCase
 
@@ -27,40 +30,59 @@
 
 @implementation AGHttpClientTests{
     BOOL _finishedFlag;
-    AGHttpClient* restClient;
+   
+    AGHttpClient* _restClient;
 }
 
 -(void)setUp {
     [super setUp];
-    // create a shared client for the demo app:
-    NSURL* testURL = [NSURL URLWithString:@"http://todo-aerogear.rhcloud.com/todo-server/"];
-    restClient = [AGHttpClient clientFor:testURL];
-    restClient.parameterEncoding = AFJSONParameterEncoding;
+    
+    // register AGFakeURLProtocol to fake HTTP comm.
+    [NSURLProtocol registerClass:[AGMockURLProtocol class]];
+    [AGMockURLProtocol setStatusCode:200];
+	[AGMockURLProtocol setHeaders:nil];
+	[AGMockURLProtocol setResponseData:nil];
+	[AGMockURLProtocol setError:nil];
+    
+    // set correct content-type otherwise AFNetworking
+    // will complain because it expects JSON response
+    [AGMockURLProtocol setHeaders:[NSDictionary
+                                   dictionaryWithObject:@"application/json; charset=utf-8" forKey:@"Content-Type"]];
+    
+    NSURL* baseURL = [NSURL URLWithString:@"http://server.com/context/"];
+    
+    _restClient = [AGHttpClient clientFor:baseURL];
+    _restClient.parameterEncoding = AFJSONParameterEncoding;
     
     _finishedFlag = NO;
 }
 
 -(void)tearDown {
-    restClient = nil;
+    [NSURLProtocol unregisterClass:[AGMockURLProtocol class]];
+    [AGMockURLProtocol setStatusCode:200];
+	[AGMockURLProtocol setHeaders:nil];
+	[AGMockURLProtocol setResponseData:nil];
+	[AGMockURLProtocol setError:nil];
+    
+    _restClient = nil;
+    
+    [super tearDown];
 }
 
-// Simple test, that goes to the web to see if the client works
+-(void)testHttpClientCreation {
+    STAssertNotNil(_restClient, @"client should not be nil");
+}
+
 -(void) testGetProjects {
+    [AGMockURLProtocol setResponseData:[PROJECTS dataUsingEncoding:NSUTF8StringEncoding]];
     
-    // TODO: use OCMock here in order to NOT require network access.....
-    
-    [restClient getPath:@"projects" parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        
-        NSLog(@"Projects: %@", responseObject);
-        
-        
-        // signal that the test finished...
+    [_restClient getPath:@"projects" parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        STAssertNotNil(responseObject, @"response should not be nil");
         _finishedFlag = YES;
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"An error occured! \n%@", error);
         _finishedFlag = YES;
-        STFail(@"Error...");
+        STFail(@"should not have failed");
         
     } ];
     
