@@ -280,14 +280,14 @@ describe(@"AGMemoryStorage", ^{
             }];
             
             
-            // remove the user with the id '0':
+            // remove the user with the id '1':
             [memStore remove:@"1" success:^(id object) {
                 [object shouldBeNil];
             } failure:^(NSError *error) {
                 // todo
             }];
             
-            // read from the empty store...
+            // should contain the first object
             [memStore readAll:^(NSArray *objects) {
                 [[objects should] haveCountOf:(NSUInteger)1];
             } failure:^(NSError *error) {
