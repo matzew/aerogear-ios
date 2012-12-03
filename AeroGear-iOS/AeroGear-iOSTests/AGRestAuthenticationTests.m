@@ -162,8 +162,8 @@ static NSString *const LOGIN_SUCCESS_RESPONSE =  @"{\"username\":\"%@\",\"roles\
     
     NSMutableDictionary* registerPayload = [NSMutableDictionary dictionary];
     
-    [registerPayload setValue:@"Matthias" forKey:@"firstname"];
-    [registerPayload setValue:@"Wessendorf" forKey:@"lastname"];
+    [registerPayload setValue:@"John" forKey:@"firstname"];
+    [registerPayload setValue:@"Doe" forKey:@"lastname"];
     [registerPayload setValue:@"emaadsil@mssssse.com" forKey:@"email"];
     [registerPayload setValue:PASSING_USERNAME forKey:@"username"];
     [registerPayload setValue:LOGIN_PASSWORD forKey:@"password"];
@@ -191,8 +191,8 @@ static NSString *const LOGIN_SUCCESS_RESPONSE =  @"{\"username\":\"%@\",\"roles\
 
     NSMutableDictionary* registerPayload = [NSMutableDictionary dictionary];
     
-    [registerPayload setValue:@"Matthias" forKey:@"firstname"];
-    [registerPayload setValue:@"Wessendorf" forKey:@"lastname"];
+    [registerPayload setValue:@"John" forKey:@"firstname"];
+    [registerPayload setValue:@"Doe" forKey:@"lastname"];
     [registerPayload setValue:@"emaadsil@mssssse.com" forKey:@"email"];
     [registerPayload setValue:PASSING_USERNAME forKey:@"username"];
     [registerPayload setValue:LOGIN_PASSWORD forKey:@"password"];
