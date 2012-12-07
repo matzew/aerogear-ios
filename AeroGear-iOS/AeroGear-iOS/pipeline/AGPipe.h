@@ -18,6 +18,8 @@
 
 #import <Foundation/Foundation.h>
 
+#import "AGFilterConfig.h"
+
 /**
  * AGPipe represents a server connection. An object of this class is responsible to
  * communicate with the server and perfoms read/write operations.
@@ -65,7 +67,7 @@
  * This block has no return value and takes one argument: The `NSError` object describing
  * the network or parsing error that occurred.
  */
--(void) readWithFilter:(id)filterObject
+-(void) readWithFilter:(void (^)(id<AGFilterConfig> config)) config
                success:(void (^)(id responseObject))success
                failure:(void (^)(NSError *error))failure;
 

@@ -17,18 +17,19 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "AGHttpClient.h"
-#import "AGPipe.h"
-#import "AGBaseAdapter.h"
-#import "AGPipeConfiguration.h"
+#import "AGFilterConfig.h"
 
-@interface AGRestAdapter : AGBaseAdapter <AGPipe> {
-    // now subclasses can see the 'ivar':
-    @protected
-    AGHttpClient* _restClient;
-}
+/**
+ * The internal implementation of the AGFilterConfig to configure filtering.
+ */
+@interface AGFilterConfiguration : NSObject <AGFilterConfig>
 
-+(id) pipeWithConfig:(id<AGPipeConfig>) pipeConfig;
--(id) initWithConfig:(id<AGPipeConfig>) pipeConfig;
+// private getters...
+-(NSString*) name;
+-(NSUInteger) limit;
+-(NSUInteger) offset;
+-(NSString*) where;
+
+- (NSDictionary*) dictionary;
 
 @end

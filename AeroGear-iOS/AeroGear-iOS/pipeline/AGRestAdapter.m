@@ -17,6 +17,7 @@
  */
 
 #import "AGRestAdapter.h"
+#import "AGFilterConfiguration.h"
 #import "AGAuthenticationModuleAdapter.h"
 
 #import "AGHttpClient.h"
@@ -102,34 +103,22 @@
     } ];
 }
 
--(void) readWithFilter:(id)filterObject
+-(void) readWithFilter:(void (^)(id<AGFilterConfig> config))config
                success:(void (^)(id responseObject))success
                failure:(void (^)(NSError *error))failure {
     // try to add auth.token:
     [self applyAuthToken];
     
-    if ([filterObject isKindOfClass:[NSNull class]]) {
-        
-        if (failure) {
-            NSError* error = [NSError errorWithDomain:@"org.aerogear.pipes.readWithFilter"
-                                                 code:0
-                                             userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"Key was NSNull", NSLocalizedDescriptionKey, nil]];
-            
-            failure(error);
-        }
-        
-        // return on NSNull
-        return;
-    }
+    NSDictionary *params;
     
-    id objectKey;
-    if ([filterObject isKindOfClass:[NSString class]]) {
-        objectKey = filterObject;
-    } else {
-        objectKey = [filterObject stringValue];
+    if (config != nil) {
+        AGFilterConfiguration* filterConfig = [[AGFilterConfiguration alloc] init];
+        config(filterConfig);
+        
+        params = [filterConfig dictionary];
     }
-    
-    [_restClient getPath:[self appendObjectPath:objectKey] parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+
+    [_restClient getPath:_url parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
         
         if (success) {
             //TODO: NSLog(@"Invoking successblock....");
