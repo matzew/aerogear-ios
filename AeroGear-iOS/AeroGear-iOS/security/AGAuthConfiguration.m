@@ -29,7 +29,7 @@
         
         
         // default values:
-        [_config setValue:@"REST" forKey:@"type"];
+        [_config setValue:@"AG_SECURITY" forKey:@"type"];
         [_config setValue:@"Auth-Token" forKey:@"tokenHeaderName"];
         [_config setValue:@"auth/login" forKey:@"loginEndpoint"];
         [_config setValue:@"auth/logout" forKey:@"logoutEndpoint"];
