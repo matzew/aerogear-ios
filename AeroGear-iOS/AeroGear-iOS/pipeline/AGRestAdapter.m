@@ -80,6 +80,28 @@
 // ======== public API (AGPipe) ========
 // =====================================================
 
+-(void) read:(id)value
+    success:(void (^)(id responseObject))success
+    failure:(void (^)(NSError *error))failure {
+
+    if ([value isKindOfClass:[NSNull class]]) {
+        if (failure) {
+            NSError* error = [NSError errorWithDomain:@"org.aerogear.pipes.read"
+                                                 code:0
+                                             userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"id value was NSNull", NSLocalizedDescriptionKey, nil]];
+            
+            failure(error);
+        }
+        
+        // return on NSNull
+        return;
+    }
+    
+    [self readWithFilter:^(id<AGFilterConfig> config) {
+        [config where:[NSDictionary dictionaryWithObjectsAndKeys:value, _recordId, nil]];
+    } success:success failure:failure];
+}
+
 // read all, via HTTP GET
 -(void) read:(void (^)(id responseObject))success
      failure:(void (^)(NSError *error))failure {
