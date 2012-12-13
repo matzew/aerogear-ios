@@ -19,9 +19,9 @@ To create a pipeline, you need to use the AGPipeline class. Below is an example:
 
     // Add a REST pipe for the 'projects' endpoint
     id<AGPipe> projects = [pipeline pipe:^(id<AGPipeConfig> config) {
-	        [config name:@"projects"];
-	        [config type:@"REST"];
-	    }];
+        [config name:@"projects"];
+        [config type:@"REST"];
+    }];
 
 
 The AGPipeline class offers some simple 'management' APIs to work with containing AGPipe objects, which itself represents a server connection. The AGPipe API is basically an abstraction layer for _any_ server side connection. In the example above the 'projects' pipe points to an RESTful endpoint (_http://todo-aerogear.rhcloud.com/todo-server/projects_). However, technical details like RESTful APIs (e.g. HTTP PUT) are not exposed on the AGPipeline and AGPipe APIs. Below is shown how to get access to an actual pipe, from the AGPipeline object:
@@ -135,8 +135,8 @@ After receiving data from the server, your application may want to keep the data
     AGDataManager* dm = [AGDataManager manager];
     // add a new (default) store object:
     id<AGStore> myStore = [dm store:^(id<AGStoreConfig> config) {
-	        [config name:@"tasks"];
-	    }];
+        [config name:@"tasks"];
+    }];
 
 The AGDataManager class offers some simple 'management' APIs to work with containing AGStore objects. The API offers read and write functionality. The default implementation represents an "in-memory" store. Similar to the pipe API technical details of the underlying system are not exposed.
 
@@ -231,9 +231,9 @@ To create an authenticator, you need to use the AGAuthenticator class. Below is 
 	// add a new auth module and the required 'base url':
     NSURL* baseURL = [NSURL URLWithString:@"https://todoauth-aerogear.rhcloud.com/todo-server/"];
     id<AGAuthenticationModule> myMod = [authenticator auth:^(id<AGAuthConfig> config) {
-	        [config name:@"authMod"];
-	        [config baseURL:baseURL];
-	    }];
+        [config name:@"authMod"];
+        [config baseURL:baseURL];
+    }];
 
 The AGAuthenticator class offers some simple 'management' APIs to work with containing AGAuthenticationModule objects. The API provides an authentication and enrollment API. The default implementation uses REST as the auth transport. Similar to the pipe API technical details of the underlying system are not exposed.
 
@@ -282,10 +282,10 @@ After running a successful login, you can start using the _AGAuthenticationModul
 
     ...
     id<AGPipe> tasks = [pipeline pipe:^(id<AGPipeConfig> config) {
-		        [config name:@"tasks"];
-		        [config baseURL:serverURL];
-                [config authModule:myMod];
-		    }];
+        [config name:@"tasks"];
+        [config baseURL:serverURL];
+        [config authModule:myMod];
+    }];
 
     [tasks read:^(id responseObject) {
         // LOG the JSON response, returned from the server:
