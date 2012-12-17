@@ -26,6 +26,7 @@
 #import "AGPipe.h"
 #import "AGPipeline.h"
 #import "AGPipeConfig.h"
+#import "AGFilterConfig.h"
 
 // DataManager
 #import "AGStore.h"
