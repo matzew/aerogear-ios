@@ -94,7 +94,7 @@
     STAssertNotNil(module, @"module should not be nil");
     
     //check default type
-    STAssertEqualObjects(@"REST", module.type, @"has expected REST type");
+    STAssertEqualObjects(@"AG_SECURITY", module.type, @"has expected REST type");
 }
 
 -(void)testAddModuleWithInvalidType {

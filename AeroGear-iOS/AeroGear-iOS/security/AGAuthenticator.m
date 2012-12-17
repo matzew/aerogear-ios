@@ -44,7 +44,7 @@
     }
 
     // TODO check ALL supported types...
-    if (! [[pipeConfig type] isEqualToString:@"REST"]) {
+    if (! [[pipeConfig type] isEqualToString:@"AG_SECURITY"]) {
         return nil;
     }
     
