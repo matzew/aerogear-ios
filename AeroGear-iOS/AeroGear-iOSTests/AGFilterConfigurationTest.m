@@ -46,12 +46,16 @@
     STAssertNotNil(_config, @"config should not be nil");
 }
 
--(void)testFilterParams {
-    STAssertEquals((NSUInteger)10, [_config limit], @"should be equal");
-    STAssertEquals((NSUInteger)3, [_config offset], @"should be equal");
+- (void)testFilterObject {
+    NSDictionary *params = [_config dictionary];
     
+    STAssertEquals([NSNumber numberWithInteger:10], [params objectForKey:@"limit"], @"should be equal");
+    STAssertEquals([NSNumber numberWithInteger:3], [params objectForKey:@"offset"], @"should be equal");
+
     NSDictionary *dummyWhere = [NSDictionary dictionaryWithObjectsAndKeys:@"BMV", @"car", nil];
     STAssertEqualObjects(dummyWhere, [_config where], @"should be equal");
 }
+
+
 
 @end
