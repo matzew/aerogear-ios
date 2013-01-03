@@ -52,8 +52,8 @@ static NSString *const PROJECT = @"{\"id\":1,\"title\":\"First Project\",\"style
     NSURL* baseURL = [NSURL URLWithString:@"http://server.com/context/"];
     
     AGPipeConfiguration* config = [[AGPipeConfiguration alloc] init];
-    [config baseURL:baseURL];
-    [config name:@"projects"];
+    [config setBaseURL:baseURL];
+    [config setName:@"projects"];
     
     _restPipe = [AGRestAdapter pipeWithConfig:config];
 }

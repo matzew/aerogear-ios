@@ -46,7 +46,7 @@
 
 -(void)testAddStoreWithDefaultType {
     id<AGStore> store = [_manager store:^(id<AGStoreConfig> config) {
-        [config name:@"tasks"];
+        [config setName:@"tasks"];
     }];
 
     STAssertNotNil(store, @"store should not be nil");
@@ -54,8 +54,8 @@
 
 -(void)testAddStoreWithMemoryType {
     id<AGStore> store = [_manager store:^(id<AGStoreConfig> config) {
-        [config name:@"tasks"];
-        [config type:@"MEMORY"];
+        [config setName:@"tasks"];
+        [config setType:@"MEMORY"];
     }];
     
     STAssertNotNil(store, @"store should not be nil");
@@ -63,8 +63,8 @@
 
 -(void)testAddStoreWithInvalidType {
     id<AGStore> store = [_manager store:^(id<AGStoreConfig> config) {
-        [config name:@"tasks"];
-        [config type:@"INVALID"];
+        [config setName:@"tasks"];
+        [config setType:@"INVALID"];
     }];
     
     STAssertNil(store, @"store should be nil");
@@ -72,13 +72,13 @@
 
 -(void) testAddAndRemoveStores {
     id<AGStore> taskStore = [_manager store:^(id<AGStoreConfig> config) {
-        [config name:@"tasks"];
+        [config setName:@"tasks"];
     }];
     
     STAssertNotNil(taskStore, @"store should not be nil");
     
     id<AGStore> tagStore = [_manager store:^(id<AGStoreConfig> config) {
-        [config name:@"projects"];
+        [config setName:@"projects"];
     }];
     
     STAssertNotNil(tagStore, @"store should not be nil");
@@ -100,7 +100,7 @@
 
 -(void)testRemoveNonExistingStore {
     id<AGStore> store = [_manager store:^(id<AGStoreConfig> config) {
-        [config name:@"tasks"];
+        [config setName:@"tasks"];
     }];
     
     STAssertNotNil(store, @"store should not be nil");
@@ -112,7 +112,7 @@
 
 -(void)testGetNonExistingStore {
     id<AGStore> store = [_manager store:^(id<AGStoreConfig> config) {
-        [config name:@"tasks"];
+        [config setName:@"tasks"];
     }];
     
     STAssertNotNil(store, @"store should not be nil");

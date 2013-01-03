@@ -32,7 +32,7 @@
     [super setUp];
     
     AGStoreConfiguration* config = [[AGStoreConfiguration alloc] init];
-    [config recordId:@"id"];
+    [config setRecordId:@"id"];
     
     _memStore = [AGMemoryStorage storeWithConfig:config];
 }

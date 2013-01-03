@@ -57,7 +57,7 @@
 
 -(void)testAddPipeWithDefaultType {
     id<AGPipe> pipe = [_pipeline pipe:^(id<AGPipeConfig> config) {
-        [config name:@"tasks"];
+        [config setName:@"tasks"];
     }];
     
     STAssertNotNil(pipe, @"pipe should not be nil");
@@ -66,8 +66,8 @@
 
 -(void)testAddPipeWithValidType {
     id<AGPipe> pipe = [_pipeline pipe:^(id<AGPipeConfig> config) {
-        [config name:@"tasks"];
-        [config type:@"REST"];
+        [config setName:@"tasks"];
+        [config setType:@"REST"];
     }];
 
     STAssertNotNil(pipe, @"pipe should not be nil");
@@ -78,8 +78,8 @@
 
 -(void)testAddPipeWithInvalidType {
     id<AGPipe> pipe = [_pipeline pipe:^(id<AGPipeConfig> config) {
-        [config name:@"tasks"];
-        [config type:@"INVALID"];
+        [config setName:@"tasks"];
+        [config setType:@"INVALID"];
     }];
     
     STAssertNil(pipe, @"pipe should be nil");
@@ -87,7 +87,7 @@
 
 -(void)testAddPipeWithName {
     id<AGPipe> pipe = [_pipeline pipe:^(id<AGPipeConfig> config) {
-        [config name:@"tasks"];
+        [config setName:@"tasks"];
     }];
     
     STAssertNotNil(pipe, @"pipe should not be nil");
@@ -98,8 +98,8 @@
     NSURL* baseURL = [NSURL URLWithString:@"http://app.com/context/"];
 
     id<AGPipe> pipe = [_pipeline pipe:^(id<AGPipeConfig> config) {
-        [config name:@"tasks"];
-        [config baseURL:baseURL]; // this should override base URL of the pipeline
+        [config setName:@"tasks"];
+        [config setBaseURL:baseURL]; // this should override base URL of the pipeline
     }];
     
     STAssertNotNil(pipe, @"pipe should not be nil");
@@ -108,8 +108,8 @@
 
 -(void)testAddPipeWithEndpoint {
     id<AGPipe> pipe = [_pipeline pipe:^(id<AGPipeConfig> config) {
-        [config name:@"bad name"];
-        [config endpoint: @"realm/status"]; //endpoint with no trailing slash
+        [config setName:@"bad name"];
+        [config setEndpoint: @"realm/status"]; //endpoint with no trailing slash
     }];
     
     STAssertNotNil(pipe, @"pipe should not be nil");
@@ -120,9 +120,9 @@
     NSURL* baseURL = [NSURL URLWithString:@"http://us.battle.net/api/wow/"];
     
     id<AGPipe> pipe = [_pipeline pipe:^(id<AGPipeConfig> config) {
-        [config name:@"status"];
-        [config baseURL:baseURL];
-        [config endpoint: @"realm/status"]; //endpoint with no trailing slash
+        [config setName:@"status"];
+        [config setBaseURL:baseURL];
+        [config setEndpoint: @"realm/status"]; //endpoint with no trailing slash
     }];
     
     STAssertNotNil(pipe, @"pipe should not be nil");
@@ -131,15 +131,15 @@
 
 -(void)testAddPipes {
     id<AGPipe> pipe = [_pipeline pipe:^(id<AGPipeConfig> config) {
-        [config name:@"tasks"];
-        [config baseURL:_baseURL];
+        [config setName:@"tasks"];
+        [config setBaseURL:_baseURL];
     }];
     
     STAssertNotNil(pipe, @"pipe should not be nil");
     
     id<AGPipe> otherPipe = [_pipeline pipe:^(id<AGPipeConfig> config) {
-        [config name:@"projects"];
-        [config baseURL:_baseURL];
+        [config setName:@"projects"];
+        [config setBaseURL:_baseURL];
     }];
     
     STAssertNotNil(otherPipe, @"other pipe should not be nil");
@@ -151,8 +151,9 @@
 
 -(void)testAddAndRemovePipe {
     id<AGPipe> pipe = [_pipeline pipe:^(id<AGPipeConfig> config) {
-        [config name:@"tasks"];
-        [config baseURL:_baseURL];
+        [config setName:@"tasks"];
+//        [config setBaseURL:_baseURL];
+        [config setBaseURL:_baseURL];        
     }];
     
     STAssertNotNil(pipe, @"pipe should not be nil");
@@ -169,8 +170,8 @@
 -(void)testRemoveNonExistingPipe {
     NSURL* baseURL = [NSURL URLWithString:@"http://server.com/context/"];
     id<AGPipe> pipe  = [_pipeline pipe:^(id<AGPipeConfig> config) {
-        [config name:@"tasks"];
-        [config baseURL:baseURL];
+        [config setName:@"tasks"];
+        [config setBaseURL:baseURL];
     }];
     
     STAssertNotNil(pipe, @"pipe should not be nil");
@@ -183,8 +184,8 @@
 -(void)testGetNonExistingPipe {
     NSURL* baseURL = [NSURL URLWithString:@"http://server.com/context/"];
     id<AGPipe> pipe  = [_pipeline pipe:^(id<AGPipeConfig> config) {
-        [config name:@"tasks"];
-        [config baseURL:baseURL];
+        [config setName:@"tasks"];
+        [config setBaseURL:baseURL];
     }];
     
     STAssertNotNil(pipe, @"pipe should not be nil");

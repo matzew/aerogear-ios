@@ -72,14 +72,14 @@
     if (self) {
         // set all the things:
         AGAuthConfiguration* config = (AGAuthConfiguration*) authConfig;
-        _type = [config type];
-        _loginEndpoint = [config loginEndpoint];
-        _logoutEndpoint = [config logoutEndpoint];
-        _enrollEndpoint = [config enrollEndpoint];
-        _baseURL = [config baseURL].absoluteString;
-        _tokenHeaderName = [config tokenHeaderName];
+        _type = config.type;
+        _loginEndpoint = config.loginEndpoint;
+        _logoutEndpoint = config.logoutEndpoint;
+        _enrollEndpoint = config.enrollEndpoint;
+        _baseURL = config.baseURL.absoluteString;
+        _tokenHeaderName = config.tokenHeaderName;
         
-        _restClient = [AGHttpClient clientFor:[config baseURL]];
+        _restClient = [AGHttpClient clientFor:config.baseURL];
         _restClient.parameterEncoding = AFJSONParameterEncoding;
     }
 

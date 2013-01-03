@@ -50,14 +50,14 @@
         // set all the things:
         AGPipeConfiguration* config = (AGPipeConfiguration*) pipeConfig;
      
-        NSURL* baseURL = [config baseURL];
-        NSString* endpoint = [config endpoint];
+        NSURL* baseURL = config.baseURL;
+        NSString* endpoint = config.endpoint;
         // append the endpoint/name and use it as the final URL
         NSURL* finalURL = [self appendEndpoint:endpoint toURL:baseURL];
         
         _url = finalURL.absoluteString;
-        _recordId = [config recordId];
-        _authModule = (id<AGAuthenticationModuleAdapter>) [config authModule];
+        _recordId = config.recordId;
+        _authModule = (id<AGAuthenticationModuleAdapter>) config.authModule;
         
         _restClient = [AGHttpClient clientFor:finalURL];
         _restClient.parameterEncoding = AFJSONParameterEncoding;
@@ -98,7 +98,7 @@
     }
     
     [self readWithFilter:^(id<AGFilterConfig> config) {
-        [config where:[NSDictionary dictionaryWithObjectsAndKeys:value, _recordId, nil]];
+        [config setWhere:[NSDictionary dictionaryWithObjectsAndKeys:value, _recordId, nil]];
     } success:success failure:failure];
 }
 

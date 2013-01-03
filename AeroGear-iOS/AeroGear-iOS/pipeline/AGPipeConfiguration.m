@@ -18,69 +18,28 @@
 
 #import "AGPipeConfiguration.h"
 
-@implementation AGPipeConfiguration {
-    NSMutableDictionary* _config;
-}
+@implementation AGPipeConfiguration
+
+@synthesize baseURL = _baseURL;
+@synthesize endpoint = _endpoint;
+@synthesize recordId = _recordId;
+@synthesize authModule = _authModule;
+@synthesize name = _name;
+@synthesize type = _type;
 
 - (id)init {
     self = [super init];
     if (self) {
-        _config = [NSMutableDictionary dictionary];
-        
         // default values:
-        [_config setValue:@"REST" forKey:@"type"];
-        [_config setValue:@"id" forKey:@"recordId"];
+        _type = @"REST";
+        _recordId = @"id";
     }
     return self;
 }
 
-
--(void) name:(NSString*) name {
-    [_config setValue:name forKey:@"name"];
-}
--(void) type:(NSString*) type {
-    [_config setValue:type forKey:@"type"];
-}
--(void) baseURL:(NSURL*) baseURL {
-    [_config setValue:baseURL forKey:@"baseURL"];
-}
--(void) endpoint:(NSString*) endpoint {
-    [_config setValue:endpoint forKey:@"endpoint"];
-}
--(void) authModule:(id<AGAuthenticationModule>) authModule {
-    [_config setValue:authModule forKey:@"authModule"];
-}
-
--(void) recordId:(NSString *)recordId {
-    [_config setValue:recordId forKey:@"recordId"];
-}
-
-// getters...
--(NSString*) name {
-    return [_config valueForKey:@"name"];
-}
--(NSString*) type {
-    return [_config valueForKey:@"type"];
-}
--(NSURL*) baseURL {
-    return [_config valueForKey:@"baseURL"];
-}
+// custom getter to return name if no endpoint is specified.
 -(NSString*) endpoint {
-    NSString* endpoint = [_config valueForKey:@"endpoint"];
-
-    // use the name as endpoint, if not specified:
-    if (endpoint == nil) {
-        endpoint = [self name];
-    }
-    
-    return endpoint;
-}
--(id<AGAuthenticationModule>) authModule {
-    return [_config valueForKey:@"authModule"];
-}
-
--(NSString*)recordId {
-    return [_config valueForKey:@"recordId"];
+    return (_endpoint == nil? _name: _endpoint);
 }
 
 @end

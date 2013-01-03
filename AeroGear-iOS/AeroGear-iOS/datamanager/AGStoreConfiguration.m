@@ -18,45 +18,20 @@
 
 #import "AGStoreConfiguration.h"
 
-@implementation AGStoreConfiguration{
-    NSMutableDictionary* _config;
-}
+@implementation AGStoreConfiguration
+
+@synthesize recordId = _recordId;
+@synthesize name = _name;
+@synthesize type = _type;
 
 - (id)init {
     self = [super init];
     if (self) {
-        _config = [NSMutableDictionary dictionary];
-        
-        
         // default values:
-        [_config setValue:@"MEMORY" forKey:@"type"];
-        [_config setValue:@"id" forKey:@"recordId"];        
+        _type = @"MEMORY";
+        _recordId = @"id";
     }
     return self;
-}
-
-
--(void) name:(NSString*) name {
-    [_config setValue:name forKey:@"name"];
-}
--(void) type:(NSString*) type {
-    [_config setValue:type forKey:@"type"];
-}
-
--(void) recordId:(NSString*) recordId {
-    [_config setValue:recordId forKey:@"recordId"];
-}
-
-
-// getters...
--(NSString*) name {
-    return [_config valueForKey:@"name"];
-}
--(NSString*) type {
-    return [_config valueForKey:@"type"];
-}
--(NSString*) recordId {
-    return [_config valueForKey:@"recordId"];
 }
 
 @end

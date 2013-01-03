@@ -28,13 +28,13 @@
  *
  * @param name The name of the actual object.
  */
--(void) name:(NSString*) name;
+@property (copy, nonatomic) NSString *name;
 
 /**
  * Applies the type to the configuration.
  *
  * @param type The type of the actual object.
  */
--(void) type:(NSString*) type;
+@property (copy, nonatomic) NSString *type;
 
 @end

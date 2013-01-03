@@ -24,14 +24,4 @@
  */
 @interface AGAuthConfiguration : NSObject<AGAuthConfig>
 
-// private getters...
--(NSString*) name;
--(NSString*) type;
--(NSURL*) baseURL;
--(NSString*) loginEndpoint;
--(NSString*) logoutEndpoint;
--(NSString*) enrollEndpoint;
--(NSString*) tokenHeaderName;
-
-
 @end

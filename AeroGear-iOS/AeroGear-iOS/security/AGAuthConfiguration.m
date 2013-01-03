@@ -18,73 +18,31 @@
 
 #import "AGAuthConfiguration.h"
 
-@implementation AGAuthConfiguration {
-    NSMutableDictionary* _config;
-}
+@implementation AGAuthConfiguration
+
+// private getters...
+@synthesize baseURL = _baseURL;
+@synthesize loginEndpoint = _loginEndpoint;
+@synthesize logoutEndpoint = _logoutEndpoint;
+@synthesize enrollEndpoint = _enrollEndpoint;
+@synthesize tokenHeaderName = _tokenHeaderName;
+
+@synthesize name = _name;
+@synthesize type = _type;
 
 - (id)init {
     self = [super init];
     if (self) {
-        _config = [NSMutableDictionary dictionary];
-        
-        
         // default values:
-        [_config setValue:@"AG_SECURITY" forKey:@"type"];
-        [_config setValue:@"Auth-Token" forKey:@"tokenHeaderName"];
-        [_config setValue:@"auth/login" forKey:@"loginEndpoint"];
-        [_config setValue:@"auth/logout" forKey:@"logoutEndpoint"];
-        [_config setValue:@"auth/enroll" forKey:@"enrollEndpoint"];
+        _type = @"AG_SECURITY";
+        _tokenHeaderName = @"Auth-Token";
+        _loginEndpoint = @"auth/login";
+        _logoutEndpoint = @"auth/logout";
+        _enrollEndpoint = @"auth/enroll";
         
     }
+    
     return self;
-}
-
-
--(void) name:(NSString*) name {
-    [_config setValue:name forKey:@"name"];
-}
--(void) type:(NSString*) type {
-    [_config setValue:type forKey:@"type"];
-}
--(void) baseURL:(NSURL*) baseURL {
-    [_config setValue:baseURL forKey:@"baseURL"];
-}
--(void) loginEndpoint:(NSString*) loginEndpoint {
-    [_config setValue:loginEndpoint forKey:@"loginEndpoint"];
-}
--(void) logoutEndpoint:(NSString*) logoutEndpoint {
-    [_config setValue:logoutEndpoint forKey:@"logoutEndpoint"];
-}
--(void) enrollEndpoint:(NSString*) enrollEndpoint {
-    [_config setValue:enrollEndpoint forKey:@"enrollEndpoint"];
-}
--(void) tokenHeaderName:(NSString*) tokenHeaderName {
-    [_config setValue:tokenHeaderName forKey:@"tokenHeaderName"];
-}
-
-
-
-// getters...
--(NSString*) name {
-    return [_config valueForKey:@"name"];
-}
--(NSString*) type {
-    return [_config valueForKey:@"type"];
-}
--(NSURL*) baseURL {
-    return [_config valueForKey:@"baseURL"];
-}
--(NSString*) loginEndpoint {
-    return [_config valueForKey:@"loginEndpoint"];
-}
--(NSString*) logoutEndpoint {
-    return [_config valueForKey:@"logoutEndpoint"];
-}
--(NSString*) enrollEndpoint {
-    return [_config valueForKey:@"enrollEndpoint"];
-}
--(NSString*) tokenHeaderName {
-    return [_config valueForKey:@"tokenHeaderName"];   
 }
 
 @end

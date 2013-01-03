@@ -24,12 +24,6 @@
  */
 @interface AGFilterConfiguration : NSObject <AGFilterConfig>
 
-// private getters...
--(NSString*) name;
--(NSUInteger) limit;
--(NSUInteger) offset;
--(NSString*) where;
-
 - (NSDictionary*) dictionary;
 
 @end

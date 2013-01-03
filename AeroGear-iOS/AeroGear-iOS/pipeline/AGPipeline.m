@@ -63,14 +63,14 @@
     AGPipeConfiguration* pipeConfig = [[AGPipeConfiguration alloc] init];
 
     // applying the defaults:
-    [pipeConfig baseURL:_baseURL];
+    [pipeConfig setBaseURL:_baseURL];
 
     if (config) {
         config(pipeConfig);
     }
     
     // TODO check ALL supported types...
-    if (! [[pipeConfig type] isEqualToString:@"REST"]) {
+    if (! [pipeConfig.type isEqualToString:@"REST"]) {
         return nil;
     }
 

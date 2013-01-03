@@ -32,8 +32,8 @@ describe(@"AGRestAdapter", ^{
             NSURL* baseURL = [NSURL URLWithString:@"http://server.com"];
             
             AGPipeConfiguration* config = [[AGPipeConfiguration alloc] init];
-            [config baseURL:baseURL];
-            [config name:@"projects"];
+            [config setBaseURL:baseURL];
+            [config setName:@"projects"];
             
             restPipe = [AGRestAdapter pipeWithConfig:config];
         });

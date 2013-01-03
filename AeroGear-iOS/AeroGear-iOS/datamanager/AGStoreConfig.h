@@ -29,7 +29,6 @@
  *
  * @param recordId The name of the field used to uniquely identify a "record" in the data
  */
--(void) recordId:(NSString*)recordId;
-
+@property (copy, nonatomic) NSString* recordId;
 
 @end

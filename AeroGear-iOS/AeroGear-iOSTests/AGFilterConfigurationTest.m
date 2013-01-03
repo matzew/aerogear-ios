@@ -33,9 +33,9 @@
 
     _config = [[AGFilterConfiguration alloc] init];
     
-    [_config limit:10];
-    [_config offset:3];
-    [_config where:[NSDictionary dictionaryWithObjectsAndKeys:@"BMV", @"car", nil]];
+    [_config setLimit:10];
+    [_config setOffset:3];
+    [_config setWhere:[NSDictionary dictionaryWithObjectsAndKeys:@"BMV", @"car", nil]];
 }
 
 -(void)tearDown {
@@ -49,8 +49,8 @@
 - (void)testFilterObject {
     NSDictionary *params = [_config dictionary];
     
-    STAssertEquals([NSNumber numberWithInteger:10], [params objectForKey:@"limit"], @"should be equal");
-    STAssertEquals([NSNumber numberWithInteger:3], [params objectForKey:@"offset"], @"should be equal");
+    STAssertEquals([NSNumber numberWithUnsignedInteger:10], [params objectForKey:@"limit"], @"should be equal");
+    STAssertEquals([NSNumber numberWithUnsignedInteger:3], [params objectForKey:@"offset"], @"should be equal");
 
     NSDictionary *dummyWhere = [NSDictionary dictionaryWithObjectsAndKeys:@"BMV", @"car", nil];
     STAssertEqualObjects(dummyWhere, [_config where], @"should be equal");

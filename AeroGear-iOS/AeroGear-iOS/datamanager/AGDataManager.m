@@ -45,7 +45,7 @@
     }
    
     // TODO check ALL supported types...
-    if (! [[storeConfig type] isEqualToString:@"MEMORY"]) {
+    if (! [storeConfig.type isEqualToString:@"MEMORY"]) {
         return nil;
     }
 

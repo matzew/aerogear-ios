@@ -46,8 +46,8 @@
 
 -(void)testAddModule {
     id<AGAuthenticationModule> module = [_authenticator auth:^(id<AGAuthConfig> config) {
-        [config name:@"SomeModule"];
-        [config baseURL:[NSURL URLWithString:@"https://server:8080/application/"]];
+        [config setName:@"SomeModule"];
+        [config setBaseURL:[NSURL URLWithString:@"https://server:8080/application/"]];
     }];
     STAssertNotNil(module, @"module should not be nil");
     
@@ -65,11 +65,11 @@
 
 -(void)testAddModuleWithDifferentEndpoints {
     id<AGAuthenticationModule> module =  [_authenticator auth:^(id<AGAuthConfig> config) {
-        [config name:@"SomeModule"];
-        [config baseURL:[NSURL URLWithString:@"https://server:8080/application/subcontext/"]];
-        [config loginEndpoint:@"auth/in"];
-        [config logoutEndpoint:@"auth/out"];
-        [config enrollEndpoint:@"auth/register"];
+        [config setName:@"SomeModule"];
+        [config setBaseURL:[NSURL URLWithString:@"https://server:8080/application/subcontext/"]];
+        [config setLoginEndpoint:@"auth/in"];
+        [config setLogoutEndpoint:@"auth/out"];
+        [config setEnrollEndpoint:@"auth/register"];
     }];
     
     STAssertNotNil(module, @"module should not be nil");
@@ -88,8 +88,8 @@
 
 -(void)testAddModuleWithDefaultType {
     id<AGAuthenticationModule> module = [_authenticator auth:^(id<AGAuthConfig> config) {
-        [config name:@"SomeModule"];
-        [config baseURL:[NSURL URLWithString:@"https://server:8080/application/"]];
+        [config setName:@"SomeModule"];
+        [config setBaseURL:[NSURL URLWithString:@"https://server:8080/application/"]];
     }];
     STAssertNotNil(module, @"module should not be nil");
     
@@ -99,9 +99,9 @@
 
 -(void)testAddModuleWithInvalidType {
     id<AGAuthenticationModule> module = [_authenticator auth:^(id<AGAuthConfig> config) {
-        [config name:@"SomeModule"];
-        [config baseURL:[NSURL URLWithString:@"https://server:8080/application/"]];
-        [config type:@"INVALID"];
+        [config setName:@"SomeModule"];
+        [config setBaseURL:[NSURL URLWithString:@"https://server:8080/application/"]];
+        [config setType:@"INVALID"];
     }];
     
     STAssertNil(module, @"module should be nil");
@@ -109,15 +109,15 @@
 
 -(void)testAddAndRemoveModules {
     id<AGAuthenticationModule> module = [_authenticator auth:^(id<AGAuthConfig> config) {
-        [config name:@"SomeModule"];
-        [config baseURL:[NSURL URLWithString:@"https://server:8080/application/"]];
+        [config setName:@"SomeModule"];
+        [config setBaseURL:[NSURL URLWithString:@"https://server:8080/application/"]];
     }];
 
     STAssertNotNil(module, @"module should not be nil");
     
     id<AGAuthenticationModule> otherModule = [_authenticator auth:^(id<AGAuthConfig> config) {
-        [config name:@"OtherModule"];
-        [config baseURL:[NSURL URLWithString:@"https://server:8080/another-application/"]];
+        [config setName:@"OtherModule"];
+        [config setBaseURL:[NSURL URLWithString:@"https://server:8080/another-application/"]];
     }];
    
     STAssertNotNil(otherModule, @"other module should not be nil");
@@ -139,8 +139,8 @@
 
 -(void)testRemoveNonExistingModule {
     id<AGAuthenticationModule> module = [_authenticator auth:^(id<AGAuthConfig> config) {
-        [config name:@"SomeModule"];
-        [config baseURL:[NSURL URLWithString:@"https://server:8080/application/"]];
+        [config setName:@"SomeModule"];
+        [config setBaseURL:[NSURL URLWithString:@"https://server:8080/application/"]];
     }];
     
     STAssertNotNil(module, @"module should not be nil");
@@ -152,8 +152,8 @@
 
 -(void)testGetNonExistingModule {
     id<AGAuthenticationModule> module = [_authenticator auth:^(id<AGAuthConfig> config) {
-        [config name:@"SomeModule"];
-        [config baseURL:[NSURL URLWithString:@"https://server:8080/application/"]];
+        [config setName:@"SomeModule"];
+        [config setBaseURL:[NSURL URLWithString:@"https://server:8080/application/"]];
     }];
 
     STAssertNotNil(module, @"module should not be nil");

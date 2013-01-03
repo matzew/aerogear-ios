@@ -18,62 +18,29 @@
 
 #import "AGFilterConfiguration.h"
 
-@implementation AGFilterConfiguration {
-    NSMutableDictionary* _config;
-}
+@implementation AGFilterConfiguration
+
+@synthesize limit = _limit;
+@synthesize offset = _offset;
+@synthesize where = _where;
+@synthesize name = _name;
+@synthesize type = _type;
 
 - (id)init {
     self = [super init];
     if (self) {
-        _config = [NSMutableDictionary dictionary];
+        // default values:
+        _name = @"default";
     }
+    
     return self;
 }
 
-
--(void) name:(NSString*) name {
-    [_config setValue:name forKey:@"name"];
-}
-
--(void) limit:(NSUInteger) limit {
-    [_config setValue:[NSNumber numberWithUnsignedInteger:limit] forKey:@"limit"];
-}
-
--(void) offset:(NSUInteger) offset {
-    [_config setValue:[NSNumber numberWithUnsignedInteger:offset] forKey:@"offset"];
-}
-
--(void) where:(NSDictionary*) where {
-    [_config setValue:where forKey:@"where"];
-}
-
--(void) type:(NSString*) type {
-    [_config setValue:type forKey:@"type"];
-}
-
-// getters...
--(NSString*) name {
-    return [_config valueForKey:@"name"];
-}
-
--(NSUInteger) limit {
-    return [[_config valueForKey:@"limit"] unsignedIntegerValue];
-}
-
--(NSUInteger) offset {
-    return [[_config valueForKey:@"offset"] unsignedIntegerValue];
-}
-
--(NSDictionary*) where {
-    return [_config valueForKey:@"where"];
-}
-
--(NSString*) type {
-    return [_config valueForKey:@"type"];
-}
-
 - (NSDictionary*) dictionary {
-    return [_config copy];
+    return [NSDictionary dictionaryWithObjectsAndKeys:_name, @"name",
+                        [NSNumber numberWithUnsignedInteger:_offset], @"offset",
+                        [NSNumber numberWithUnsignedInteger:_limit], @"limit",
+                        _where, @"where", nil];
 }
 
 @end

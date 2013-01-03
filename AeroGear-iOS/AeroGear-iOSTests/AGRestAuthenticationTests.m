@@ -64,16 +64,16 @@ static NSString *const LOGIN_SUCCESS_RESPONSE =  @"{\"username\":\"%@\",\"roles\
     
     // setup REST Authenticator
     AGAuthConfiguration* config = [[AGAuthConfiguration alloc] init];
-    [config baseURL:baseURL];
-    [config enrollEndpoint:@"auth/register"];
+    [config setBaseURL:baseURL];
+    [config setEnrollEndpoint:@"auth/register"];
 
     _restAuthModule = [AGRestAuthentication moduleWithConfig:config];
 
     // setup Pipeline
     AGPipeline* pipeline = [AGPipeline pipeline:baseURL];
     _projects = [pipeline pipe:^(id<AGPipeConfig> config) {
-        [config name:@"projects"];
-        [config authModule:_restAuthModule];
+        [config setName:@"projects"];
+        [config setAuthModule:_restAuthModule];
     }];
 }
 

@@ -42,7 +42,7 @@
         _array = [NSMutableArray array];
 
         AGStoreConfiguration *config = (AGStoreConfiguration*) storeConfig;
-        _recordId = [config recordId];
+        _recordId = config.recordId;
     }
     
     return self;

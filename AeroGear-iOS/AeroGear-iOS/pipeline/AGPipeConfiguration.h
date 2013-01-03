@@ -24,13 +24,4 @@
  */
 @interface AGPipeConfiguration : NSObject <AGPipeConfig>
 
-
-// private getters...
--(NSString*) name;
--(NSString*) type;
--(NSURL*) baseURL;
--(NSString*) endpoint;
--(NSString*) recordId;
--(id<AGAuthenticationModule>) authModule;
-
 @end

@@ -30,7 +30,7 @@
  *
  * @param baseURL The baseURL of the actual AGPipe object.
  */
--(void) baseURL:(NSURL*) baseURL;
+@property (strong, nonatomic) NSURL* baseURL;
 
 /**
  * Applies the baseURL to the configuration.
@@ -38,20 +38,20 @@
  *
  * @param endpoint The baseURL of the actual AGPipe object.
  */
--(void) endpoint:(NSString*) endpoint;
+@property (copy, nonatomic) NSString* endpoint;
 
 /**
  * Applies the recordId to the configuration.
  *
  * @param recordId The name of the field used to uniquely identify a "record" in the data
  */
--(void) recordId:(NSString*)recordId;
+@property (copy, nonatomic) NSString* recordId;
 
 /**
  * Applies the AGAuthenticationModule object to the configuration.
  *
  * @param authModule The AGAuthenticationModule of the actual AGPipe object.
  */
--(void) authModule:(id<AGAuthenticationModule>) authModule;
+@property (strong, nonatomic) id<AGAuthenticationModule> authModule;
 
 @end
