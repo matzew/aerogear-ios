@@ -22,7 +22,7 @@
 #import "AGBaseAdapter.h"
 #import "AGPipeConfiguration.h"
 
-@interface AGRestAdapter : AGBaseAdapter <AGPipe> {
+@interface AGRESTPipe : AGBaseAdapter <AGPipe> {
     // now subclasses can see the 'ivar':
     @protected
     AGHttpClient* _restClient;

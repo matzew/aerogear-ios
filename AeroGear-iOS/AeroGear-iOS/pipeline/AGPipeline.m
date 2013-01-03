@@ -18,7 +18,7 @@
 
 #import "AGPipeline.h"
 #import "AGPipeConfiguration.h"
-#import "AGRestAdapter.h"
+#import "AGRESTPipe.h"
 
 // category
 @interface AGPipeline ()
@@ -74,7 +74,7 @@
         return nil;
     }
 
-    id<AGPipe> pipe = [AGRestAdapter pipeWithConfig:pipeConfig];
+    id<AGPipe> pipe = [AGRESTPipe pipeWithConfig:pipeConfig];
     [_pipes setValue:pipe forKey:[pipeConfig name]];
     
     return pipe;

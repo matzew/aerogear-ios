@@ -17,7 +17,7 @@
  */
 
 #import <SenTestingKit/SenTestingKit.h>
-#import "AGRestAdapter.h"
+#import "AGRESTPipe.h"
 #import "AGMockURLProtocol.h"
 
 static NSString *const PROJECTS = @"[{\"id\":1,\"title\":\"First Project\",\"style\":\"project-161-58-58\",\"tasks\":[]},{\"id\":                 2,\"title\":\"Second Project\",\"style\":\"project-64-144-230\",\"tasks\":[]}]";
@@ -55,7 +55,7 @@ static NSString *const PROJECT = @"{\"id\":1,\"title\":\"First Project\",\"style
     [config setBaseURL:baseURL];
     [config setName:@"projects"];
     
-    _restPipe = [AGRestAdapter pipeWithConfig:config];
+    _restPipe = [AGRESTPipe pipeWithConfig:config];
 }
 
 -(void)tearDown {
@@ -234,14 +234,14 @@ static NSString *const PROJECT = @"{\"id\":1,\"title\":\"First Project\",\"style
 }
 
 -(void)testAccepts {
-    STAssertTrue([AGRestAdapter accepts:@"REST"], @"type '%@' should be accepted", @"REST");
+    STAssertTrue([AGRESTPipe accepts:@"REST"], @"type '%@' should be accepted", @"REST");
     [self assertNotAcceptedType: nil];
     [self assertNotAcceptedType: @"bogus"];
     [self assertNotAcceptedType:[@"REST" lowercaseString]];
 }
 
 -(void) assertNotAcceptedType:(NSString*) type {
-    STAssertFalse([AGRestAdapter accepts:type], @"type '%@' should not be accepted", type);
+    STAssertFalse([AGRESTPipe accepts:type], @"type '%@' should not be accepted", type);
 }
 
 @end

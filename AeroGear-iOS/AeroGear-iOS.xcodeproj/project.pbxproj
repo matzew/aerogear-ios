@@ -32,7 +32,7 @@
 		573B709D161DA2AE009F0452 /* AGAuthenticator.m in Sources */ = {isa = PBXBuildFile; fileRef = 573B709C161DA2AE009F0452 /* AGAuthenticator.m */; };
 		573B70A1161DDD1C009F0452 /* AGRestAuthentication.m in Sources */ = {isa = PBXBuildFile; fileRef = 573B70A0161DDD1C009F0452 /* AGRestAuthentication.m */; };
 		573CBD9A15E3ECB60071E7A6 /* AGPipeline.m in Sources */ = {isa = PBXBuildFile; fileRef = 573CBD9915E3ECB60071E7A6 /* AGPipeline.m */; };
-		573CBD9D15E3ED7F0071E7A6 /* AGRestAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 573CBD9C15E3ED7F0071E7A6 /* AGRestAdapter.m */; };
+		573CBD9D15E3ED7F0071E7A6 /* AGRESTPipe.m in Sources */ = {isa = PBXBuildFile; fileRef = 573CBD9C15E3ED7F0071E7A6 /* AGRESTPipe.m */; };
 		573CBDA115E4CEDD0071E7A6 /* AGPipelineTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 573CBDA015E4CEDD0071E7A6 /* AGPipelineTests.m */; };
 		573CBDA415E4F31B0071E7A6 /* AGPipelineSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 573CBDA315E4F31B0071E7A6 /* AGPipelineSpec.m */; };
 		573CBDAA15E546A20071E7A6 /* AGRestAdapterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 573CBDA915E546A20071E7A6 /* AGRestAdapterTests.m */; };
@@ -114,8 +114,8 @@
 		573CBD9615E3ECA80071E7A6 /* AGPipe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AGPipe.h; path = pipeline/AGPipe.h; sourceTree = "<group>"; };
 		573CBD9815E3ECB60071E7A6 /* AGPipeline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AGPipeline.h; path = pipeline/AGPipeline.h; sourceTree = "<group>"; };
 		573CBD9915E3ECB60071E7A6 /* AGPipeline.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AGPipeline.m; path = pipeline/AGPipeline.m; sourceTree = "<group>"; };
-		573CBD9B15E3ED7F0071E7A6 /* AGRestAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AGRestAdapter.h; path = pipeline/AGRestAdapter.h; sourceTree = "<group>"; };
-		573CBD9C15E3ED7F0071E7A6 /* AGRestAdapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AGRestAdapter.m; path = pipeline/AGRestAdapter.m; sourceTree = "<group>"; };
+		573CBD9B15E3ED7F0071E7A6 /* AGRESTPipe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AGRESTPipe.h; path = pipeline/AGRESTPipe.h; sourceTree = "<group>"; };
+		573CBD9C15E3ED7F0071E7A6 /* AGRESTPipe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AGRESTPipe.m; path = pipeline/AGRESTPipe.m; sourceTree = "<group>"; };
 		573CBD9E15E3EE1F0071E7A6 /* AeroGear.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AeroGear.h; sourceTree = "<group>"; };
 		573CBDA015E4CEDD0071E7A6 /* AGPipelineTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGPipelineTests.m; sourceTree = "<group>"; };
 		573CBDA315E4F31B0071E7A6 /* AGPipelineSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGPipelineSpec.m; sourceTree = "<group>"; };
@@ -315,8 +315,8 @@
 				573CBD9615E3ECA80071E7A6 /* AGPipe.h */,
 				573CBD9815E3ECB60071E7A6 /* AGPipeline.h */,
 				573CBD9915E3ECB60071E7A6 /* AGPipeline.m */,
-				573CBD9B15E3ED7F0071E7A6 /* AGRestAdapter.h */,
-				573CBD9C15E3ED7F0071E7A6 /* AGRestAdapter.m */,
+				573CBD9B15E3ED7F0071E7A6 /* AGRESTPipe.h */,
+				573CBD9C15E3ED7F0071E7A6 /* AGRESTPipe.m */,
 				57C2616216402B3C00793C0F /* AGPipeConfig.h */,
 				57C2616316402B8900793C0F /* AGPipeConfiguration.h */,
 				57C2616416402B8900793C0F /* AGPipeConfiguration.m */,
@@ -504,7 +504,7 @@
 			files = (
 				57345BD815E3D18600B74FEB /* AGHttpClient.m in Sources */,
 				573CBD9A15E3ECB60071E7A6 /* AGPipeline.m in Sources */,
-				573CBD9D15E3ED7F0071E7A6 /* AGRestAdapter.m in Sources */,
+				573CBD9D15E3ED7F0071E7A6 /* AGRESTPipe.m in Sources */,
 				57DCDB8415F20E4800289EA4 /* AGBaseAdapter.m in Sources */,
 				57ED144E160B490F00881924 /* AGDataManager.m in Sources */,
 				571DBACB1610715800A0A3A6 /* AGMemoryStorage.m in Sources */,

@@ -17,7 +17,7 @@
  */
 
 #import <Kiwi/Kiwi.h>
-#import "AGRestAdapter.h"
+#import "AGRESTPipe.h"
 
 SPEC_BEGIN(AGRestAdapterSpec)
 
@@ -35,7 +35,7 @@ describe(@"AGRestAdapter", ^{
             [config setBaseURL:baseURL];
             [config setName:@"projects"];
             
-            restPipe = [AGRestAdapter pipeWithConfig:config];
+            restPipe = [AGRESTPipe pipeWithConfig:config];
         });
         
         

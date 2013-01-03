@@ -16,13 +16,13 @@
  * limitations under the License.
  */
 
-#import "AGRestAdapter.h"
+#import "AGRESTPipe.h"
 #import "AGFilterConfiguration.h"
 #import "AGAuthenticationModuleAdapter.h"
 
 #import "AGHttpClient.h"
 
-@implementation AGRestAdapter {
+@implementation AGRESTPipe {
     id<AGAuthenticationModuleAdapter> _authModule;
     NSString* _recordId;
 }
