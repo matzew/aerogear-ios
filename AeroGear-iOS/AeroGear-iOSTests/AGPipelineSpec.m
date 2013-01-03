@@ -42,7 +42,7 @@ describe(@"AGPipeline", ^{
         });
         
         it(@"should have a pipe", ^{
-            id pipe = [pipeline get:@"tests"];
+            id pipe = [pipeline pipeWithName:@"tests"];
             [[theValue(pipe) shouldNot] equal:nil];
         });
         
@@ -65,7 +65,7 @@ describe(@"AGPipeline", ^{
             }];
             [pipeline shouldNotBeNil];
             
-            id<AGPipe> pipe = [pipeline get:@"tests"];
+            id<AGPipe> pipe = [pipeline pipeWithName:@"tests"];
             [[pipe.url should] equal:@"http://server.com/tests"];
         });
         
@@ -79,7 +79,7 @@ describe(@"AGPipeline", ^{
 
             [pipeline shouldNotBeNil];
             
-            id<AGPipe> pipe = [pipeline get:@"some bad name"];
+            id<AGPipe> pipe = [pipeline pipeWithName:@"some bad name"];
             [[pipe.url should] equal:@"http://server.com/tests"];
         });
         
@@ -93,7 +93,7 @@ describe(@"AGPipeline", ^{
             }];
             [pipeline shouldNotBeNil];
             
-            id<AGPipe> pipe = [pipeline get:@"some bad name"];
+            id<AGPipe> pipe = [pipeline pipeWithName:@"some bad name"];
             [[pipe.url should] equal:@"http://server.com/tests"];
         });
         
@@ -106,7 +106,7 @@ describe(@"AGPipeline", ^{
             }];
             [pipeline shouldNotBeNil];
             
-            id<AGPipe> pipe = [pipeline get:@"tests"];
+            id<AGPipe> pipe = [pipeline pipeWithName:@"tests"];
             [[pipe.url should] equal:@"http://server.com/tests"];
         });
         

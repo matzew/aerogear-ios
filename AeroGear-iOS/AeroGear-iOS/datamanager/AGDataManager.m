@@ -56,12 +56,12 @@
 }
 
 -(id<AGStore>)remove:(NSString*) storeName {
-    id<AGStore> store = [self get:storeName];
+    id<AGStore> store = [self storeWithName:storeName];
     [_stores removeObjectForKey:storeName];
     return store;
 }
 
--(id<AGStore>)get:(NSString*) storeName {
+-(id<AGStore>)storeWithName:(NSString*) storeName {
     return [_stores valueForKey:storeName];
 }
 

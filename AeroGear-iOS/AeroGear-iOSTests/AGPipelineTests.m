@@ -145,8 +145,8 @@
     STAssertNotNil(otherPipe, @"other pipe should not be nil");
     
     // look em up:
-    STAssertNotNil([_pipeline get:@"tasks"], @"pipe should not be nil");
-    STAssertNotNil([_pipeline get:@"projects"], @"pipe should not be nil");
+    STAssertNotNil([_pipeline pipeWithName:@"tasks"], @"pipe should not be nil");
+    STAssertNotNil([_pipeline pipeWithName:@"projects"], @"pipe should not be nil");
 }
 
 -(void)testAddAndRemovePipe {
@@ -159,12 +159,12 @@
     STAssertNotNil(pipe, @"pipe should not be nil");
 
     // look it up:
-    STAssertNotNil([_pipeline get:@"tasks"], @"pipe should not be nil");
+    STAssertNotNil([_pipeline pipeWithName:@"tasks"], @"pipe should not be nil");
     
     // remove it
     [_pipeline remove:@"tasks"];
     // look it up:
-    STAssertNil([_pipeline get:@"tasks"], @"pipe was already removed");
+    STAssertNil([_pipeline pipeWithName:@"tasks"], @"pipe was already removed");
 }
 
 -(void)testRemoveNonExistingPipe {
@@ -191,7 +191,7 @@
     STAssertNotNil(pipe, @"pipe should not be nil");
     
     // look up a non existing pipe
-    id<AGPipe> fooPipe = [_pipeline get:@"FOO"];
+    id<AGPipe> fooPipe = [_pipeline pipeWithName:@"FOO"];
     STAssertNil(fooPipe, @"pipe should be nil");
 }
 @end

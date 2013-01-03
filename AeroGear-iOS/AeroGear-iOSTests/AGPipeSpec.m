@@ -42,7 +42,7 @@ describe(@"AGPipe", ^{
 
         it(@"AGPipe should have an expected URL", ^{
             
-            id<AGPipe> pipe = [pipeline get:@"tests"];
+            id<AGPipe> pipe = [pipeline pipeWithName:@"tests"];
             [[theValue(pipe.url) shouldNot] equal:nil];
             // does it match ?
             [[pipe.url should] equal:@"http://server.com/tests"];
@@ -55,7 +55,7 @@ describe(@"AGPipe", ^{
             }];
 
             
-            id<AGPipe> newPipe = [pipeline get:@"tasks"];
+            id<AGPipe> newPipe = [pipeline pipeWithName:@"tasks"];
             NSLog(@"%@", newPipe);
             NSLog(@"%@", newPipe.url);
             
@@ -72,7 +72,7 @@ describe(@"AGPipe", ^{
             }];
 
             
-            id<AGPipe> newPipe = [pipeline get:@"tasks"];
+            id<AGPipe> newPipe = [pipeline pipeWithName:@"tasks"];
             [[theValue(newPipe.url) shouldNot] equal:nil];
             [[newPipe.url should] equal:@"http://server.com/mytasks"];
         });
@@ -86,7 +86,7 @@ describe(@"AGPipe", ^{
             }];
 
             
-            id<AGPipe> newPipe = [pipeline get:@"tasks"];
+            id<AGPipe> newPipe = [pipeline pipeWithName:@"tasks"];
             [[theValue(newPipe.url) shouldNot] equal:nil];
             [[newPipe.url should] equal:@"http://server.com/mytasks"];
         });
@@ -99,7 +99,7 @@ describe(@"AGPipe", ^{
             }];
 
             
-            id<AGPipe> newPipe = [pipeline get:@"tasks"];
+            id<AGPipe> newPipe = [pipeline pipeWithName:@"tasks"];
             [[theValue(newPipe.url) shouldNot] equal:nil];
             [[newPipe.url should] equal:@"http://server.com/tasks"];
         });
@@ -113,7 +113,7 @@ describe(@"AGPipe", ^{
             }];
             
             
-            id<AGPipe> newPipe = [pipeline get:@"tasks"];
+            id<AGPipe> newPipe = [pipeline pipeWithName:@"tasks"];
             [[theValue(newPipe.url) shouldNot] equal:nil];
             [[newPipe.url should] equal:@"http://blah.com/context/tasks"];
         });
@@ -127,7 +127,7 @@ describe(@"AGPipe", ^{
                 [config setEndpoint:@"myTasks"];
             }];
 
-            id<AGPipe> newPipe = [pipeline get:@"tasks"];
+            id<AGPipe> newPipe = [pipeline pipeWithName:@"tasks"];
             [[theValue(newPipe.url) shouldNot] equal:nil];
             [[newPipe.url should] equal:@"http://blah.com/context/myTasks"];
         });
@@ -142,7 +142,7 @@ describe(@"AGPipe", ^{
                 [config setType:@"REST"];
             }];
             
-            id<AGPipe> newPipe = [pipeline get:@"tasks"];
+            id<AGPipe> newPipe = [pipeline pipeWithName:@"tasks"];
             [[theValue(newPipe.url) shouldNot] equal:nil];
             [[newPipe.url should] equal:@"http://blah.com/context/myTasks"];
         });
@@ -156,7 +156,7 @@ describe(@"AGPipe", ^{
                 [config setType:@"REST"];
             }];
             
-            id<AGPipe> newPipe = [pipeline get:@"tasks"];
+            id<AGPipe> newPipe = [pipeline pipeWithName:@"tasks"];
             [[theValue(newPipe.url) shouldNot] equal:nil];
             [[newPipe.url should] equal:@"http://blah.com/context/tasks"];
         });
@@ -168,7 +168,7 @@ describe(@"AGPipe", ^{
                 [config setName:@"tasks"];
             }];
             
-            id<AGPipe> newPipe = [pipeline get:@"tasks"];
+            id<AGPipe> newPipe = [pipeline pipeWithName:@"tasks"];
             [[theValue(newPipe.url) shouldNot] equal:nil];
             
             [[newPipe.url should] equal:@"http://server.com/tasks"];
@@ -182,7 +182,7 @@ describe(@"AGPipe", ^{
             }];
 
             
-            id<AGPipe> otherPipe = [pipeline get:@"projects"];
+            id<AGPipe> otherPipe = [pipeline pipeWithName:@"projects"];
             [[theValue(otherPipe.url) shouldNot] equal:nil];
             [[otherPipe.url should] equal:@"http://blah.com/context/projects"];
             
@@ -194,7 +194,7 @@ describe(@"AGPipe", ^{
                 [config setBaseURL:secondBaseURL];
             }];
             
-            id<AGPipe> newestPipe = [pipeline get:@"tags"];
+            id<AGPipe> newestPipe = [pipeline pipeWithName:@"tags"];
             [[theValue(newestPipe.url) shouldNot] equal:nil];
             [[newestPipe.url should] equal:@"http://blah.com/somecontext/tags"];
             
@@ -208,7 +208,7 @@ describe(@"AGPipe", ^{
             }];
             
             
-            id<AGPipe> newPipe = [pipeline get:@"tasks"];
+            id<AGPipe> newPipe = [pipeline pipeWithName:@"tasks"];
             [[theValue(newPipe.url) shouldNot] equal:nil];
             
             [[newPipe.url should] equal:@"http://server.com/tasks"];
@@ -222,7 +222,7 @@ describe(@"AGPipe", ^{
             }];
 
             
-            id<AGPipe> otherPipe = [pipeline get:@"projects"];
+            id<AGPipe> otherPipe = [pipeline pipeWithName:@"projects"];
             [[theValue(otherPipe.url) shouldNot] equal:nil];
             [[otherPipe.url should] equal:@"http://blah.com/context/projects"];
             
@@ -236,7 +236,7 @@ describe(@"AGPipe", ^{
             }];
 
             
-            id<AGPipe> newestPipe = [pipeline get:@"tasks"];
+            id<AGPipe> newestPipe = [pipeline pipeWithName:@"tasks"];
             [[theValue(newestPipe.url) shouldNot] equal:nil];
             [[newestPipe.url should] equal:@"http://blah.com/somecontext/tags"];
             

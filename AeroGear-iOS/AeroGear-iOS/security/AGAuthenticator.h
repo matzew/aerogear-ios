@@ -59,7 +59,7 @@
  *
  * @param moduleName The name of the actual auth module object.
  */
--(id<AGAuthenticationModule>)get:(NSString*) moduleName;
+-(id<AGAuthenticationModule>)authModuleWithName:(NSString*) moduleName;
 
 
 @end

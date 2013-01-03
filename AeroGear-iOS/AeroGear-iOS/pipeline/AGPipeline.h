@@ -85,6 +85,6 @@
  *
  * @return the new created AGPipe object
  */
--(id<AGPipe>) get:(NSString*) name;
+-(id<AGPipe>) pipeWithName:(NSString*) name;
 
 @end

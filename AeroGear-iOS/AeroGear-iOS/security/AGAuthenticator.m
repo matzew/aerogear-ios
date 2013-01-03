@@ -54,12 +54,12 @@
 }
 
 -(id<AGAuthenticationModule>)remove:(NSString*) moduleName {
-    id<AGAuthenticationModule> module = [self get:moduleName];
+    id<AGAuthenticationModule> module = [self authModuleWithName:moduleName];
     [_modules removeObjectForKey:moduleName];
     return module;
 }
 
--(id<AGAuthenticationModule>)get:(NSString*) moduleName {
+-(id<AGAuthenticationModule>)authModuleWithName:(NSString*) moduleName {
     return [_modules valueForKey:moduleName];
 }
 

@@ -84,18 +84,18 @@
     STAssertNotNil(tagStore, @"store should not be nil");
     
     // look em up:
-    STAssertNotNil([_manager get:@"tasks"], @"store should not be nil");
-    STAssertNotNil([_manager get:@"projects"], @"store should not be nil");
+    STAssertNotNil([_manager storeWithName:@"tasks"], @"store should not be nil");
+    STAssertNotNil([_manager storeWithName:@"projects"], @"store should not be nil");
     
     // remove it
     [_manager remove:@"tasks"];
     // look it up:
-    STAssertNil([_manager get:@"tasks"], @"store was already removed");
+    STAssertNil([_manager storeWithName:@"tasks"], @"store was already removed");
     
     // remove it
     [_manager remove:@"projects"];
     // look it up:
-    STAssertNil([_manager get:@"projects"], @"store was already removed");
+    STAssertNil([_manager storeWithName:@"projects"], @"store was already removed");
 }
 
 -(void)testRemoveNonExistingStore {
@@ -118,7 +118,7 @@
     STAssertNotNil(store, @"store should not be nil");
     
     // look up a non existing store
-    id<AGStore> fooStore = [_manager get:@"FOO"];
+    id<AGStore> fooStore = [_manager storeWithName:@"FOO"];
     STAssertNil(fooStore, @"store should be nil");
 }
 @end

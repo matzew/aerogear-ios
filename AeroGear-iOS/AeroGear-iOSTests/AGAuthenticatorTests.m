@@ -123,18 +123,18 @@
     STAssertNotNil(otherModule, @"other module should not be nil");
     
     // look em up:
-    STAssertNotNil([_authenticator get:@"SomeModule"], @"module should not be nil");
-    STAssertNotNil([_authenticator get:@"OtherModule"], @"module should not be nil");
+    STAssertNotNil([_authenticator authModuleWithName:@"SomeModule"], @"module should not be nil");
+    STAssertNotNil([_authenticator authModuleWithName:@"OtherModule"], @"module should not be nil");
     
     // remove module
     [_authenticator remove:@"SomeModule"];
     // look it up:
-    STAssertNil([_authenticator get:@"SomeModule"], @"module was already removed");
+    STAssertNil([_authenticator authModuleWithName:@"SomeModule"], @"module was already removed");
 
     // remove module
     [_authenticator remove:@"OtherModule"];
     // look it up:
-    STAssertNil([_authenticator get:@"OtherModule"], @"module was already removed");
+    STAssertNil([_authenticator authModuleWithName:@"OtherModule"], @"module was already removed");
 }
 
 -(void)testRemoveNonExistingModule {
@@ -159,7 +159,7 @@
     STAssertNotNil(module, @"module should not be nil");
     
     // look up a non existing module
-    id<AGAuthenticationModule> fooModule = [_authenticator get:@"FOO"];
+    id<AGAuthenticationModule> fooModule = [_authenticator authModuleWithName:@"FOO"];
     STAssertNil(fooModule, @"module should be nil");
 }
 

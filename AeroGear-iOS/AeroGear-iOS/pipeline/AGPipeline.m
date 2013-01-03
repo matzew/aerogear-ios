@@ -81,13 +81,13 @@
 }
 
 -(id<AGPipe>) remove:(NSString*) name {
-    id<AGPipe> pipe = [self get:name];
+    id<AGPipe> pipe = [self pipeWithName:name];
     [_pipes removeObjectForKey:name];
     
     return pipe;
 }
 
--(id<AGPipe>) get:(NSString*) name {
+-(id<AGPipe>) pipeWithName:(NSString*) name {
     return [_pipes valueForKey:name];
 }
 

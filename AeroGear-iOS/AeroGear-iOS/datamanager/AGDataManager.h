@@ -59,6 +59,6 @@
  *
  * @param storeName The name of the actual data store object.
  */
--(id<AGStore>)get:(NSString*) storeName;
+-(id<AGStore>)storeWithName:(NSString*) storeName;
 
 @end
