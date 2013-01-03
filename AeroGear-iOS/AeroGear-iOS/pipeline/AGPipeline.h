@@ -34,7 +34,7 @@
  *
  * @return the AGPipeline object
  */
--(id) init:(NSURL*) baseURL;
+-(id) initWithBaseURL:(NSURL*) baseURL;
 
 /**
  * An initializer method to instantiate an empty AGPipeline.
@@ -57,7 +57,7 @@
  *
  * @return the AGPipeline object
  */
-+(id) pipeline:(NSURL*) baseURL;
++(id) pipelineWithBaseURL:(NSURL*) baseURL;
 
 /**
  * Adds a new AGPipe object, based on the give configuration object.

@@ -55,7 +55,7 @@
         // append the endpoint/name and use it as the final URL
         NSURL* finalURL = [self appendEndpoint:endpoint toURL:baseURL];
         
-        _url = finalURL.absoluteString;
+        _url = finalURL;
         _recordId = config.recordId;
         _authModule = (id<AGAuthenticationModuleAdapter>) config.authModule;
         
@@ -110,7 +110,7 @@
     [self applyAuthToken];
     
     // TODO: better Endpoints....
-    [_restClient getPath:_url parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    [_restClient getPath:_url.path parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
         
         if (success) {
             //TODO: NSLog(@"Invoking successblock....");
@@ -140,7 +140,7 @@
         params = [filterConfig dictionary];
     }
 
-    [_restClient getPath:_url parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    [_restClient getPath:_url.path parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
         
         if (success) {
             //TODO: NSLog(@"Invoking successblock....");
@@ -185,7 +185,7 @@
     // we need to check if the map representation contains the "recordID" and its value is actually set:
     if (objectKey == nil || [objectKey isKindOfClass:[NSNull class]]) {
         //TODO: NSLog(@"HTTP POST to create the given object");
-        [_restClient postPath:_url parameters:object success:successCallback failure:failureCallback];
+        [_restClient postPath:_url.path parameters:object success:successCallback failure:failureCallback];
         return;
     } else {
         NSString* updateId;

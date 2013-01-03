@@ -77,7 +77,7 @@ static NSString *const PROJECT = @"{\"id\":1,\"title\":\"First Project\",\"style
 }
 
 -(void)testPipeURLProperty {
-    STAssertEqualObjects(@"http://server.com/context/projects", _restPipe.url, @"verifying the given URL");
+    STAssertEqualObjects([NSURL URLWithString:@"http://server.com/context/projects"], _restPipe.url, @"verifying the given URL");
 }
 
 -(void)testRead {

@@ -44,7 +44,7 @@ describe(@"AGRestAdapter", ^{
         });
         
         it(@"should have an expected url", ^{
-            [[[restPipe url] should] equal:@"http://server.com/projects"];
+            [[[restPipe url] should] equal:[NSURL URLWithString:@"http://server.com/projects"]];
         });
         
     });

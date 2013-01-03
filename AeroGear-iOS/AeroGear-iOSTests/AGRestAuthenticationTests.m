@@ -70,7 +70,7 @@ static NSString *const LOGIN_SUCCESS_RESPONSE =  @"{\"username\":\"%@\",\"roles\
     _restAuthModule = [AGRestAuthentication moduleWithConfig:config];
 
     // setup Pipeline
-    AGPipeline* pipeline = [AGPipeline pipeline:baseURL];
+    AGPipeline* pipeline = [AGPipeline pipelineWithBaseURL:baseURL];
     _projects = [pipeline pipe:^(id<AGPipeConfig> config) {
         [config setName:@"projects"];
         [config setAuthModule:_restAuthModule];

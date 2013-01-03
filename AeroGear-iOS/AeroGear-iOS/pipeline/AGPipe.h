@@ -34,7 +34,7 @@
 /**
  * Returns the url string of the underlying 'pipe implementation'
  */
-@property (nonatomic, readonly) NSString* url;
+@property (nonatomic, readonly) NSURL* url;
 
 /**
  * Reads all the data from the underlying server connection.

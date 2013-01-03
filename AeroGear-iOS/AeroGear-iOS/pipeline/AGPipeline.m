@@ -41,7 +41,7 @@
     return self;
 }
 
-- (id)init:(NSURL*) baseURL {
+- (id)initWithBaseURL:(NSURL*) baseURL {
     self = [self init];
     if (self) {
         
@@ -55,8 +55,8 @@
     return [[self alloc] init];
 }
 
-+(id)pipeline:(NSURL*) baseURL; {
-    return [[self alloc] init:baseURL];
++(id)pipelineWithBaseURL:(NSURL*) baseURL; {
+    return [[self alloc] initWithBaseURL:baseURL];
 }
 
 -(id<AGPipe>) pipe:(void (^)(id<AGPipeConfig> config)) config {

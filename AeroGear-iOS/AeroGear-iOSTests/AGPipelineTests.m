@@ -34,7 +34,7 @@
     
     // create Pipeline
     _baseURL = [NSURL URLWithString:@"http://server.com/context/"];
-    _pipeline = [AGPipeline pipeline:_baseURL];
+    _pipeline = [AGPipeline pipelineWithBaseURL:_baseURL];
 }
 
 -(void)tearDown {
@@ -50,7 +50,7 @@
 
 -(void)testPipelineCreationWithBaseURL {
     NSURL* baseURL = [NSURL URLWithString:@"http://app.com/context/"];
-    AGPipeline* pipeline = [AGPipeline pipeline:baseURL];
+    AGPipeline* pipeline = [AGPipeline pipelineWithBaseURL:baseURL];
 
     STAssertNotNil(pipeline, @"pipeline should not be nil");
 }
@@ -91,7 +91,7 @@
     }];
     
     STAssertNotNil(pipe, @"pipe should not be nil");
-    STAssertEqualObjects(@"http://server.com/context/tasks", pipe.url, @"verifying the given URL");    
+    STAssertEqualObjects([NSURL URLWithString:@"http://server.com/context/tasks"], pipe.url, @"verifying the given URL");
 }
 
 -(void)testAddPipeWithURL {
@@ -103,7 +103,7 @@
     }];
     
     STAssertNotNil(pipe, @"pipe should not be nil");
-    STAssertEqualObjects(@"http://app.com/context/tasks", pipe.url, @"verifying the given URL");
+    STAssertEqualObjects([NSURL URLWithString:@"http://app.com/context/tasks"], pipe.url, @"verifying the given URL");
 }
 
 -(void)testAddPipeWithEndpoint {
@@ -113,7 +113,7 @@
     }];
     
     STAssertNotNil(pipe, @"pipe should not be nil");
-    STAssertEqualObjects(@"http://server.com/context/realm/status", pipe.url, @"verifying the given URL");
+    STAssertEqualObjects([NSURL URLWithString:@"http://server.com/context/realm/status"], pipe.url, @"verifying the given URL");
 }
 
 -(void)testAddPipeWithURLAndEndpoint {
@@ -126,7 +126,7 @@
     }];
     
     STAssertNotNil(pipe, @"pipe should not be nil");
-    STAssertEqualObjects(@"http://us.battle.net/api/wow/realm/status", pipe.url, @"verifying the given URL");
+    STAssertEqualObjects([NSURL URLWithString:@"http://us.battle.net/api/wow/realm/status"], pipe.url, @"verifying the given URL");
 }
 
 -(void)testAddPipes {
