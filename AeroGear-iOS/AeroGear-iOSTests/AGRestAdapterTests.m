@@ -185,7 +185,12 @@ static NSString *const PROJECT = @"{\"id\":1,\"title\":\"First Project\",\"style
 -(void)testRemove {
     [AGMockURLProtocol setResponseData:[PROJECT dataUsingEncoding:NSUTF8StringEncoding]];
     
-    [_restPipe remove:@"1" success:^(id responseObject) {
+    NSMutableDictionary* project = [NSMutableDictionary
+                                    dictionaryWithObjectsAndKeys:@"1", @"id", @"First Project", @"title",
+                                    @"project-161-58-58", @"style", nil];
+
+    
+    [_restPipe remove:project success:^(id responseObject) {
         STAssertNotNil(responseObject, @"response should not be nil");
         _finishedFlag = YES;
 
@@ -221,8 +226,15 @@ static NSString *const PROJECT = @"{\"id\":1,\"title\":\"First Project\",\"style
 }
 
 -(void)testNSNullValueOnRemove {
-    [_restPipe remove:[NSNull null] success:^(id responseObject) {
-        STFail(@"no success expected");
+    [AGMockURLProtocol setResponseData:[PROJECT dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    //fake Tag: id + title
+    NSDictionary* fakeTag = [NSDictionary dictionaryWithObjectsAndKeys:[NSNull null], @"id", @"Fake TAG", @"title", nil];
+    
+    [_restPipe remove:fakeTag success:^(id responseObject) {
+        STFail(@"success not expected");
+        _finishedFlag = YES;
+        
     } failure:^(NSError *error) {
         _finishedFlag = YES;
     }];

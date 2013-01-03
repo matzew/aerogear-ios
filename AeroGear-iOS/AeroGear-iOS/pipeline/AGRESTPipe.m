@@ -159,6 +159,20 @@
      success:(void (^)(id responseObject))success
      failure:(void (^)(NSError *error))failure {
 
+    // when null is provided we try to invoke the failure block
+    if (object == nil || [object isKindOfClass:[NSNull class]]) {
+        if (failure) {
+            NSError* error = [NSError errorWithDomain:@"org.aerogear.pipes.save"
+                                                 code:0
+                                             userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"object was nil", NSLocalizedDescriptionKey, nil]];
+            
+            failure(error);
+        }
+        
+        // return on NSNull
+        return;
+    }
+
     // try to add auth.token:
     [self applyAuthToken];
     
@@ -201,36 +215,48 @@
     }
 }
 
--(void) remove:(id) key
+-(void) remove:(NSDictionary*) object
        success:(void (^)(id responseObject))success
        failure:(void (^)(NSError *error))failure {
     
-    // when null was provided we try to invoke the failure block
-    if ([key isKindOfClass:[NSNull class]]) {
-        
+    // when null is provided we try to invoke the failure block
+    if (object == nil || [object isKindOfClass:[NSNull class]]) {
         if (failure) {
             NSError* error = [NSError errorWithDomain:@"org.aerogear.pipes.remove"
                                                  code:0
-                                             userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"Key was NSNull", NSLocalizedDescriptionKey, nil]];
+                                             userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"object was nil", NSLocalizedDescriptionKey, nil]];
             
             failure(error);
         }
-        
-        // return on NSNull
+
         return;
     }
-    
 
     // try to add auth.token:
     [self applyAuthToken];
 
-    id deleteKey;
-    if ([key isKindOfClass:[NSString class]]) {
-        deleteKey = key;
-    } else {
-        deleteKey = [key stringValue];
+    id objectKey = [object objectForKey:_recordId];
+    // we need to check if the map representation contains the "recordID" and its value is actually set:
+    if (objectKey == nil || [objectKey isKindOfClass:[NSNull class]]) {
+        if (failure) {
+            NSError* error = [NSError errorWithDomain:@"org.aerogear.pipes.remove"
+                                                 code:0
+                                             userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"recordId not set", NSLocalizedDescriptionKey, nil]];
+            
+            failure(error);
+        }
+        
+        // do nothing
+        return;
     }
-
+   
+    NSString* deleteKey;
+    if ([objectKey isKindOfClass:[NSString class]]) {
+        deleteKey = objectKey;
+    } else {
+        deleteKey = [objectKey stringValue];
+    }
+    
     [_restClient deletePath:[self appendObjectPath:deleteKey] parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
         
         if (success) {
