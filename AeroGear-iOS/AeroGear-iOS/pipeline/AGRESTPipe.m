@@ -84,16 +84,9 @@
     success:(void (^)(id responseObject))success
     failure:(void (^)(NSError *error))failure {
 
-    if ([value isKindOfClass:[NSNull class]]) {
-        if (failure) {
-            NSError* error = [NSError errorWithDomain:@"org.aerogear.pipes.read"
-                                                 code:0
-                                             userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"id value was NSNull", NSLocalizedDescriptionKey, nil]];
-            
-            failure(error);
-        }
-        
-        // return on NSNull
+    if (value == nil || [value isKindOfClass:[NSNull class]]) {
+        [self raiseError:@"read" msg:@"read id value was nil" failure:failure];
+        // do nothing        
         return;
     }
     
@@ -161,15 +154,8 @@
 
     // when null is provided we try to invoke the failure block
     if (object == nil || [object isKindOfClass:[NSNull class]]) {
-        if (failure) {
-            NSError* error = [NSError errorWithDomain:@"org.aerogear.pipes.save"
-                                                 code:0
-                                             userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"object was nil", NSLocalizedDescriptionKey, nil]];
-            
-            failure(error);
-        }
-        
-        // return on NSNull
+        [self raiseError:@"save" msg:@"object was nil" failure:failure];
+        // do nothing
         return;
     }
 
@@ -221,14 +207,8 @@
     
     // when null is provided we try to invoke the failure block
     if (object == nil || [object isKindOfClass:[NSNull class]]) {
-        if (failure) {
-            NSError* error = [NSError errorWithDomain:@"org.aerogear.pipes.remove"
-                                                 code:0
-                                             userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"object was nil", NSLocalizedDescriptionKey, nil]];
-            
-            failure(error);
-        }
-
+        [self raiseError:@"remove" msg:@"object was nil" failure:failure];
+        // do nothing        
         return;
     }
 
@@ -238,14 +218,7 @@
     id objectKey = [object objectForKey:_recordId];
     // we need to check if the map representation contains the "recordID" and its value is actually set:
     if (objectKey == nil || [objectKey isKindOfClass:[NSNull class]]) {
-        if (failure) {
-            NSError* error = [NSError errorWithDomain:@"org.aerogear.pipes.remove"
-                                                 code:0
-                                             userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"recordId not set", NSLocalizedDescriptionKey, nil]];
-            
-            failure(error);
-        }
-        
+        [self raiseError:@"remove" msg:@"recordId not set" failure:failure];
         // do nothing
         return;
     }
@@ -286,6 +259,21 @@
 
 -(NSString *) description {
     return [NSString stringWithFormat: @"%@ [type=%@, url=%@]", self.class, _type, _URL];
+}
+
+-(void) raiseError:(NSString*) domain
+               msg:(NSString*) msg
+           failure:(void (^)(NSError *error))failure {
+    
+    if (!failure)
+        return;
+    
+    NSError* error = [NSError errorWithDomain:[NSString stringWithFormat:@"org.aerogear.pipes.%@", domain]
+                                         code:0
+                                     userInfo:[NSDictionary dictionaryWithObjectsAndKeys:msg,
+                                               NSLocalizedDescriptionKey, nil]];
+    
+    failure(error);
 }
 
 + (BOOL) accepts:(NSString *) type {
