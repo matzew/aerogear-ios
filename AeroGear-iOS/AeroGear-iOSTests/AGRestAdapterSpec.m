@@ -25,7 +25,7 @@ describe(@"AGRestAdapter", ^{
     context(@"when newly created", ^{
         
         //A 'RESTful' pipe object:
-        __block id restPipe = nil;
+        __block AGRESTPipe* restPipe = nil;
         
         
         beforeEach(^{
@@ -44,7 +44,7 @@ describe(@"AGRestAdapter", ^{
         });
         
         it(@"should have an expected url", ^{
-            [[[restPipe url] should] equal:[NSURL URLWithString:@"http://server.com/projects"]];
+            [[restPipe.URL should] equal:[NSURL URLWithString:@"http://server.com/projects"]];
         });
         
     });

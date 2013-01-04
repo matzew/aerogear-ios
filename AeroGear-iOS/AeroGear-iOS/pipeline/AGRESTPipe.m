@@ -32,7 +32,7 @@
 // =====================================================
 
 @synthesize type = _type;
-@synthesize url = _url;
+@synthesize URL = _URL;
 
 // ==============================================
 // ======== 'factory' and 'init' section ========
@@ -55,7 +55,7 @@
         // append the endpoint/name and use it as the final URL
         NSURL* finalURL = [self appendEndpoint:endpoint toURL:baseURL];
         
-        _url = finalURL;
+        _URL = finalURL;
         _recordId = config.recordId;
         _authModule = (id<AGAuthenticationModuleAdapter>) config.authModule;
         
@@ -110,7 +110,7 @@
     [self applyAuthToken];
     
     // TODO: better Endpoints....
-    [_restClient getPath:_url.path parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    [_restClient getPath:_URL.path parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
         
         if (success) {
             //TODO: NSLog(@"Invoking successblock....");
@@ -140,7 +140,7 @@
         params = [filterConfig dictionary];
     }
 
-    [_restClient getPath:_url.path parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
+    [_restClient getPath:_URL.path parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
         
         if (success) {
             //TODO: NSLog(@"Invoking successblock....");
@@ -199,7 +199,7 @@
     // we need to check if the map representation contains the "recordID" and its value is actually set:
     if (objectKey == nil || [objectKey isKindOfClass:[NSNull class]]) {
         //TODO: NSLog(@"HTTP POST to create the given object");
-        [_restClient postPath:_url.path parameters:object success:successCallback failure:failureCallback];
+        [_restClient postPath:_URL.path parameters:object success:successCallback failure:failureCallback];
         return;
     } else {
         NSString* updateId;
@@ -274,7 +274,7 @@
 
 // appends the path for delete/updates to the URL
 -(NSString*) appendObjectPath:(NSString*)path {
-    return [NSString stringWithFormat:@"%@/%@", _url, path];
+    return [NSString stringWithFormat:@"%@/%@", _URL, path];
 }
 
 // helper method:
@@ -285,7 +285,7 @@
 }
 
 -(NSString *) description {
-    return [NSString stringWithFormat: @"%@ [type=%@, url=%@]", self.class, _type, _url];
+    return [NSString stringWithFormat: @"%@ [type=%@, url=%@]", self.class, _type, _URL];
 }
 
 + (BOOL) accepts:(NSString *) type {

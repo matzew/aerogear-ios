@@ -91,7 +91,7 @@
     }];
     
     STAssertNotNil(pipe, @"pipe should not be nil");
-    STAssertEqualObjects([NSURL URLWithString:@"http://server.com/context/tasks"], pipe.url, @"verifying the given URL");
+    STAssertEqualObjects([NSURL URLWithString:@"http://server.com/context/tasks"], pipe.URL, @"verifying the given URL");
 }
 
 -(void)testAddPipeWithURL {
@@ -103,7 +103,7 @@
     }];
     
     STAssertNotNil(pipe, @"pipe should not be nil");
-    STAssertEqualObjects([NSURL URLWithString:@"http://app.com/context/tasks"], pipe.url, @"verifying the given URL");
+    STAssertEqualObjects([NSURL URLWithString:@"http://app.com/context/tasks"], pipe.URL, @"verifying the given URL");
 }
 
 -(void)testAddPipeWithEndpoint {
@@ -113,7 +113,7 @@
     }];
     
     STAssertNotNil(pipe, @"pipe should not be nil");
-    STAssertEqualObjects([NSURL URLWithString:@"http://server.com/context/realm/status"], pipe.url, @"verifying the given URL");
+    STAssertEqualObjects([NSURL URLWithString:@"http://server.com/context/realm/status"], pipe.URL, @"verifying the given URL");
 }
 
 -(void)testAddPipeWithURLAndEndpoint {
@@ -126,7 +126,7 @@
     }];
     
     STAssertNotNil(pipe, @"pipe should not be nil");
-    STAssertEqualObjects([NSURL URLWithString:@"http://us.battle.net/api/wow/realm/status"], pipe.url, @"verifying the given URL");
+    STAssertEqualObjects([NSURL URLWithString:@"http://us.battle.net/api/wow/realm/status"], pipe.URL, @"verifying the given URL");
 }
 
 -(void)testAddPipes {

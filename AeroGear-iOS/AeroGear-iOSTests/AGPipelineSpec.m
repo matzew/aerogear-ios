@@ -66,7 +66,7 @@ describe(@"AGPipeline", ^{
             [pipeline shouldNotBeNil];
             
             id<AGPipe> pipe = [pipeline pipeWithName:@"tests"];
-            [[pipe.url should] equal:[NSURL URLWithString:@"http://server.com/tests"]];
+            [[pipe.URL should] equal:[NSURL URLWithString:@"http://server.com/tests"]];
         });
         
         it(@"with name and baseURL and endpoint", ^{
@@ -80,7 +80,7 @@ describe(@"AGPipeline", ^{
             [pipeline shouldNotBeNil];
             
             id<AGPipe> pipe = [pipeline pipeWithName:@"some bad name"];
-            [[pipe.url should] equal:[NSURL URLWithString:@"http://server.com/tests"]];
+            [[pipe.URL should] equal:[NSURL URLWithString:@"http://server.com/tests"]];
         });
         
         it(@"with name and baseURL and endpoint and (known) type", ^{
@@ -94,7 +94,7 @@ describe(@"AGPipeline", ^{
             [pipeline shouldNotBeNil];
             
             id<AGPipe> pipe = [pipeline pipeWithName:@"some bad name"];
-            [[pipe.url should] equal:[NSURL URLWithString:@"http://server.com/tests"]];
+            [[pipe.URL should] equal:[NSURL URLWithString:@"http://server.com/tests"]];
         });
         
         it(@"with name and baseURL and (known) type", ^{
@@ -107,7 +107,7 @@ describe(@"AGPipeline", ^{
             [pipeline shouldNotBeNil];
             
             id<AGPipe> pipe = [pipeline pipeWithName:@"tests"];
-            [[pipe.url should] equal:[NSURL URLWithString:@"http://server.com/tests"]];
+            [[pipe.URL should] equal:[NSURL URLWithString:@"http://server.com/tests"]];
         });
         
     });
