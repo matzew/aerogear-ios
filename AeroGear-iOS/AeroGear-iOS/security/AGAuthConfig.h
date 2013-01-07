@@ -26,37 +26,27 @@
 
 /**
  * Applies the baseURL to the configuration.
- *
- * @param baseURL The baseURL of the actual AGAuthenticationModule object.
  */
 @property (strong, nonatomic) NSURL* baseURL;
 
 
 /**
  * Applies the "login endpoint" to the configuration.
- *
- * @param loginEndpoint The login endpoint of the actual AGAuthenticationModule object.
  */
 @property (copy, nonatomic) NSString* loginEndpoint;
 
 /**
  * Applies the "logout endpoint" to the configuration.
- *
- * @param logoutEndpoint The logout endpoint of the actual AGAuthenticationModule object.
  */
 @property (copy, nonatomic) NSString* logoutEndpoint;
 
 /**
  * Applies the "enroll endpoint" to the configuration.
- *
- * @param enrollEndpoint The enroll endpoint of the actual AGAuthenticationModule object.
  */
 @property (copy, nonatomic) NSString* enrollEndpoint;
 
 /**
  * Applies the tokenHeaderName header name to the configuration.
- *
- * @param tokenHeaderName The token-header-name of the actual AGAuthenticationModule object.
  */
 @property (copy, nonatomic) NSString* tokenHeaderName;
 

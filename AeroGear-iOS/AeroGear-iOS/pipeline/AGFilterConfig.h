@@ -26,23 +26,16 @@
 
 /**
  * Applies the limit to the configuration.
- *
- * @param limit The number of the results returned
  */
 @property (assign, nonatomic) NSUInteger limit;
 
 /**
  * Applies the offset to the configuration.
- *
- * @param offset The offset in the number of the results
  */
-
 @property (assign, nonatomic) NSUInteger offset;
 
 /**
  * Applies the query to the configuration.
- *
- * @param where The query to be used to filter returned results
  */
 @property (strong, nonatomic) NSDictionary* where;
 

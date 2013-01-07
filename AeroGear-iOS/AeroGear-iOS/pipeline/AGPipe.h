@@ -54,7 +54,7 @@
 /**
  * Read specific object from the underlying server connection.
  *
- * @param value The value of the recordId (see method [AGPipeConfig recordId:])
+ * @param value The value of the recordId. See property [AGPipeConfig recordId]
  *
  * @param success A block object to be executed when the request operation finishes successfully.
  * This block has no return value and takes one argument: The object created from the response
@@ -90,7 +90,7 @@
 
 
 /**
- * Saves (or updates) a give 'JSON' map on the server;
+ * Saves (or updates) a given object from the underlying server connection.
  *
  * @param object a 'JSON' map, representing the data to save/update
  *
@@ -108,10 +108,11 @@
      failure:(void (^)(NSError *error))failure;
 
 /**
- * Removes an object from the underlying server connection. The
- * given key argument is used as the objects ID.
+ * Removes an object from the underlying server connection.
  *
- * @param key (string, integer,...) representing the 'id'
+ *
+ * @param object a 'JSON' map, representing the data to remove. Note the map must have the
+ * 'recordId' key set. See property [AGPipeConfig recordId]
  *
  * @param success A block object to be executed when the request operation finishes successfully.
  * This block has no return value and takes one argument: The object created from the response
@@ -122,7 +123,7 @@
  * This block has no return value and takes one argument: The `NSError` object describing
  * the network or parsing error that occurred.
  */
--(void) remove:(NSDictionary*) key
+-(void) remove:(NSDictionary*) object
        success:(void (^)(id responseObject))success
        failure:(void (^)(NSError *error))failure;
 
