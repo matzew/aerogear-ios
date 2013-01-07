@@ -122,7 +122,7 @@
  * This block has no return value and takes one argument: The `NSError` object describing
  * the network or parsing error that occurred.
  */
--(void) remove:(id) key
+-(void) remove:(NSDictionary*) key
        success:(void (^)(id responseObject))success
        failure:(void (^)(NSError *error))failure;
 
