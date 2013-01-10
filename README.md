@@ -12,10 +12,6 @@ The project requires [CocoaPods](http://cocoapods.org/) for dependency managemen
 
 The API is documented [here](http://aerogear.org/docs/specs/aerogear-ios/). Some basic usages are documented [here](API.md).
 
-## Test cases
-
-The test case just checks a simple GET and POST request against the [AeroGear TODO app](http://todo-aerogear.rhcloud.com/)
-
 ## Getting started
 
 Open the [AeroGear-iOS.xcworkspace](aerogear-ios/tree/master/AeroGear-iOS/AeroGear-iOS.xcworkspace) in Xcode, if you want to get the project...
