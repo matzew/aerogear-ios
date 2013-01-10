@@ -41,24 +41,8 @@
         AGStoreConfiguration* config = (AGStoreConfiguration*) storeConfig;
         _recordId = config.recordId;
         
-        // for cases that a store name is not set
-        if (config.name == nil)
-            config.name = @"unnamed";
-        
-        // calculate path
-        NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-        NSString* documentsDirectory = [paths objectAtIndex:0];
-        
-        // create the Documents directory if it doesn't exist
-        BOOL isDir;
-        if (![[NSFileManager defaultManager] fileExistsAtPath:documentsDirectory isDirectory:&isDir]) {
-            NSError *error = nil;
-            [[NSFileManager defaultManager] createDirectoryAtPath:documentsDirectory
-                                      withIntermediateDirectories:YES attributes:nil error:&error];
-        }
-
-        // the filename is based on this store name
-        _file = [documentsDirectory stringByAppendingPathComponent:config.name];
+        // extract file path
+        _file = [self storeFilePathWithName:config.name];
         
         // if file exists initialize store
         if ([[NSFileManager defaultManager] fileExistsAtPath:_file]) {
@@ -70,6 +54,10 @@
     
     return self;
 }
+
+// =====================================================
+// ======== public API (AGStore) ========
+// =====================================================
 
 -(void) save:(id) data
      success:(void (^)(id object))success
@@ -121,19 +109,25 @@
     } failure:failure];
 }
 
--(void) raiseError:(NSString*) domain
-               msg:(NSString*) msg
-           failure:(void (^)(NSError *error))failure {
+// =====================================================
+// =========== private utility methods  ================
+// =====================================================
+
+-(NSString*) storeFilePathWithName:(NSString*) name {
+    // calculate path
+    NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString* documentsDirectory = [paths objectAtIndex:0];
     
-    if (!failure)
-        return;
+    // create the Documents directory if it doesn't exist
+    BOOL isDir;
+    if (![[NSFileManager defaultManager] fileExistsAtPath:documentsDirectory isDirectory:&isDir]) {
+        NSError *error = nil;
+        [[NSFileManager defaultManager] createDirectoryAtPath:documentsDirectory
+                                  withIntermediateDirectories:YES attributes:nil error:&error];
+    }
     
-    NSError* error = [NSError errorWithDomain:[NSString stringWithFormat:@"org.aerogear.pipes.%@", domain]
-                                         code:0
-                                     userInfo:[NSDictionary dictionaryWithObjectsAndKeys:msg,
-                                               NSLocalizedDescriptionKey, nil]];
-    
-    failure(error);
+    // the filename is based on this store name
+    return [documentsDirectory stringByAppendingPathComponent:name];
 }
 
 @end

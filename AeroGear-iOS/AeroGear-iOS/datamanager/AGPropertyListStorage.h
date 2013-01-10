@@ -24,7 +24,4 @@
 
 @interface AGPropertyListStorage : AGMemoryStorage
 
-+(id) storeWithConfig:(id<AGStoreConfig>) storeConfig;
--(id) initWithConfig:(id<AGStoreConfig>) storeConfig;
-
 @end
