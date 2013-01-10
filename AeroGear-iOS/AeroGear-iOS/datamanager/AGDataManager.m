@@ -44,8 +44,12 @@
     if (config) {
         config(storeConfig);
     }
-   
-    id<AGStore> store;
+
+    // throw exception if name is not set
+    if (storeConfig.name == nil)
+        [NSException raise:@"Invalid config.name value" format:@"config.name is nil"];
+    
+    id<AGStore> store = nil;
     
     if ([storeConfig.type isEqualToString:@"MEMORY"]) {
         store = [AGMemoryStorage storeWithConfig:storeConfig];
@@ -55,7 +59,7 @@
         return nil;
     }
 
-    [_stores setValue:store forKey:[storeConfig name]];
+    [_stores setValue:store forKey:storeConfig.name];
     
     return store;
 }
