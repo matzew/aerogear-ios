@@ -218,6 +218,29 @@ The reset function allows you the erase all data available in the used AGStore o
 
 The reset method accepts two simple blocks that are invoked on success or in case of an failure.
 
+## Persistent Storeage system
+
+A simple _Property list_ storage system is part of the library as well, The same ```AGStore``` protocol is used for reading and writing. Below is a little example on how to same to the file syste:
+
+    // initalize plist store (if the file does not exist it will be created)
+    AGDataManager* manager = [AGDataManager manager];
+    id<AGStore> plistStore = [manager store:^(id<AGStoreConfig> config) {
+        [config setName:@"secrets"]; // will be used as the filename for the plist
+        [config setType:@"PLIST"];
+    }];
+ 
+    // the object to save (e.g. a dictionary)
+    NSDictionary *otp = [NSDictionary dictionaryWithObjectsAndKeys:@"19a01df0281afcdbe", @"otp", @"1", @"id", nil];
+
+    // save it
+    [plistStore save:otp success:^(id object) {
+        // success callback...
+    } failure:^(NSError *error) {
+        NSLog(@"error: %@", error);
+    }];
+    
+The ```read```, ```reset``` or ```remove``` API behave the same, as on the default ("in memory") store. 
+
 Authentication and User enrollment
 ==================================
 
