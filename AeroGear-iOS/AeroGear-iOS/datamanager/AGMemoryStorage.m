@@ -256,6 +256,10 @@
     return [NSString stringWithFormat: @"%@ [type=%@]", self.class, _type];
 }
 
+// =====================================================
+// =========== private utility methods  ================
+// =====================================================
+
 -(void) raiseError:(NSString*) domain
                msg:(NSString*) msg
            failure:(void (^)(NSError *error))failure {
@@ -263,7 +267,7 @@
     if (!failure)
         return;
     
-    NSError* error = [NSError errorWithDomain:[NSString stringWithFormat:@"org.aerogear.pipes.%@", domain]
+    NSError* error = [NSError errorWithDomain:[NSString stringWithFormat:@"org.aerogear.stores.%@", domain]
                                          code:0
                                      userInfo:[NSDictionary dictionaryWithObjectsAndKeys:msg,
                                                NSLocalizedDescriptionKey, nil]];
