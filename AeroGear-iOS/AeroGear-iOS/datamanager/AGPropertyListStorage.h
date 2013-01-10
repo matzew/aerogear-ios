@@ -20,12 +20,9 @@
 #import "AGStore.h"
 #import "AGStoreConfiguration.h"
 
-@interface AGMemoryStorage : NSObject <AGStore> {
+#import "AGMemoryStorage.h"
 
-@protected
-    NSMutableArray* _array;
-    NSString* _recordId;
-}
+@interface AGPropertyListStorage : AGMemoryStorage
 
 +(id) storeWithConfig:(id<AGStoreConfig>) storeConfig;
 -(id) initWithConfig:(id<AGStoreConfig>) storeConfig;

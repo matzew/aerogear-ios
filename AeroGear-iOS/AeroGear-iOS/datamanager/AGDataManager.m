@@ -18,6 +18,7 @@
 
 #import "AGDataManager.h"
 #import "AGMemoryStorage.h"
+#import "AGPropertyListStorage.h"
 #import "AGStoreConfiguration.h"
 
 @implementation AGDataManager {
@@ -44,12 +45,16 @@
         config(storeConfig);
     }
    
-    // TODO check ALL supported types...
-    if (! [storeConfig.type isEqualToString:@"MEMORY"]) {
+    id<AGStore> store;
+    
+    if ([storeConfig.type isEqualToString:@"MEMORY"]) {
+        store = [AGMemoryStorage storeWithConfig:storeConfig];
+    } else if ([storeConfig.type isEqualToString:@"PLIST"]) {
+        store = [AGPropertyListStorage storeWithConfig:storeConfig];
+    } else { // unknown type
         return nil;
     }
 
-    id<AGStore> store = [AGMemoryStorage storeWithConfig:storeConfig];
     [_stores setValue:store forKey:[storeConfig name]];
     
     return store;

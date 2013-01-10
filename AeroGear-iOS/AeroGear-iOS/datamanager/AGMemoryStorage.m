@@ -18,11 +18,7 @@
 
 #import "AGMemoryStorage.h"
 
-@implementation AGMemoryStorage {
-    // ivars
-    NSMutableArray* _array;
-    NSString* _recordId;
-}
+@implementation AGMemoryStorage
 
 @synthesize type = _type;
 
@@ -118,6 +114,14 @@
     if ([data isKindOfClass:[NSArray class]]) {
 
         @try {
+            
+            // check if the array contains non-dictionary objects
+            // if yes fail fast
+            for (id record in data) {
+                if (![record isKindOfClass:[NSDictionary class]])
+                    [self raiseError:@"save" msg:@"array contains non-dictionary objects!" failure:failure];
+            }
+ 
             for (id record in data) {
                 // we pass in NO success block/callback
                 [self saveOne:record success:nil failure:failure];
@@ -136,6 +140,9 @@
     } else if([data isKindOfClass:[NSDictionary class]]) {
         // single obj:
         [self saveOne:data success:success failure:failure];
+
+    } else { // not a dictionary, fail back
+        [self raiseError:@"save" msg:@"dictionary objects are supported only" failure:failure];
     }
     
 }
@@ -164,6 +171,17 @@
         }
 
         if (!_objFound) {
+            // if the object hasnt' set a recordId property
+            if ([data objectForKey:_recordId] == nil) {
+                //generate a UIID to be used as this object recordId
+                CFUUIDRef uuid = CFUUIDCreate(NULL);
+                NSString *uuidStr = (__bridge_transfer NSString *)CFUUIDCreateString(NULL, uuid);
+                CFRelease(uuid);
+                
+                [data setValue:uuidStr forKey:_recordId];
+            }
+            
+            // add it to our list
             [_array addObject:data];
         }
         
@@ -236,6 +254,21 @@
 
 -(NSString *) description {
     return [NSString stringWithFormat: @"%@ [type=%@]", self.class, _type];
+}
+
+-(void) raiseError:(NSString*) domain
+               msg:(NSString*) msg
+           failure:(void (^)(NSError *error))failure {
+    
+    if (!failure)
+        return;
+    
+    NSError* error = [NSError errorWithDomain:[NSString stringWithFormat:@"org.aerogear.pipes.%@", domain]
+                                         code:0
+                                     userInfo:[NSDictionary dictionaryWithObjectsAndKeys:msg,
+                                               NSLocalizedDescriptionKey, nil]];
+    
+    failure(error);
 }
 
 @end
