@@ -48,7 +48,7 @@
 
 -(void) testSave {
     NSMutableDictionary* user = [NSMutableDictionary
-                                  dictionaryWithObjectsAndKeys:@"Matthias",@"name",@"0",@"id", nil];
+                                  dictionaryWithObjectsAndKeys:@"Robert",@"name",@"0",@"id", nil];
     
     [_memStore save:user success:^(id object) {
         STAssertNotNil(object, @"object should not be nil");
@@ -59,7 +59,7 @@
 
 -(void) testRead {
     NSMutableDictionary* user = [NSMutableDictionary
-                                 dictionaryWithObjectsAndKeys:@"Matthias",@"name",@"0",@"id", nil];
+                                 dictionaryWithObjectsAndKeys:@"Robert",@"name",@"0",@"id", nil];
 
     //save it
     [_memStore save:user success:^(id object) {
@@ -71,7 +71,7 @@
 
     // read it
     [_memStore read:@"0" success:^(id object) {
-        STAssertEqualObjects(@"Matthias", [object valueForKey:@"name"], @"should be equal");
+        STAssertEqualObjects(@"Robert", [object valueForKey:@"name"], @"should be equal");
     } failure:^(NSError *error) {
         STFail(@"read should not fail");
     }];
@@ -79,7 +79,7 @@
 
 -(void) testReadNonExisting {
     NSMutableDictionary* user = [NSMutableDictionary
-                                 dictionaryWithObjectsAndKeys:@"Matthias",@"name",@"0",@"id", nil];
+                                 dictionaryWithObjectsAndKeys:@"Robert",@"name",@"0",@"id", nil];
     
     //save it
     [_memStore save:user success:^(id object) {
@@ -99,7 +99,7 @@
 
 -(void) testRemove {
     NSMutableDictionary* user = [NSMutableDictionary
-                                 dictionaryWithObjectsAndKeys:@"0",@"id", @"Matthias",@"name", nil];
+                                 dictionaryWithObjectsAndKeys:@"0",@"id", @"Robert",@"name", nil];
     
     //save it
     [_memStore save:user success:^(id object) {
@@ -111,7 +111,7 @@
     
     // read it
     [_memStore read:@"0" success:^(id object) {
-        STAssertEqualObjects(@"Matthias", [object valueForKey:@"name"], @"should be equal");
+        STAssertEqualObjects(@"Robert", [object valueForKey:@"name"], @"should be equal");
     } failure:^(NSError *error) {
         STFail(@"read should not fail");
     }];
@@ -133,7 +133,7 @@
 
 -(void) testRemoveNonExisting {
     NSMutableDictionary* user = [NSMutableDictionary
-                                 dictionaryWithObjectsAndKeys:@"0",@"id", @"Matthias",@"name", nil];
+                                 dictionaryWithObjectsAndKeys:@"0",@"id", @"Robert",@"name", nil];
     
     //save it
     [_memStore save:user success:^(id object) {
@@ -145,7 +145,7 @@
     
     // read it
     [_memStore read:@"0" success:^(id object) {
-        STAssertEqualObjects(@"Matthias", [object valueForKey:@"name"], @"should be equal");
+        STAssertEqualObjects(@"Robert", [object valueForKey:@"name"], @"should be equal");
     } failure:^(NSError *error) {
         STFail(@"read should not fail");
     }];
@@ -167,7 +167,7 @@
 
 -(void) testReset {
     NSMutableDictionary* user1 = [NSMutableDictionary
-                                 dictionaryWithObjectsAndKeys:@"0",@"id", @"Matthias",@"name", nil];
+                                 dictionaryWithObjectsAndKeys:@"0",@"id", @"Robert",@"name", nil];
     NSMutableDictionary* user2 = [NSMutableDictionary
                                  dictionaryWithObjectsAndKeys:@"1",@"id", @"John",@"name", nil];
     
@@ -218,7 +218,7 @@
 
 -(void) testReadAll {
     NSMutableDictionary* user1 = [NSMutableDictionary
-                                  dictionaryWithObjectsAndKeys:@"0",@"id", @"Matthias",@"name", nil];
+                                  dictionaryWithObjectsAndKeys:@"0",@"id", @"Robert",@"name", nil];
     NSMutableDictionary* user2 = [NSMutableDictionary
                                   dictionaryWithObjectsAndKeys:@"1",@"id", @"John",@"name", nil];
     

@@ -47,7 +47,7 @@
 
 -(void) testSaveAndRead{
     NSMutableDictionary* user = [NSMutableDictionary
-                                  dictionaryWithObjectsAndKeys:@"Matthias",@"name",@"0",@"id", nil];
+                                  dictionaryWithObjectsAndKeys:@"Robert",@"name",@"0",@"id", nil];
     
 
     AGPropertyListStorage* plistStore;
@@ -67,7 +67,7 @@
     
     // read it
     [plistStore read:@"0" success:^(id object) {
-        STAssertEqualObjects(@"Matthias", [object valueForKey:@"name"], @"should be equal");
+        STAssertEqualObjects(@"Robert", [object valueForKey:@"name"], @"should be equal");
     } failure:^(NSError *error) {
         STFail(@"read should not fail");
     }];
@@ -75,7 +75,7 @@
 
 -(void) testSaveAndRemoveAndRead{
     NSMutableDictionary* user = [NSMutableDictionary
-                                 dictionaryWithObjectsAndKeys:@"0",@"id", @"Matthias",@"name", nil];
+                                 dictionaryWithObjectsAndKeys:@"0",@"id", @"Robert",@"name", nil];
     
     AGPropertyListStorage* plistStore;
     
@@ -94,7 +94,7 @@
 
     // read it
     [plistStore read:@"0" success:^(id object) {
-        STAssertEqualObjects(@"Matthias", [object valueForKey:@"name"], @"should be equal");
+        STAssertEqualObjects(@"Robert", [object valueForKey:@"name"], @"should be equal");
     } failure:^(NSError *error) {
         STFail(@"read should not fail");
     }];
@@ -119,7 +119,7 @@
 
 -(void) testReset {
     NSMutableDictionary* user1 = [NSMutableDictionary
-                                 dictionaryWithObjectsAndKeys:@"0",@"id", @"Matthias",@"name", nil];
+                                 dictionaryWithObjectsAndKeys:@"0",@"id", @"Robert",@"name", nil];
     NSMutableDictionary* user2 = [NSMutableDictionary
                                  dictionaryWithObjectsAndKeys:@"1",@"id", @"John",@"name", nil];
     
