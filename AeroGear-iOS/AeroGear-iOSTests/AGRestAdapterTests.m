@@ -244,6 +244,23 @@ static NSString *const PROJECT = @"{\"id\":1,\"title\":\"First Project\",\"style
     }
 }
 
+-(void)testRemoveNilValue {
+    [AGMockURLProtocol setResponseData:[PROJECT dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    [_restPipe remove:nil success:^(id responseObject) {
+        STFail(@"success not expected");
+        _finishedFlag = YES;
+        
+    } failure:^(NSError *error) {
+        _finishedFlag = YES;
+    }];
+    
+    // keep the run loop going
+    while(!_finishedFlag) {
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+    }
+}
+
 -(void)testAccepts {
     STAssertTrue([AGRESTPipe accepts:@"REST"], @"type '%@' should be accepted", @"REST");
     [self assertNotAcceptedType: nil];
