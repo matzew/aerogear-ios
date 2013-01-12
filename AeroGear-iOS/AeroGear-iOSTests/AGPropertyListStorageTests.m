@@ -100,7 +100,7 @@
     }];
     
     // remove it
-    [plistStore remove:@"0" success:^(id object) {
+    [plistStore remove:user success:^(id object) {
         STAssertNotNil(object, @"object should not be nil");
     } failure:^(NSError *error) {
         STFail(@"remove should not fail");

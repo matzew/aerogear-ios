@@ -110,7 +110,7 @@
 /**
  * Removes a specific object/record from the underlying storage system.
  *
- * @param recordId id from the desired object
+ * @param record the desired object
  *
  * @param success A block object to be executed when the operation finishes successfully.
  * This block has no return value and takes one argument: The object that has been removed.
@@ -119,7 +119,7 @@
  * This block has no return value and takes one argument: The `NSError` object describing
  * the error that occurred.
  */
--(void) remove:(id) recordId
+-(void) remove:(id) record
        success:(void (^)(id object))success
        failure:(void (^)(NSError *error))failure;
 

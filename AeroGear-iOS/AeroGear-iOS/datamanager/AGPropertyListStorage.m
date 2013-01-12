@@ -91,11 +91,11 @@
     } failure:failure];
 }
 
--(void) remove:(id) recordId
+-(void) remove:(id) record
        success:(void (^)(id object))success
        failure:(void (^)(NSError *error))failure {
     
-    [super remove:recordId success:^(id object) {
+    [super remove:record success:^(id object) {
         BOOL saved = [_array writeToFile:_file atomically:YES];
         
         if (saved) {

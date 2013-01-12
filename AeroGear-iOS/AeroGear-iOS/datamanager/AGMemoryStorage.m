@@ -220,19 +220,35 @@
     
 }
 
--(void) remove:(id) recordId
+-(void) remove:(id) record
        success:(void (^)(id object))success
        failure:(void (^)(NSError *error))failure {
+
+    // when null is provided we try to invoke the failure block
+    if (record == nil || [record isKindOfClass:[NSNull class]]) {
+        [self raiseError:@"remove" msg:@"object was nil" failure:failure];
+        // do nothing
+        return;
+    }
+    
+    
+    id objectKey = [record objectForKey:_recordId];
+    // we need to check if the map representation contains the "recordID" and its value is actually set:
+    if (objectKey == nil || [objectKey isKindOfClass:[NSNull class]]) {
+        [self raiseError:@"remove" msg:@"recordId not set" failure:failure];
+        // do nothing
+        return;
+    }
 
     id objectToDelete;
     
     @try {
-        for (id record in _array) {
+        for (id item in _array) {
             // check the 'id':
-            if ([[record objectForKey:_recordId] isEqual:recordId]) {
+            if ([[item objectForKey:_recordId] isEqual:objectKey]) {
                 // replace/update it:
-                objectToDelete = record;
-                NSUInteger index = [_array indexOfObject:record];
+                objectToDelete = item;
+                NSUInteger index = [_array indexOfObject:item];
                 [_array removeObjectAtIndex:index];
                 break;
             }

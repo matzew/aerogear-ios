@@ -246,8 +246,8 @@ describe(@"AGMemoryStorage", ^{
             }];
             
             
-            // remove the user with the id '0':
-            [memStore remove:@"0" success:^(id object) {
+            // remove the above user:
+            [memStore remove:user1 success:^(id object) {
                 [[object should] equal:user1];
             } failure:^(NSError *error) {
                 // todo
@@ -278,9 +278,9 @@ describe(@"AGMemoryStorage", ^{
                 // todo
             }];
             
-            
+            NSMutableDictionary* user2 = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"Matthias",@"name",@"1",@"id", nil];
             // remove the user with the id '1':
-            [memStore remove:@"1" success:^(id object) {
+            [memStore remove:user2 success:^(id object) {
                 [object shouldBeNil];
             } failure:^(NSError *error) {
                 // todo
