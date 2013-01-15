@@ -30,14 +30,14 @@
     self = [super init];
     if (self) {
         // default values:
-        _name = @"default";
+        //_name = @"default";
     }
     
     return self;
 }
 
 - (NSDictionary*) dictionary {
-    return [NSDictionary dictionaryWithObjectsAndKeys:_name, @"name",
+    return [NSDictionary dictionaryWithObjectsAndKeys:
                         [NSNumber numberWithUnsignedInteger:_offset], @"offset",
                         [NSNumber numberWithUnsignedInteger:_limit], @"limit",
                         _where, @"where", nil];
