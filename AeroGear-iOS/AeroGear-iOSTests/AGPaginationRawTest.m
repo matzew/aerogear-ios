@@ -17,6 +17,7 @@
 
 #import <SenTestingKit/SenTestingKit.h>
 #import "AGHttpClient.h"
+#import "AGPipeline.h"
 
 @interface AGPaginationRawTest : SenTestCase
 
@@ -105,6 +106,29 @@ NSDictionary *pagingState;
     }
 }
 
-
+-(void)testReadWithFilter {
+    AGPipeline *testPipeline = [AGPipeline pipelineWithBaseURL:[NSURL URLWithString:@"http://controllerdemo-danbev.rhcloud.com/aerogear-controller-demo/"]];
+    id<AGPipe> pipe = [testPipeline pipe:^(id<AGPipeConfig> config) {
+        [config setName:@"cars"];
+    }];
+    
+    
+    [pipe readWithFilter:^(id<AGFilterConfig> config) {
+        // hrm...
+        [config setLimit:3];
+        [config setOffset:0];
+        
+    } success:^(id responseObject) {
+        NSLog(@"\n\n -- > %@", [responseObject description]);
+        _finishedFlag = YES;
+    } failure:^(NSError *error) {
+    }];
+    
+    
+    // keep the run loop going
+    while(!_finishedFlag) {
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+    }
+}
 
 @end
