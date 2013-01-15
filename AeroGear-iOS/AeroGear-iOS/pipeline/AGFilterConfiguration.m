@@ -31,6 +31,10 @@
     if (self) {
         // default values:
         //_name = @"default";
+    
+        // adding some more (reasonable) defaults:
+        _limit = 10;
+        _offset = 0;
     }
     
     return self;
