@@ -27,13 +27,14 @@
     BOOL _finishedFlag;
     
     AGHttpClient* _restClient;
+    NSURL* _baseURL;
 }
 
 -(void)setUp {
     [super setUp];
-    NSURL* baseURL = [NSURL URLWithString:@"http://controllerdemo-danbev.rhcloud.com/aerogear-controller-demo/"];
+    _baseURL = [NSURL URLWithString:@"http://localhost:8080/aerogear-controller-demo/"];
     
-    _restClient = [AGHttpClient clientFor:baseURL];
+    _restClient = [AGHttpClient clientFor:_baseURL];
     _restClient.parameterEncoding = AFJSONParameterEncoding;
     
     _finishedFlag = NO;
@@ -107,7 +108,7 @@ NSDictionary *pagingState;
 }
 
 -(void)testReadWithFilter {
-    AGPipeline *testPipeline = [AGPipeline pipelineWithBaseURL:[NSURL URLWithString:@"http://controllerdemo-danbev.rhcloud.com/aerogear-controller-demo/"]];
+    AGPipeline *testPipeline = [AGPipeline pipelineWithBaseURL:_baseURL];
     id<AGPipe> pipe = [testPipeline pipe:^(id<AGPipeConfig> config) {
         [config setName:@"cars"];
     }];
@@ -115,8 +116,8 @@ NSDictionary *pagingState;
     
     [pipe readWithFilter:^(id<AGFilterConfig> config) {
         // hrm...
-        [config setLimit:3];
-        [config setOffset:0];
+//        [config setLimit:3];
+//        [config setOffset:0];
         
     } success:^(id responseObject) {
         NSLog(@"\n\n -- > %@", [responseObject description]);
