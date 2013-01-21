@@ -39,46 +39,7 @@
             </BuildableReference>
             <SkippedTests>
                <Test
-                  Identifier = "AGMemoryStorageTests">
-               </Test>
-               <Test
-                  Identifier = "AGPipelineSpec">
-               </Test>
-               <Test
-                  Identifier = "AGPipelineTests">
-               </Test>
-               <Test
-                  Identifier = "AGMemoryStorageSpec">
-               </Test>
-               <Test
-                  Identifier = "AGHttpClientTests">
-               </Test>
-               <Test
-                  Identifier = "AGFilterConfigurationTest">
-               </Test>
-               <Test
-                  Identifier = "AGDataManagerTests">
-               </Test>
-               <Test
-                  Identifier = "AGAuthenticatorTests">
-               </Test>
-               <Test
-                  Identifier = "AGBaseAdapterTests">
-               </Test>
-               <Test
-                  Identifier = "AGPipeSpec">
-               </Test>
-               <Test
-                  Identifier = "AGPropertyListStorageTests">
-               </Test>
-               <Test
-                  Identifier = "AGRestAdapterSpec">
-               </Test>
-               <Test
-                  Identifier = "AGRestAdapterTests">
-               </Test>
-               <Test
-                  Identifier = "AGRestAuthenticationTests">
+                  Identifier = "AGPaginationRawTest">
                </Test>
             </SkippedTests>
          </TestableReference>
