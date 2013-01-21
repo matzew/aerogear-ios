@@ -25,6 +25,7 @@
 @synthesize authModule = _authModule;
 @synthesize name = _name;
 @synthesize type = _type;
+@synthesize parameterProvider = _parameterProvider;
 
 - (id)init {
     self = [super init];

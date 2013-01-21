@@ -41,6 +41,11 @@
 @property (copy, nonatomic) NSString* recordId;
 
 /**
+ * Applies HTTP request parameters, used when issuing paging requests.
+ */
+@property (copy, nonatomic) NSDictionary* parameterProvider;
+
+/**
  * Applies the AGAuthenticationModule object to the configuration.
  */
 @property (strong, nonatomic) id<AGAuthenticationModule> authModule;
