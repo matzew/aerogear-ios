@@ -69,10 +69,9 @@
      failure:(void (^)(NSError *error))failure;
 
 /**
- * Reads all the data that matches a given filter criteria from the underlying server connection.
+ * Reads all the data that matches a given parameter provider  from the underlying server connection.
  *
- * @param config `AGFilterConfig` object initialized with the filter
- *
+ * @param parameterProvider The parameters passed to the server
  *
  * @param success A block object to be executed when the request operation finishes successfully.
  * This block has no return value and takes one argument: The object created from the response
@@ -83,7 +82,7 @@
  * This block has no return value and takes one argument: The `NSError` object describing
  * the network or parsing error that occurred.
  */
--(void) readWithFilter:(void (^)(id<AGFilterConfig> config)) config
+-(void) readWithParams:(NSDictionary*)parameterProvider
                success:(void (^)(id responseObject))success
                failure:(void (^)(NSError *error))failure;
 

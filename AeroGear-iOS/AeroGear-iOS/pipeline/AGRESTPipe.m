@@ -22,9 +22,14 @@
 
 #import "AGHttpClient.h"
 
+//category:
+#import "AGNSArray+Paging.h"
+
 @implementation AGRESTPipe {
+    // TODO make properties on a PRIVATE category...
     id<AGAuthenticationModuleAdapter> _authModule;
     NSString* _recordId;
+    AGPipeConfiguration* _config;
 }
 
 // =====================================================
@@ -48,16 +53,16 @@
         _type = @"REST";
 
         // set all the things:
-        AGPipeConfiguration* config = (AGPipeConfiguration*) pipeConfig;
+        _config = (AGPipeConfiguration*) pipeConfig;
      
-        NSURL* baseURL = config.baseURL;
-        NSString* endpoint = config.endpoint;
+        NSURL* baseURL = _config.baseURL;
+        NSString* endpoint = _config.endpoint;
         // append the endpoint/name and use it as the final URL
         NSURL* finalURL = [self appendEndpoint:endpoint toURL:baseURL];
         
         _URL = finalURL;
-        _recordId = config.recordId;
-        _authModule = (id<AGAuthenticationModuleAdapter>) config.authModule;
+        _recordId = _config.recordId;
+        _authModule = (id<AGAuthenticationModuleAdapter>) _config.authModule;
         
         _restClient = [AGHttpClient clientFor:finalURL];
         _restClient.parameterEncoding = AFJSONParameterEncoding;
@@ -118,6 +123,47 @@
     } ];
 }
 
+-(void) readWithParams:(NSDictionary*)parameterProvider
+               success:(void (^)(id responseObject))success
+               failure:(void (^)(NSError *error))failure {
+    // try to add auth.token:
+    [self applyAuthToken];
+    
+    // if none has been passed, we use the "global" setting
+    // which can be the default limit/offset OR what has
+    // been configured on the PIPE level.....:
+    if (!parameterProvider)
+        parameterProvider = _config.parameterProvider;
+    
+    [_restClient getPath:_URL.path parameters:parameterProvider success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        
+        NSDictionary *linkInformationContainer;
+        if ([_config.metadataLocation isEqualToString:@"webLinking"]) {
+            linkInformationContainer = [self parseWebLinkInformation:[[[operation response] allHeaderFields] valueForKey:@"Link"]];
+        }
+        
+//        NSLog(@"\n\n\n%@", [linkInformationContainer valueForKey:@"next"] );
+        
+        
+        NSArray* results = (NSArray*) responseObject;
+        // stash pipe reference:
+        results.pipe = self;
+        // stash the SCROLLING params:
+        results.parameterProvider = linkInformationContainer;
+        
+        if (success) {
+            //TODO: NSLog(@"Invoking successblock....");
+            success(results);
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+        if (failure) {
+            //TODO: NSLog(@"Invoking failure block....");
+            failure(error);
+        }
+    } ];
+}
+
 -(void) readWithFilter:(void (^)(id<AGFilterConfig> config))config
                success:(void (^)(id responseObject))success
                failure:(void (^)(NSError *error))failure {
@@ -132,7 +178,7 @@
         
         params = [filterConfig dictionary];
     }
-
+    
     [_restClient getPath:_URL.path parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
         
         if (success) {
@@ -275,6 +321,53 @@
     
     failure(error);
 }
+
+
+-(NSDictionary *) parseWebLinkInformation:(NSString *)headerValue {
+    NSMutableDictionary *pagingLinks = [NSMutableDictionary dictionary];
+    NSArray *links = [headerValue componentsSeparatedByString:@","];
+    for (NSString *link in links) {
+        NSArray *elementsPerLink = [link componentsSeparatedByString:@";"];
+        
+
+        NSDictionary *queryArguments;
+        for (NSString *elem in elementsPerLink) {
+            // funny TRIN
+            NSString *tmpElem = [elem stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+            // URL...
+            if ([tmpElem hasPrefix:@"<"] && [tmpElem hasSuffix:@">"]) {
+                
+                // TODO.... rel. url... (could use extractQueryArgs)
+                
+               NSURL *parsedURL = [NSURL URLWithString:[[tmpElem substringFromIndex:1] substringToIndex:tmpElem.length-2]]; //2 because, the first did already cut one char...
+                
+                queryArguments = [self transformQueryString:parsedURL.query];
+            } else if ([tmpElem hasPrefix:@"rel="]) { // only rel...
+                NSString *rel = [[tmpElem substringFromIndex:5] substringToIndex:tmpElem.length-6]; // cutting 5 + the last....
+                [pagingLinks setValue:queryArguments forKey:rel];
+            } else {
+                // ignore title etc
+            }
+        }
+    }
+    return pagingLinks;
+}
+
+-(NSDictionary *) transformQueryString:(NSString *) value {
+    if ([value hasPrefix:@"?"]) {
+        value = [value substringFromIndex:1];
+    }
+    // chop the query into a dictionary
+    NSArray *components = [value componentsSeparatedByString:@"&"];
+    NSMutableDictionary *parameters = [[NSMutableDictionary alloc] init];
+    for (NSString *component in components) {
+        [parameters setObject:[[component componentsSeparatedByString:@"="] objectAtIndex:1] forKey:[[component componentsSeparatedByString:@"="] objectAtIndex:0]];
+    }
+    return parameters;
+}
+
+
+
 
 + (BOOL) accepts:(NSString *) type {
     return [type isEqualToString:@"REST"];

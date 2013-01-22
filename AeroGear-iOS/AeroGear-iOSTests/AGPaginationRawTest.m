@@ -18,6 +18,7 @@
 #import <SenTestingKit/SenTestingKit.h>
 #import "AGHttpClient.h"
 #import "AGPipeline.h"
+#import "AGNSArray+Paging.h"
 
 @interface AGPaginationRawTest : SenTestCase
 
@@ -46,7 +47,52 @@
     [super tearDown];
 }
 
--(void) testReceivingLinkHeader {
+
+-(void) testReadWithParams {
+    
+    AGPipeline *ghPipeline = [AGPipeline pipeline];
+    id<AGPipe> gists = [ghPipeline pipe:^(id<AGPipeConfig> config) {
+        [config setBaseURL:[NSURL URLWithString:@"https://api.github.com/users/matzew/"]];
+        [config setName:@"gists"];
+    }];
+    
+    
+    __block NSArray *pagedResultSet;
+
+    [gists readWithParams:@{@"page" : @"2", @"per_page" : @"1"} success:^(id responseObject) {
+        
+        NSLog(@"\n\n\n1) req: %@\n", responseObject);
+        pagedResultSet = responseObject;
+        
+        [pagedResultSet next:^(id responseObject) {
+            NSLog(@"\n\n\n2) req: %@\n", responseObject);
+            
+            // hrm... currently... I need to update the reference ....
+            pagedResultSet = responseObject;
+            [pagedResultSet next:^(id responseObject) {
+                NSLog(@"\n\n\n3) req: %@\n", responseObject);
+                _finishedFlag = YES;
+            } failure:^(NSError *error) {
+                
+            }];
+        } failure:^(NSError *error) {
+            NSLog(@"\n\n%@\n", error);
+        }];
+        
+        //_finishedFlag = YES;
+    } failure:^(NSError *error) {
+        
+    }];
+    
+    // keep the run loop going
+    while(!_finishedFlag) {
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+    }
+}
+
+
+
+-(void) stestReceivingLinkHeader {
 
     [_restClient getPath:@"gists" parameters:@{@"page" : @"2", @"per_page" : @"1"} success:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSMutableDictionary *pagingLinks = [NSMutableDictionary dictionary];
@@ -104,7 +150,7 @@
     return parameters;
 }
 
--(void) testTwitterBits {
+-(void) stestTwitterBits {
     
     _baseURL = [NSURL URLWithString:@"http://search.twitter.com/"];
     _restClient = [AGHttpClient clientFor:_baseURL];
