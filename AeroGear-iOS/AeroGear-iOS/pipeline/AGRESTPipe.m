@@ -142,7 +142,10 @@
             linkInformationContainer = [self parseWebLinkInformation:[[[operation response] allHeaderFields] valueForKey:@"Link"]];
         } else if ([_config.metadataLocation isEqualToString:@"body"]) {
             linkInformationContainer = [self parseBodyInformation:responseObject];
+        } else if ([_config.metadataLocation isEqualToString:@"header"]) {
+            linkInformationContainer = [self parseHeaderInformation:[[operation response] allHeaderFields]];
         }
+
         
         NSArray* results = nil;
         
@@ -340,7 +343,21 @@
     NSMutableDictionary *mapOfLink = [NSMutableDictionary dictionary];
     
     [mapOfLink setValue:[self transformQueryString:[body valueForKey:nextIdentifier]] forKey:@"next"]; /// internal NEXT key...
-    [mapOfLink setValue:[self transformQueryString:[body valueForKey:prevIdentifier]] forKey:@"previous"]; /// internal NEXT key...
+    [mapOfLink setValue:[self transformQueryString:[body valueForKey:prevIdentifier]] forKey:@"previous"]; /// internal PREVIOUS key...
+    
+    return mapOfLink;
+}
+
+-(NSDictionary *) parseHeaderInformation:(NSDictionary *)headers {
+    // TODO, read the KEY from config........
+    NSString *nextIdentifier = _config.nextIdentifier;
+    NSString *prevIdentifier = _config.previousIdentifier;
+    
+    // buld the MAP of links....:
+    NSMutableDictionary *mapOfLink = [NSMutableDictionary dictionary];
+    
+    [mapOfLink setValue:[self transformQueryString:[headers valueForKey:nextIdentifier]] forKey:@"next"]; /// internal NEXT key...
+    [mapOfLink setValue:[self transformQueryString:[headers valueForKey:prevIdentifier]] forKey:@"previous"]; /// internal PREVIOUS key...
     
     return mapOfLink;
 }
@@ -369,9 +386,12 @@
 }
 
 -(NSDictionary *) transformQueryString:(NSString *) value {
-    if ([value hasPrefix:@"?"]) {
-        value = [value substringFromIndex:1];
+    NSRange range = [value rangeOfString:@"?"];
+  
+    if (range.location != NSNotFound) {
+        value = [value substringFromIndex:NSMaxRange(range)];
     }
+
     // chop the query into a dictionary
     NSArray *components = [value componentsSeparatedByString:@"&"];
     NSMutableDictionary *parameters = [[NSMutableDictionary alloc] init];

@@ -132,6 +132,54 @@
     }
 }
 
+-(void) testHeaderPaging {
+    
+    AGPipeline *ghPipeline = [AGPipeline pipeline];
+    id<AGPipe> cars = [ghPipeline pipe:^(id<AGPipeConfig> config) {
+        //[config setBaseURL:[NSURL URLWithString:@"http://controllerdemo-danbev.rhcloud.com/aerogear-controller-demo/"]];
+        [config setBaseURL:[NSURL URLWithString:@"http://localhost:8080/aerogear-controller-demo/"]];
+        [config setName:@"cars"];
+        [config setLimit:[NSNumber numberWithInt:3]];
+        [config setOffset:@"0"];
+        
+        [config setNextIdentifier:@"AG-Links-Next"];
+        [config setPreviousIdentifier:@"AG-Links-Previous"];
+        [config setMetadataLocation:@"header"];
+    }];
+    
+    __block NSArray *pagedResultSet;
+    
+    [cars readWithParams:nil success:^(id responseObject) {
+        
+        NSLog(@"\n\n\n1) req: %@\n", responseObject);
+        pagedResultSet = responseObject;
+        
+        [pagedResultSet next:^(id responseObject) {
+            NSLog(@"\n\n\n2) req: %@\n", responseObject);
+            
+            // hrm... currently... I need to update the reference ....
+            pagedResultSet = responseObject;
+            [pagedResultSet next:^(id responseObject) {
+                NSLog(@"\n\n\n3) req: %@\n", responseObject);
+                _finishedFlag = YES;
+            } failure:^(NSError *error) {
+                
+            }];
+        } failure:^(NSError *error) {
+            NSLog(@"\n\n%@\n", error);
+        }];
+        
+        //        _finishedFlag = YES;
+    } failure:^(NSError *error) {
+        NSLog(@"%@", error);
+    }];
+    
+    // keep the run loop going
+    while(!_finishedFlag) {
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+    }
+}
+
 
 
 -(void) stestReceivingLinkHeader {
