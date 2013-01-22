@@ -140,12 +140,20 @@
         NSDictionary *linkInformationContainer;
         if ([_config.metadataLocation isEqualToString:@"webLinking"]) {
             linkInformationContainer = [self parseWebLinkInformation:[[[operation response] allHeaderFields] valueForKey:@"Link"]];
+        } else if ([_config.metadataLocation isEqualToString:@"body"]) {
+            linkInformationContainer = [self parseBodyInformation:responseObject];
         }
         
-//        NSLog(@"\n\n\n%@", [linkInformationContainer valueForKey:@"next"] );
+        NSArray* results = nil;
         
+        // HACK....
+        if ([responseObject isKindOfClass:[NSDictionary class]]) {
+            results = [NSArray arrayWithObject:responseObject];
+        } else {
+            results = (NSArray*) responseObject;
+
+        }
         
-        NSArray* results = (NSArray*) responseObject;
         // stash pipe reference:
         results.pipe = self;
         // stash the SCROLLING params:
@@ -322,6 +330,20 @@
     failure(error);
 }
 
+// TODO.... CAN be an NSArray....
+-(NSDictionary *) parseBodyInformation:(NSDictionary *)body {
+    // TODO, read the KEY from config........
+    NSString *nextIdentifier = @"next_page";
+    NSString *prevIdentifier = @"previous_page";
+    
+    // buld the MAP of links....:
+    NSMutableDictionary *mapOfLink = [NSMutableDictionary dictionary];
+    
+    [mapOfLink setValue:[self transformQueryString:[body valueForKey:nextIdentifier]] forKey:@"next"]; /// internal NEXT key...
+    [mapOfLink setValue:[self transformQueryString:[body valueForKey:prevIdentifier]] forKey:@"previous"]; /// internal NEXT key...
+    
+    return mapOfLink;
+}
 
 -(NSDictionary *) parseWebLinkInformation:(NSString *)headerValue {
     NSMutableDictionary *pagingLinks = [NSMutableDictionary dictionary];
@@ -329,18 +351,11 @@
     for (NSString *link in links) {
         NSArray *elementsPerLink = [link componentsSeparatedByString:@";"];
         
-
         NSDictionary *queryArguments;
         for (NSString *elem in elementsPerLink) {
-            // funny TRIN
             NSString *tmpElem = [elem stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-            // URL...
             if ([tmpElem hasPrefix:@"<"] && [tmpElem hasSuffix:@">"]) {
-                
-                // TODO.... rel. url... (could use extractQueryArgs)
-                
-               NSURL *parsedURL = [NSURL URLWithString:[[tmpElem substringFromIndex:1] substringToIndex:tmpElem.length-2]]; //2 because, the first did already cut one char...
-                
+                NSURL *parsedURL = [NSURL URLWithString:[[tmpElem substringFromIndex:1] substringToIndex:tmpElem.length-2]]; //2 because, the first did already cut one char...
                 queryArguments = [self transformQueryString:parsedURL.query];
             } else if ([tmpElem hasPrefix:@"rel="]) { // only rel...
                 NSString *rel = [[tmpElem substringFromIndex:5] substringToIndex:tmpElem.length-6]; // cutting 5 + the last....

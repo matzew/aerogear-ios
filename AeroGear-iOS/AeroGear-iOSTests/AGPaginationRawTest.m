@@ -48,7 +48,7 @@
 }
 
 
--(void) testReadWithParams {
+-(void) stestReadWithParams {
     
     AGPipeline *ghPipeline = [AGPipeline pipeline];
     id<AGPipe> gists = [ghPipeline pipe:^(id<AGPipeConfig> config) {
@@ -82,6 +82,48 @@
         //_finishedFlag = YES;
     } failure:^(NSError *error) {
         
+    }];
+    
+    // keep the run loop going
+    while(!_finishedFlag) {
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+    }
+}
+
+-(void) testTwitterPaging {
+    
+    AGPipeline *ghPipeline = [AGPipeline pipeline];
+    id<AGPipe> gists = [ghPipeline pipe:^(id<AGPipeConfig> config) {
+        [config setBaseURL:[NSURL URLWithString:@"http://search.twitter.com/"]];
+        [config setName:@"search.json"];
+        [config setMetadataLocation:@"body"];
+    }];
+    
+    __block NSArray *pagedResultSet;
+    
+    [gists readWithParams:@{@"q" : @"aerogear", @"page" : @"2", @"rpp" : @"1"} success:^(id responseObject) {
+        
+        NSLog(@"\n\n\n1) req: %@\n", responseObject);
+        pagedResultSet = responseObject;
+        
+        [pagedResultSet next:^(id responseObject) {
+            NSLog(@"\n\n\n2) req: %@\n", responseObject);
+            
+            // hrm... currently... I need to update the reference ....
+            pagedResultSet = responseObject;
+            [pagedResultSet next:^(id responseObject) {
+                NSLog(@"\n\n\n3) req: %@\n", responseObject);
+                _finishedFlag = YES;
+            } failure:^(NSError *error) {
+                
+            }];
+        } failure:^(NSError *error) {
+            NSLog(@"\n\n%@\n", error);
+        }];
+        
+//        _finishedFlag = YES;
+    } failure:^(NSError *error) {
+        NSLog(@"%@", error);
     }];
     
     // keep the run loop going

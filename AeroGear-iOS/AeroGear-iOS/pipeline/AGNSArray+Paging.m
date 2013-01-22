@@ -43,6 +43,16 @@ static char const * const AGParamProviderKey = "AGParamProviderKey";
 -(void) previous:(void (^)(id responseObject))success
      failure:(void (^)(NSError *error))failure {
     
+    
+    [self.pipe readWithParams:[self.parameterProvider valueForKey:@"previous"] success:^(id responseObject) {
+        if (success) {
+            success(responseObject);
+        }
+    } failure:^(NSError *error) {
+        if (failure) {
+            failure(error);
+        }
+    }];
 }
 
 #pragma mark accessor AssociatedObjects
