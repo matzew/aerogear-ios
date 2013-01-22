@@ -90,7 +90,7 @@
     }
 }
 
--(void) testTwitterPaging {
+-(void) xtestTwitterPaging {
     
     AGPipeline *ghPipeline = [AGPipeline pipeline];
     id<AGPipe> gists = [ghPipeline pipe:^(id<AGPipeConfig> config) {
@@ -228,67 +228,80 @@
 
 
 
-///**
-// * A static shared "pagigng context"; it stores the "AG-...-NEXT" header.
-// *
-// * It is static, to make sure it is valid between the different test() executions
-// */
-//NSDictionary *pagingState;
-//
-//-(void) testPagingFiveCars {
-//    
-//    // start scrolling......
-//    pagingState = @{@"offset" : @"1", @"limit" : @"5"};
-//    
-//    [_restClient getPath:@"cars" parameters:pagingState success:^(AFHTTPRequestOperation *operation, id responseObject) {
-//        NSLog(@"\n\n%@\n", responseObject);
-//        
-//        
-//        
-//        /// genereate the 'next' information.... MOVE to function...., arg is the header.......
-//        NSString *next = [[[operation response] allHeaderFields] valueForKey:@"AG-Links-Next"];
-//        // get rid of the resource?
-//        NSRange range = [next rangeOfString:@"?"];
-//        next = [next substringFromIndex:range.location+1];
-//        // chop the query into a dictionary
-//        NSArray *components = [next componentsSeparatedByString:@"&"];
-//        NSMutableDictionary *parameters = [[NSMutableDictionary alloc] init];
-//        for (NSString *component in components) {
-//            [parameters setObject:[[component componentsSeparatedByString:@"="] objectAtIndex:1] forKey:[[component componentsSeparatedByString:@"="] objectAtIndex:0]];
-//        }
-//        
-//        // stash the result, to reference it for the 'next' invoke
-//        pagingState = parameters;
-//
-//        
-//        _finishedFlag = YES;
-//    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-//        NSLog(@"Error: %@", error);
-//    }];
-//    
-//    // keep the run loop going
-//    while(!_finishedFlag) {
-//        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
-//    }
-//}
-//
-//-(void) testPagingFiveCarsAndNext {
-//    
-//    // now, ..... HERE is the 'next()' invoke...
-//    
-//    [_restClient getPath:@"cars" parameters:pagingState success:^(AFHTTPRequestOperation *operation, id responseObject) {
-//        NSLog(@"\n\n%@\n", responseObject);
-//        _finishedFlag = YES;
-//    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-//        NSLog(@"Error: %@", error);
-//    }];
-//    
-//    // keep the run loop going
-//    while(!_finishedFlag) {
-//        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
-//    }
-//}
-//
+/**
+ * A static shared "pagigng context"; it stores the "AG-...-NEXT" header.
+ *
+ * It is static, to make sure it is valid between the different test() executions
+ */
+NSDictionary *pagingState;
+
+-(void) testPagingFiveCars {
+    
+    _baseURL = [NSURL URLWithString:@"http://localhost:8080/aerogear-controller-demo/"];
+    _restClient = [AGHttpClient clientFor:_baseURL];
+    _restClient.parameterEncoding = AFJSONParameterEncoding;
+
+    
+    // start scrolling......
+    pagingState = @{@"offset" : @"0", @"limit" : @"5"};
+    
+    [_restClient getPath:@"cars" parameters:pagingState success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSLog(@"\n\n%@\n", responseObject);
+        
+        
+        
+        /// genereate the 'next' information.... MOVE to function...., arg is the header.......
+        NSString *next = [[[operation response] allHeaderFields] valueForKey:@"AG-Links-Next"];
+        NSLog(@"HEADER: %@", next);
+        
+        
+        // get rid of the resource?
+        NSRange range = [next rangeOfString:@"?"];
+        next = [next substringFromIndex:range.location+1];
+        // chop the query into a dictionary
+        NSArray *components = [next componentsSeparatedByString:@"&"];
+        NSMutableDictionary *parameters = [[NSMutableDictionary alloc] init];
+        for (NSString *component in components) {
+            [parameters setObject:[[component componentsSeparatedByString:@"="] objectAtIndex:1] forKey:[[component componentsSeparatedByString:@"="] objectAtIndex:0]];
+        }
+        
+        // stash the result, to reference it for the 'next' invoke
+        pagingState = parameters;
+
+        
+        _finishedFlag = YES;
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"Error: %@", error);
+    }];
+    
+    // keep the run loop going
+    while(!_finishedFlag) {
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+    }
+}
+-(void) testPagingFiveCarsAndNext {
+    
+    // meh:
+    _baseURL = [NSURL URLWithString:@"http://localhost:8080/aerogear-controller-demo/"];
+    _restClient = [AGHttpClient clientFor:_baseURL];
+    _restClient.parameterEncoding = AFJSONParameterEncoding;
+
+    
+    // now, ..... HERE is the 'next()' invoke...
+    
+    [_restClient getPath:@"cars" parameters:pagingState success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSLog(@"\n\n%@\n", responseObject);
+        _finishedFlag = YES;
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"Error: %@", error);
+    }];
+    
+    // keep the run loop going
+    while(!_finishedFlag) {
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+    }
+}
+
 //-(void)testReadWithFilter {
 //    AGPipeline *testPipeline = [AGPipeline pipelineWithBaseURL:_baseURL];
 //    id<AGPipe> pipe = [testPipeline pipe:^(id<AGPipeConfig> config) {
