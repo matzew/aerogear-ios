@@ -25,7 +25,15 @@
 @synthesize authModule = _authModule;
 @synthesize name = _name;
 @synthesize type = _type;
+
+// paging
 @synthesize parameterProvider = _parameterProvider;
+@synthesize offset = _offset;
+@synthesize limit = _limit;
+@synthesize metadataLocation = _metadataLocation;
+@synthesize pagingLocation = _pagingLocation;
+@synthesize nextIdentifier = _nextIdentifier;
+@synthesize previousIdentifier = _previousIdentifier;
 
 - (id)init {
     self = [super init];
@@ -33,6 +41,12 @@
         // default values:
         _type = @"REST";
         _recordId = @"id";
+        _metadataLocation = @"webLinking";
+        _pagingLocation = @"query";
+        _nextIdentifier = @"next";
+        _previousIdentifier = @"previous";
+        _offset = @"0"; //strange APIs like reddit... treat offset as string...
+        _limit = [NSNumber numberWithInteger:10];
     }
     return self;
 }
@@ -42,4 +56,32 @@
     return (_endpoint == nil? _name: _endpoint);
 }
 
+// custom getter for the prarameter provider...
+// If the user does NOT provide a "parameter provider",
+// the values for limit/offset are used
+-(NSDictionary *)parameterProvider {
+    if (_parameterProvider) {
+        return _parameterProvider;
+    } else {
+        return [NSDictionary dictionaryWithObjectsAndKeys:_offset, @"offset", _limit, @"limit", nil];
+    }
+}
+
+// custom setter to make sure only "header", "body" or "webLinking" is provided:
+-(void)setMetadataLocation:(NSString *)metadataLocation {
+    
+    if ([@"header" isEqualToString:metadataLocation] || [@"body" isEqualToString:metadataLocation] || [@"webLinking" isEqualToString:metadataLocation]) {
+        _metadataLocation = metadataLocation;
+    } else {
+        _metadataLocation = @"webLinking"; // default.....
+    }
+}
+// custom setter to make sure only "header" or "pagingLocation" is provided:
+-(void)setPagingLocation:(NSString *)pagingLocation {
+    if ([@"header" isEqualToString:pagingLocation] || [@"pagingLocation" isEqualToString:pagingLocation] ) {
+        _pagingLocation = pagingLocation;
+    } else {
+        _pagingLocation = @"query"; // default.....
+    }
+}
 @end

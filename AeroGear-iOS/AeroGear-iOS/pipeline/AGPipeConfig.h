@@ -25,28 +25,69 @@
 @protocol AGPipeConfig <AGConfig>
 
 /**
- * Applies the baseURL to the configuration.
+ * The baseURL to the configuration.
  */
 @property (strong, nonatomic) NSURL* baseURL;
 
 /**
- * Applies the endpoint to the configuration.
+ * The endpoint to the configuration.
  * If no endpoint is specified, the name will be used as its value.
  */
 @property (copy, nonatomic) NSString* endpoint;
 
 /**
- * Applies the recordId to the configuration.
+ * The recordId to the configuration.
  */
 @property (copy, nonatomic) NSString* recordId;
 
 /**
- * Applies HTTP request parameters, used when issuing paging requests.
+ * The HTTP request parameters, used when issuing paging requests.
+ *
+ * If no "parameter provider" has been provided, the values for
+ * limit/offset are used
  */
 @property (copy, nonatomic) NSDictionary* parameterProvider;
 
 /**
- * Applies the AGAuthenticationModule object to the configuration.
+ * The offset of the first element that should be included in the
+ * returned collection (default: 0)
+ * 
+ * If a paramater provider has been given, the offset value is ignored.
+ */
+@property (copy, nonatomic) NSString* offset;
+
+/**
+ * The maximum number of results the server should return (default: 10)
+ *
+ * If a paramater provider has been given, the limit value is ignored.
+ */
+@property (assign, nonatomic) NSNumber* limit;
+
+/**
+ * Indicates whether paging information (see identifiers) is received
+ * from the response 'header', the response 'body' or via RFC 5988 ('webLinking'),
+ * which is the default.
+ */
+@property (copy, nonatomic) NSString* metadataLocation;
+
+/**
+ * Indicate whether paging information is sent as 'query' parameters (default),
+ * or on the request 'header'.
+ */
+@property (copy, nonatomic) NSString* pagingLocation;
+
+/**
+ * The next identifier name (default: 'next').
+ */
+@property (copy, nonatomic) NSString* nextIdentifier;
+
+/**
+ * The previous identifier name (default: 'previous').
+sb */
+@property (copy, nonatomic) NSString* previousIdentifier;
+
+/**
+ * The AGAuthenticationModule object to the configuration.
  */
 @property (strong, nonatomic) id<AGAuthenticationModule> authModule;
 
