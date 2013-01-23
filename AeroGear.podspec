@@ -21,7 +21,7 @@ Pod::Spec.new do |s|
   s.homepage     = "https://github.com/aerogear/aerogear-ios"
   s.license      = 'Apache License, Version 2.0'
   s.author       = "Red Hat, Inc."
-  s.source       = { :git => 'https://github.com/aerogear/aerogear-ios.git', :commit => '3882f799f9bcbb97e018c3342b4e260a80da73b9' }
+  s.source       = { :git => 'https://github.com/aerogear/aerogear-ios.git', :commit => '29f48a3bfa13ab40693e04f494d25fc127370d32' }
   s.platform     = :ios
   s.source_files = 'AeroGear-iOS/AeroGear-iOS/**/*.{h,m}'
   s.public_header_files = 'AeroGear-iOS/AeroGear-iOS/AeroGear.h', 'AeroGear-iOS/AeroGear-iOS/config/AGConfig.h', 'AeroGear-iOS/AeroGear-iOS/pipeline/AGPipe.h', 'AeroGear-iOS/AeroGear-iOS/pipeline/AGPipeline.h', 'AeroGear-iOS/AeroGear-iOS/pipeline/AGPipeConfig.h', 'AeroGear-iOS/AeroGear-iOS/pipeline/AGNSArray+Paging.h', 'AeroGear-iOS/AeroGear-iOS/datamanager/AGStore.h', 'AeroGear-iOS/AeroGear-iOS/datamanager/AGDataManager.h', 'AeroGear-iOS/AeroGear-iOS/datamanager/AGStoreConfig.h', 'AeroGear-iOS/AeroGear-iOS/security/AGAuthenticationModule.h', 'AeroGear-iOS/AeroGear-iOS/security/AGAuthenticator.h', 'AeroGear-iOS/AeroGear-iOS/security/AGAuthConfig.h'
