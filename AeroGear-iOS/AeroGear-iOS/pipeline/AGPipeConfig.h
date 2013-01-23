@@ -72,12 +72,6 @@
 @property (copy, nonatomic) NSString* metadataLocation;
 
 /**
- * Indicate whether paging information is sent as 'query' parameters (default),
- * or on the request 'header'. Other values are ignored and the default is being used.
- */
-@property (copy, nonatomic) NSString* pagingLocation;
-
-/**
  * The next identifier name (default: 'next').
  */
 @property (copy, nonatomic) NSString* nextIdentifier;

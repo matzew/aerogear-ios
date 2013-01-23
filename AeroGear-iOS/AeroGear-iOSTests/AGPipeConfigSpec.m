@@ -38,7 +38,6 @@ describe(@"AGPipeConfig.h", ^{
         });
         
         it(@"should have defaults", ^{
-            [[config.pagingLocation should] equal:@"query"];
             [[config.metadataLocation should] equal:@"webLinking"];
             [[config.nextIdentifier should] equal:@"next"];
             [[config.previousIdentifier should] equal:@"previous"];
@@ -55,13 +54,11 @@ describe(@"AGPipeConfig.h", ^{
         it(@"should allow overriding defaults", ^{
             
             // set up:
-            config.pagingLocation = @"header";
             config.metadataLocation = @"body";
             config.nextIdentifier = @"tw-next";
             config.previousIdentifier = @"tw-prev";
             config.parameterProvider = [NSDictionary dictionaryWithObjectsAndKeys:@"foo", @"key1", @"bar", @"key2", nil];
             
-            [[config.pagingLocation should] equal:@"header"];
             [[config.metadataLocation should] equal:@"body"];
             [[config.nextIdentifier should] equal:@"tw-next"];
             [[config.previousIdentifier should] equal:@"tw-prev"];
@@ -78,10 +75,9 @@ describe(@"AGPipeConfig.h", ^{
         it(@"should ignore bogus values", ^{
             
             // set up:
-            config.pagingLocation = @"foo";
             config.metadataLocation = @"baar";
-            
-            [[config.pagingLocation should] equal:@"query"];
+
+            // check:
             [[config.metadataLocation should] equal:@"webLinking"];
             
         });

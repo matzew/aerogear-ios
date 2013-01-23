@@ -31,7 +31,6 @@
 @synthesize offset = _offset;
 @synthesize limit = _limit;
 @synthesize metadataLocation = _metadataLocation;
-@synthesize pagingLocation = _pagingLocation;
 @synthesize nextIdentifier = _nextIdentifier;
 @synthesize previousIdentifier = _previousIdentifier;
 
@@ -42,7 +41,6 @@
         _type = @"REST";
         _recordId = @"id";
         _metadataLocation = @"webLinking";
-        _pagingLocation = @"query";
         _nextIdentifier = @"next";
         _previousIdentifier = @"previous";
         _offset = @"0"; // string to work with 'strange' APIs, that are treating offset as string...
@@ -76,12 +74,5 @@
         _metadataLocation = @"webLinking"; // default.....
     }
 }
-// custom setter to make sure only "header" or "pagingLocation" is provided:
--(void)setPagingLocation:(NSString *)pagingLocation {
-    if ([@"header" isEqualToString:pagingLocation] || [@"pagingLocation" isEqualToString:pagingLocation] ) {
-        _pagingLocation = pagingLocation;
-    } else {
-        _pagingLocation = @"query"; // default.....
-    }
-}
+
 @end
