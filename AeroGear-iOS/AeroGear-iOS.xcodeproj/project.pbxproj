@@ -49,9 +49,7 @@
 		57ED144E160B490F00881924 /* AGDataManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 57ED144D160B490F00881924 /* AGDataManager.m */; };
 		57ED1452160B492B00881924 /* AGDataManagerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 57ED1451160B492B00881924 /* AGDataManagerTests.m */; };
 		57F24DFC1601F91600A3EAD8 /* AGPipeSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 57F24DFB1601F91600A3EAD8 /* AGPipeSpec.m */; };
-		6F0AFD1E1670B24E008D18C1 /* AGFilterConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F0AFD1D1670B24E008D18C1 /* AGFilterConfiguration.m */; };
 		6F0E7B98165F7092005E0BE5 /* AGMemoryStorageTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F0E7B97165F7092005E0BE5 /* AGMemoryStorageTests.m */; };
-		6F3A21941671DF5100513FBC /* AGFilterConfigurationTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F3A21931671DF5000513FBC /* AGFilterConfigurationTest.m */; };
 		6F6F23A31665212A00006155 /* AGMockURLProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F6F23A21665212A00006155 /* AGMockURLProtocol.m */; };
 		6FC562E2169ECE94000D7A43 /* AGPropertyListStorageTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FC562E1169ECE94000D7A43 /* AGPropertyListStorageTests.m */; };
 		6FE55675169DE7C800E6188E /* AGPropertyListStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FE55674169DE7C800E6188E /* AGPropertyListStorage.m */; };
@@ -148,11 +146,7 @@
 		57ED1453160B566200881924 /* AGStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AGStore.h; path = datamanager/AGStore.h; sourceTree = "<group>"; };
 		57F24DFB1601F91600A3EAD8 /* AGPipeSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGPipeSpec.m; sourceTree = "<group>"; };
 		65D1DA06FAB24A18AB6A5963 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		6F0AFD1C1670B24E008D18C1 /* AGFilterConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AGFilterConfig.h; path = pipeline/AGFilterConfig.h; sourceTree = "<group>"; };
-		6F0AFD1D1670B24E008D18C1 /* AGFilterConfiguration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AGFilterConfiguration.m; path = pipeline/AGFilterConfiguration.m; sourceTree = "<group>"; };
-		6F0AFD1F1670B274008D18C1 /* AGFilterConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AGFilterConfiguration.h; path = pipeline/AGFilterConfiguration.h; sourceTree = "<group>"; };
 		6F0E7B97165F7092005E0BE5 /* AGMemoryStorageTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGMemoryStorageTests.m; sourceTree = "<group>"; };
-		6F3A21931671DF5000513FBC /* AGFilterConfigurationTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGFilterConfigurationTest.m; sourceTree = "<group>"; };
 		6F6F23A11665212A00006155 /* AGMockURLProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AGMockURLProtocol.h; path = utils/AGMockURLProtocol.h; sourceTree = "<group>"; };
 		6F6F23A21665212A00006155 /* AGMockURLProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AGMockURLProtocol.m; path = utils/AGMockURLProtocol.m; sourceTree = "<group>"; };
 		6FC562E1169ECE94000D7A43 /* AGPropertyListStorageTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGPropertyListStorageTests.m; sourceTree = "<group>"; };
@@ -222,7 +216,6 @@
 				6F0E7B97165F7092005E0BE5 /* AGMemoryStorageTests.m */,
 				6FC562E1169ECE94000D7A43 /* AGPropertyListStorageTests.m */,
 				570B908516231D1100426BA7 /* AGRestAuthenticationTests.m */,
-				6F3A21931671DF5000513FBC /* AGFilterConfigurationTest.m */,
 				A08816D716A4730100BB77ED /* AGPaginationRawTest.m */,
 			);
 			name = "Unit Tests";
@@ -335,9 +328,6 @@
 				57C2616216402B3C00793C0F /* AGPipeConfig.h */,
 				57C2616316402B8900793C0F /* AGPipeConfiguration.h */,
 				57C2616416402B8900793C0F /* AGPipeConfiguration.m */,
-				6F0AFD1C1670B24E008D18C1 /* AGFilterConfig.h */,
-				6F0AFD1F1670B274008D18C1 /* AGFilterConfiguration.h */,
-				6F0AFD1D1670B24E008D18C1 /* AGFilterConfiguration.m */,
 				A0A37AD816AEAEDE00979868 /* AGNSMutableArray+Paging.h */,
 				A0A37AD916AEAEDE00979868 /* AGNSMutableArray+Paging.m */,
 			);
@@ -533,7 +523,6 @@
 				57C2616516402B8900793C0F /* AGPipeConfiguration.m in Sources */,
 				57277DFF164131FA00C50DC5 /* AGStoreConfiguration.m in Sources */,
 				57277E111641364300C50DC5 /* AGAuthConfiguration.m in Sources */,
-				6F0AFD1E1670B24E008D18C1 /* AGFilterConfiguration.m in Sources */,
 				6FE55675169DE7C800E6188E /* AGPropertyListStorage.m in Sources */,
 				A0A37ADA16AEAEDE00979868 /* AGNSMutableArray+Paging.m in Sources */,
 			);
@@ -556,7 +545,6 @@
 				570B908A1624360600426BA7 /* AGAuthenticatorTests.m in Sources */,
 				6F0E7B98165F7092005E0BE5 /* AGMemoryStorageTests.m in Sources */,
 				6F6F23A31665212A00006155 /* AGMockURLProtocol.m in Sources */,
-				6F3A21941671DF5100513FBC /* AGFilterConfigurationTest.m in Sources */,
 				6FC562E2169ECE94000D7A43 /* AGPropertyListStorageTests.m in Sources */,
 				A08816D816A4730100BB77ED /* AGPaginationRawTest.m in Sources */,
 				A0A37AD316AE905F00979868 /* AGPipeConfigSpec.m in Sources */,

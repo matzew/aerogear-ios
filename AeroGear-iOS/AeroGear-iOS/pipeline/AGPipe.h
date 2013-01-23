@@ -17,8 +17,6 @@
 
 #import <Foundation/Foundation.h>
 
-#import "AGFilterConfig.h"
-
 /**
  * AGPipe represents a server connection. An object of this class is responsible to
  * communicate with the server and perfoms read/write operations.

@@ -150,25 +150,6 @@ static NSString *const PROJECT = @"{\"id\":1,\"title\":\"First Project\",\"style
     }
 }
 
-// TODO: when filtering is impl.
-//-(void) testReadWithFilter {
-//    [AGFakeURLProtocol setResponseData:[PROJECTS dataUsingEncoding:NSUTF8StringEncoding]];
-//
-//    [_restPipe readWithFilter:@"10" success:^(id responseObject) {
-//        STAssertNotNil(responseObject, @"response should not be nil");
-//        _finishedFlag = YES;
-//        
-//    } failure:^(NSError *error) {
-//        _finishedFlag = YES;
-//        STFail(@"should not fail");
-//    }];
-//
-//    // keep the run loop going
-//    while(!_finishedFlag) {
-//        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
-//    }
-//}
-
 -(void)testSaveNew {
     [AGMockURLProtocol setResponseData:[PROJECT dataUsingEncoding:NSUTF8StringEncoding]];
     

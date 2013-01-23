@@ -17,7 +17,6 @@
  */
 
 #import "AGRESTPipe.h"
-#import "AGFilterConfiguration.h"
 #import "AGAuthenticationModuleAdapter.h"
 
 #import "AGHttpClient.h"
@@ -140,7 +139,7 @@
     } ];
 }
 
-// read, with (filter) params. Used for paging, can be used
+// read, with (filter/query) params. Used for paging, can be used
 // to issue queries as well...
 -(void) readWithParams:(NSDictionary*)parameterProvider
                success:(void (^)(id responseObject))success
@@ -190,35 +189,6 @@
     } ];
 }
 
--(void) readWithFilter:(void (^)(id<AGFilterConfig> config))config
-               success:(void (^)(id responseObject))success
-               failure:(void (^)(NSError *error))failure {
-    // try to add auth.token:
-    [self applyAuthToken];
-    
-    NSDictionary *params;
-    
-    if (config != nil) {
-        AGFilterConfiguration* filterConfig = [[AGFilterConfiguration alloc] init];
-        config(filterConfig);
-        
-        params = [filterConfig dictionary];
-    }
-    
-    [_restClient getPath:_URL.path parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        
-        if (success) {
-            //TODO: NSLog(@"Invoking successblock....");
-            success(responseObject);
-        }
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        
-        if (failure) {
-            //TODO: NSLog(@"Invoking failure block....");
-            failure(error);
-        }
-    } ];
-}
 
 -(void) save:(NSDictionary*) object
      success:(void (^)(id responseObject))success
