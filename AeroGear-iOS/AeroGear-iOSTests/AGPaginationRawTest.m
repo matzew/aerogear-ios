@@ -18,7 +18,7 @@
 #import <SenTestingKit/SenTestingKit.h>
 #import "AGHttpClient.h"
 #import "AGPipeline.h"
-#import "AGNSArray+Paging.h"
+#import "AGNSMutableArray+Paging.h"
 
 @interface AGPaginationRawTest : SenTestCase
 

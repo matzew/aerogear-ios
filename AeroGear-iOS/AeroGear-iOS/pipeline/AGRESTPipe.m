@@ -23,14 +23,14 @@
 #import "AGHttpClient.h"
 
 //category:
-#import "AGNSArray+Paging.h"
+#import "AGNSMutableArray+Paging.h"
 
 @implementation AGRESTPipe {
     // TODO make properties on a PRIVATE category...
     id<AGAuthenticationModuleAdapter> _authModule;
     NSString* _recordId;
     AGPipeConfiguration* _config;
-    
+    // the state of the paging object reference.
     NSMutableArray* _pagingObject;
 }
 
@@ -68,11 +68,9 @@
         
         _restClient = [AGHttpClient clientFor:finalURL];
         _restClient.parameterEncoding = AFJSONParameterEncoding;
-        
-        
+
         _pagingObject = [NSMutableArray array];
     }
-    
     return self;
 }
 
@@ -81,7 +79,7 @@
     if (endpoint == nil) {
         endpoint = @"";
     }
-    
+
     // append the endpoint name and use it as the final URL
     return [baseURL URLByAppendingPathComponent:endpoint];
 }
@@ -128,20 +126,23 @@
     } ];
 }
 
+// read, with (filter) params. Used for paging, can be used
+// to issue queries as well...
 -(void) readWithParams:(NSDictionary*)parameterProvider
                success:(void (^)(id responseObject))success
                failure:(void (^)(NSError *error))failure {
+
     // try to add auth.token:
     [self applyAuthToken];
-    
+
     // if none has been passed, we use the "global" setting
     // which can be the default limit/offset OR what has
     // been configured on the PIPE level.....:
     if (!parameterProvider)
         parameterProvider = _config.parameterProvider;
-    
+
     [_restClient getPath:_URL.path parameters:parameterProvider success:^(AFHTTPRequestOperation *operation, id responseObject) {
-        
+
         NSDictionary *linkInformationContainer;
         if ([_config.metadataLocation isEqualToString:@"webLinking"]) {
             linkInformationContainer = [self parseWebLinkInformation:[[[operation response] allHeaderFields] valueForKey:@"Link"]];
@@ -151,7 +152,6 @@
             linkInformationContainer = [self parseQueryInformation:[[operation response] allHeaderFields]];
         }
         
-        // HACK....
         if ([responseObject isKindOfClass:[NSDictionary class]]) {
             [_pagingObject setArray:[NSArray arrayWithObject:responseObject]];
         } else {
@@ -334,7 +334,7 @@
     failure(error);
 }
 
-// TODO.... CAN be an NSArray....
+// TODO could an NSArray being parsed in? (yes, with nested metainfo + payload)
 -(NSDictionary *) parseQueryInformation:(NSDictionary *)info {
     NSString *nextIdentifier = _config.nextIdentifier;
     NSString *prevIdentifier = _config.previousIdentifier;
@@ -342,8 +342,8 @@
     // buld the MAP of links....:
     NSMutableDictionary *mapOfLink = [NSMutableDictionary dictionary];
     
-    [mapOfLink setValue:[self transformQueryString:[info valueForKey:nextIdentifier]] forKey:@"AG-next-key"]; /// internal NEXT key...
-    [mapOfLink setValue:[self transformQueryString:[info valueForKey:prevIdentifier]] forKey:@"AG-prev-key"]; /// internal PREV key...
+    [mapOfLink setValue:[self transformQueryString:[info valueForKey:nextIdentifier]] forKey:@"AG-next-key"]; /// internal key...
+    [mapOfLink setValue:[self transformQueryString:[info valueForKey:prevIdentifier]] forKey:@"AG-prev-key"]; /// internal key...
 
     return mapOfLink;
 }

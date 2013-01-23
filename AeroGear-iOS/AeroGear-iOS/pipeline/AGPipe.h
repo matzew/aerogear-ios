@@ -69,9 +69,11 @@
      failure:(void (^)(NSError *error))failure;
 
 /**
- * Reads all the data that matches a given parameter provider  from the underlying server connection.
+ * Reads all the data that matches a given parameter provider from the underlying server connection.
  *
- * @param parameterProvider The parameters passed to the server
+ * @param parameterProvider A dictionary containing all the parameters and their values, that are 
+ * passed to the server. If no parameterProvider is given, the defaults from the `AGPipeConfig` 
+ * are used.
  *
  * @param success A block object to be executed when the request operation finishes successfully.
  * This block has no return value and takes one argument: The object created from the response

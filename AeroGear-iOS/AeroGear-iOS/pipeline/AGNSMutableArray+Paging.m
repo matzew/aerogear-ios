@@ -17,7 +17,7 @@
  */
 
 #import <objc/runtime.h>
-#import "AGNSArray+Paging.h"
+#import "AGNSMutableArray+Paging.h"
 
 static char const * const AGPipeKey = "AGPipeKey";
 static char const * const AGParamProviderKey = "AGParamProviderKey";

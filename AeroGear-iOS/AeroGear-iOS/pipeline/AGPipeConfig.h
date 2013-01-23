@@ -41,7 +41,8 @@
 @property (copy, nonatomic) NSString* recordId;
 
 /**
- * The HTTP request parameters, used when issuing paging requests.
+ * A dictionary containing all the HTTP request parameters and their values,
+ * that are passed to the server, used used when issuing paging requests.
  *
  * If no "parameter provider" has been provided, the values for
  * limit/offset are used
@@ -66,13 +67,13 @@
 /**
  * Indicates whether paging information (see identifiers) is received
  * from the response 'header', the response 'body' or via RFC 5988 ('webLinking'),
- * which is the default.
+ * which is the default. Other values are ignored and the default is being used.
  */
 @property (copy, nonatomic) NSString* metadataLocation;
 
 /**
  * Indicate whether paging information is sent as 'query' parameters (default),
- * or on the request 'header'.
+ * or on the request 'header'. Other values are ignored and the default is being used.
  */
 @property (copy, nonatomic) NSString* pagingLocation;
 

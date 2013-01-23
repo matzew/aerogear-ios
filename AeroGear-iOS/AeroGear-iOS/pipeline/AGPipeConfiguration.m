@@ -45,7 +45,7 @@
         _pagingLocation = @"query";
         _nextIdentifier = @"next";
         _previousIdentifier = @"previous";
-        _offset = @"0"; //strange APIs like reddit... treat offset as string...
+        _offset = @"0"; // string to work with 'strange' APIs, that are treating offset as string...
         _limit = [NSNumber numberWithInteger:10];
     }
     return self;
