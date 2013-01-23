@@ -97,18 +97,52 @@ static NSString *const PROJECT = @"{\"id\":1,\"title\":\"First Project\",\"style
     }
 }
 
--(void)testReadOneObject {
+-(void)testReadOneObjectWithStringArgument {
     [AGMockURLProtocol setResponseData:[PROJECT dataUsingEncoding:NSUTF8StringEncoding]];
     
     [_restPipe read:@"1"
-     success:^(id responseObject) {
-        STAssertNotNil(responseObject, @"response should not be nil");
-        _finishedFlag = YES;
-        
-    } failure:^(NSError *error) {
-        _finishedFlag = YES;
-        STFail(@"should not fail");
-    }];
+            success:^(id responseObject) {
+                STAssertNotNil(responseObject, @"response should not be nil");
+                _finishedFlag = YES;
+                
+            } failure:^(NSError *error) {
+                _finishedFlag = YES;
+                STFail(@"should not fail");
+            }];
+    
+    // keep the run loop going
+    while(!_finishedFlag) {
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+    }
+}
+
+-(void)testReadOneObjectWithIntegerArgument {
+    [AGMockURLProtocol setResponseData:[PROJECT dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    [_restPipe read:[NSNumber numberWithInt:1]
+            success:^(id responseObject) {
+                STAssertNotNil(responseObject, @"response should not be nil");
+                _finishedFlag = YES;
+            } failure:^(NSError *error) {
+                _finishedFlag = YES;
+                STFail(@"should not fail");
+            }];
+    
+    // keep the run loop going
+    while(!_finishedFlag) {
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+    }
+}
+
+-(void)testReadOneObjectWithNil {
+    [_restPipe read:nil
+            success:^(id responseObject) {
+                _finishedFlag = YES;
+                STFail(@"should not successed");
+                
+            } failure:^(NSError *error) {
+                _finishedFlag = YES;
+            }];
     
     // keep the run loop going
     while(!_finishedFlag) {

@@ -98,9 +98,23 @@
         return;
     }
     
-    [self readWithFilter:^(id<AGFilterConfig> config) {
-        [config setWhere:[NSDictionary dictionaryWithObjectsAndKeys:value, _recordId, nil]];
-    } success:success failure:failure];
+    // try to add auth.token:
+    [self applyAuthToken];
+    
+    NSString* objectKey = [self getStringValue:value];
+    [_restClient getPath:[self appendObjectPath:objectKey] parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        
+        if (success) {
+            //TODO: NSLog(@"Invoking successblock....");
+            success(responseObject);
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+        if (failure) {
+            //TODO: NSLog(@"Invoking failure block....");
+            failure(error);
+        }
+    }];
 }
 
 // read all, via HTTP GET
@@ -246,13 +260,7 @@
         [_restClient postPath:_URL.path parameters:object success:successCallback failure:failureCallback];
         return;
     } else {
-        NSString* updateId;
-        if ([objectKey isKindOfClass:[NSString class]]) {
-            updateId = objectKey;
-        } else {
-            updateId = [objectKey stringValue];
-        }
-        
+        NSString* updateId = [self getStringValue:objectKey];
         //TODO: NSLog(@"HTTP PUT to update the given object");
         [_restClient putPath:[self appendObjectPath:updateId] parameters:object success:successCallback failure:failureCallback];
         return;
@@ -281,12 +289,7 @@
         return;
     }
     
-    NSString* deleteKey;
-    if ([objectKey isKindOfClass:[NSString class]]) {
-        deleteKey = objectKey;
-    } else {
-        deleteKey = [objectKey stringValue];
-    }
+    NSString* deleteKey = [self getStringValue:objectKey];
     
     [_restClient deletePath:[self appendObjectPath:deleteKey] parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
         
@@ -301,6 +304,17 @@
             failure(error);
         }
     } ];
+}
+
+// extract the sting value (e.g. for read:id, or remove:id)
+-(NSString *) getStringValue:(id) value {
+    NSString* objectKey;
+    if ([value isKindOfClass:[NSString class]]) {
+        objectKey = value;
+    } else {
+        objectKey = [value stringValue];
+    }
+    return objectKey;
 }
 
 // appends the path for delete/updates to the URL
