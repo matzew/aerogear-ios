@@ -53,9 +53,9 @@
 		6F6F23A31665212A00006155 /* AGMockURLProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F6F23A21665212A00006155 /* AGMockURLProtocol.m */; };
 		6FC562E2169ECE94000D7A43 /* AGPropertyListStorageTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FC562E1169ECE94000D7A43 /* AGPropertyListStorageTests.m */; };
 		6FE55675169DE7C800E6188E /* AGPropertyListStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FE55674169DE7C800E6188E /* AGPropertyListStorage.m */; };
-		A08816D816A4730100BB77ED /* AGPaginationRawTest.m in Sources */ = {isa = PBXBuildFile; fileRef = A08816D716A4730100BB77ED /* AGPaginationRawTest.m */; };
 		A0A37AD316AE905F00979868 /* AGPipeConfigSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = A0A37AD216AE905F00979868 /* AGPipeConfigSpec.m */; };
 		A0A37ADA16AEAEDE00979868 /* AGNSMutableArray+Paging.m in Sources */ = {isa = PBXBuildFile; fileRef = A0A37AD916AEAEDE00979868 /* AGNSMutableArray+Paging.m */; };
+		A0CACD3416B054D00016A827 /* AGHttpClientMockTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A0CACD3316B054D00016A827 /* AGHttpClientMockTests.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -152,10 +152,10 @@
 		6FC562E1169ECE94000D7A43 /* AGPropertyListStorageTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGPropertyListStorageTests.m; sourceTree = "<group>"; };
 		6FE55673169DE5D900E6188E /* AGPropertyListStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AGPropertyListStorage.h; path = datamanager/AGPropertyListStorage.h; sourceTree = "<group>"; };
 		6FE55674169DE7C800E6188E /* AGPropertyListStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AGPropertyListStorage.m; path = datamanager/AGPropertyListStorage.m; sourceTree = "<group>"; };
-		A08816D716A4730100BB77ED /* AGPaginationRawTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGPaginationRawTest.m; sourceTree = "<group>"; };
 		A0A37AD216AE905F00979868 /* AGPipeConfigSpec.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGPipeConfigSpec.m; sourceTree = "<group>"; };
 		A0A37AD816AEAEDE00979868 /* AGNSMutableArray+Paging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "AGNSMutableArray+Paging.h"; path = "pipeline/AGNSMutableArray+Paging.h"; sourceTree = "<group>"; };
 		A0A37AD916AEAEDE00979868 /* AGNSMutableArray+Paging.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "AGNSMutableArray+Paging.m"; path = "pipeline/AGNSMutableArray+Paging.m"; sourceTree = "<group>"; };
+		A0CACD3316B054D00016A827 /* AGHttpClientMockTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGHttpClientMockTests.m; sourceTree = "<group>"; };
 		B8AB37EC1AA3464892D758C1 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = SOURCE_ROOT; };
 		D6A7A8124B23447DA65BC0DE /* Pods-AeroGear-iOSTests.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AeroGear-iOSTests.xcconfig"; path = "Pods/Pods-AeroGear-iOSTests.xcconfig"; sourceTree = SOURCE_ROOT; };
 		DD46252015EF437500A5040C /* common.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = common.xcconfig; sourceTree = "<group>"; };
@@ -208,6 +208,7 @@
 			children = (
 				6F6F239F1664D16200006155 /* Utils */,
 				570B90891624360600426BA7 /* AGAuthenticatorTests.m */,
+				A0CACD3316B054D00016A827 /* AGHttpClientMockTests.m */,
 				57DCDB8715F20FB700289EA4 /* AGBaseAdapterTests.m */,
 				57345BDB15E3D1DF00B74FEB /* AGHttpClientTests.m */,
 				573CBDA015E4CEDD0071E7A6 /* AGPipelineTests.m */,
@@ -216,7 +217,6 @@
 				6F0E7B97165F7092005E0BE5 /* AGMemoryStorageTests.m */,
 				6FC562E1169ECE94000D7A43 /* AGPropertyListStorageTests.m */,
 				570B908516231D1100426BA7 /* AGRestAuthenticationTests.m */,
-				A08816D716A4730100BB77ED /* AGPaginationRawTest.m */,
 			);
 			name = "Unit Tests";
 			sourceTree = "<group>";
@@ -546,8 +546,8 @@
 				6F0E7B98165F7092005E0BE5 /* AGMemoryStorageTests.m in Sources */,
 				6F6F23A31665212A00006155 /* AGMockURLProtocol.m in Sources */,
 				6FC562E2169ECE94000D7A43 /* AGPropertyListStorageTests.m in Sources */,
-				A08816D816A4730100BB77ED /* AGPaginationRawTest.m in Sources */,
 				A0A37AD316AE905F00979868 /* AGPipeConfigSpec.m in Sources */,
+				A0CACD3416B054D00016A827 /* AGHttpClientMockTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
