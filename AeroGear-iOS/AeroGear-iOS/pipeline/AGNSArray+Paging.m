@@ -21,7 +21,7 @@
 
 static char const * const AGPipeKey = "AGPipeKey";
 static char const * const AGParamProviderKey = "AGParamProviderKey";
-@implementation NSArray (AGPaging)
+@implementation NSMutableArray (AGPaging)
 
 
 #pragma mark paging category 
@@ -29,7 +29,7 @@ static char const * const AGParamProviderKey = "AGParamProviderKey";
      failure:(void (^)(NSError *error))failure {
     
     
-    [self.pipe readWithParams:[self.parameterProvider valueForKey:@"next"] success:^(id responseObject) {
+    [self.pipe readWithParams:[self.parameterProvider valueForKey:@"AG-next-key"] success:^(id responseObject) {
         if (success) {
             success(responseObject);
         }
@@ -43,8 +43,7 @@ static char const * const AGParamProviderKey = "AGParamProviderKey";
 -(void) previous:(void (^)(id responseObject))success
      failure:(void (^)(NSError *error))failure {
     
-    
-    [self.pipe readWithParams:[self.parameterProvider valueForKey:@"previous"] success:^(id responseObject) {
+    [self.pipe readWithParams:[self.parameterProvider valueForKey:@"AG-prev-key"] success:^(id responseObject) {
         if (success) {
             success(responseObject);
         }

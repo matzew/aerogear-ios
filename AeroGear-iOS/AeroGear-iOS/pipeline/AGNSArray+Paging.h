@@ -18,14 +18,14 @@
 #import <Foundation/Foundation.h>
 #import "AGPipe.h"
 
-@interface NSArray (AGPaging)
+@interface NSMutableArray (AGPaging)
 
 // a bit ugly....
 @property id<AGPipe> pipe;
 @property NSDictionary* parameterProvider;
 
 /**
- * Reads the next 'page', based on the current position, of the paging result, from the server.
+ * Reads the next 'q     page', based on the current position, of the paging result, from the server.
  *
  * @param success A block object to be executed when the request operation finishes successfully.
  * This block has no return value and takes one argument: The object created from the response

@@ -30,6 +30,8 @@
     id<AGAuthenticationModuleAdapter> _authModule;
     NSString* _recordId;
     AGPipeConfiguration* _config;
+    
+    NSMutableArray* _pagingObject;
 }
 
 // =====================================================
@@ -51,10 +53,10 @@
     self = [super init];
     if (self) {
         _type = @"REST";
-
+        
         // set all the things:
         _config = (AGPipeConfiguration*) pipeConfig;
-     
+        
         NSURL* baseURL = _config.baseURL;
         NSString* endpoint = _config.endpoint;
         // append the endpoint/name and use it as the final URL
@@ -66,6 +68,9 @@
         
         _restClient = [AGHttpClient clientFor:finalURL];
         _restClient.parameterEncoding = AFJSONParameterEncoding;
+        
+        
+        _pagingObject = [NSMutableArray array];
     }
     
     return self;
@@ -86,12 +91,12 @@
 // =====================================================
 
 -(void) read:(id)value
-    success:(void (^)(id responseObject))success
-    failure:(void (^)(NSError *error))failure {
-
+     success:(void (^)(id responseObject))success
+     failure:(void (^)(NSError *error))failure {
+    
     if (value == nil || [value isKindOfClass:[NSNull class]]) {
         [self raiseError:@"read" msg:@"read id value was nil" failure:failure];
-        // do nothing        
+        // do nothing
         return;
     }
     
@@ -141,30 +146,26 @@
         if ([_config.metadataLocation isEqualToString:@"webLinking"]) {
             linkInformationContainer = [self parseWebLinkInformation:[[[operation response] allHeaderFields] valueForKey:@"Link"]];
         } else if ([_config.metadataLocation isEqualToString:@"body"]) {
-            linkInformationContainer = [self parseBodyInformation:responseObject];
+            linkInformationContainer = [self parseQueryInformation:responseObject];
         } else if ([_config.metadataLocation isEqualToString:@"header"]) {
-            linkInformationContainer = [self parseHeaderInformation:[[operation response] allHeaderFields]];
+            linkInformationContainer = [self parseQueryInformation:[[operation response] allHeaderFields]];
         }
-
-        
-        NSArray* results = nil;
         
         // HACK....
         if ([responseObject isKindOfClass:[NSDictionary class]]) {
-            results = [NSArray arrayWithObject:responseObject];
+            [_pagingObject setArray:[NSArray arrayWithObject:responseObject]];
         } else {
-            results = (NSArray*) responseObject;
-
+            [_pagingObject setArray:(NSMutableArray*) responseObject];
         }
         
         // stash pipe reference:
-        results.pipe = self;
+        _pagingObject.pipe = self;
         // stash the SCROLLING params:
-        results.parameterProvider = linkInformationContainer;
+        _pagingObject.parameterProvider = linkInformationContainer;
         
         if (success) {
             //TODO: NSLog(@"Invoking successblock....");
-            success(results);
+            success(_pagingObject);
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         
@@ -208,14 +209,14 @@
 -(void) save:(NSDictionary*) object
      success:(void (^)(id responseObject))success
      failure:(void (^)(NSError *error))failure {
-
+    
     // when null is provided we try to invoke the failure block
     if (object == nil || [object isKindOfClass:[NSNull class]]) {
         [self raiseError:@"save" msg:@"object was nil" failure:failure];
         // do nothing
         return;
     }
-
+    
     // try to add auth.token:
     [self applyAuthToken];
     
@@ -265,13 +266,13 @@
     // when null is provided we try to invoke the failure block
     if (object == nil || [object isKindOfClass:[NSNull class]]) {
         [self raiseError:@"remove" msg:@"object was nil" failure:failure];
-        // do nothing        
+        // do nothing
         return;
     }
-
+    
     // try to add auth.token:
     [self applyAuthToken];
-
+    
     id objectKey = [object objectForKey:_recordId];
     // we need to check if the map representation contains the "recordID" and its value is actually set:
     if (objectKey == nil || [objectKey isKindOfClass:[NSNull class]]) {
@@ -279,7 +280,7 @@
         // do nothing
         return;
     }
-   
+    
     NSString* deleteKey;
     if ([objectKey isKindOfClass:[NSString class]]) {
         deleteKey = objectKey;
@@ -334,31 +335,16 @@
 }
 
 // TODO.... CAN be an NSArray....
--(NSDictionary *) parseBodyInformation:(NSDictionary *)body {
-    // TODO, read the KEY from config........
-    NSString *nextIdentifier = @"next_page";
-    NSString *prevIdentifier = @"previous_page";
-    
-    // buld the MAP of links....:
-    NSMutableDictionary *mapOfLink = [NSMutableDictionary dictionary];
-    
-    [mapOfLink setValue:[self transformQueryString:[body valueForKey:nextIdentifier]] forKey:@"next"]; /// internal NEXT key...
-    [mapOfLink setValue:[self transformQueryString:[body valueForKey:prevIdentifier]] forKey:@"previous"]; /// internal PREVIOUS key...
-    
-    return mapOfLink;
-}
-
--(NSDictionary *) parseHeaderInformation:(NSDictionary *)headers {
-    // TODO, read the KEY from config........
+-(NSDictionary *) parseQueryInformation:(NSDictionary *)info {
     NSString *nextIdentifier = _config.nextIdentifier;
     NSString *prevIdentifier = _config.previousIdentifier;
     
     // buld the MAP of links....:
     NSMutableDictionary *mapOfLink = [NSMutableDictionary dictionary];
     
-    [mapOfLink setValue:[self transformQueryString:[headers valueForKey:nextIdentifier]] forKey:@"next"]; /// internal NEXT key...
-    [mapOfLink setValue:[self transformQueryString:[headers valueForKey:prevIdentifier]] forKey:@"previous"]; /// internal PREVIOUS key...
-    
+    [mapOfLink setValue:[self transformQueryString:[info valueForKey:nextIdentifier]] forKey:@"AG-next-key"]; /// internal NEXT key...
+    [mapOfLink setValue:[self transformQueryString:[info valueForKey:prevIdentifier]] forKey:@"AG-prev-key"]; /// internal PREV key...
+
     return mapOfLink;
 }
 
@@ -374,9 +360,15 @@
             if ([tmpElem hasPrefix:@"<"] && [tmpElem hasSuffix:@">"]) {
                 NSURL *parsedURL = [NSURL URLWithString:[[tmpElem substringFromIndex:1] substringToIndex:tmpElem.length-2]]; //2 because, the first did already cut one char...
                 queryArguments = [self transformQueryString:parsedURL.query];
-            } else if ([tmpElem hasPrefix:@"rel="]) { // only rel...
+            } else if ([tmpElem hasPrefix:@"rel="]) {
+                // only those 'rel' links that we need (prev/next)
                 NSString *rel = [[tmpElem substringFromIndex:5] substringToIndex:tmpElem.length-6]; // cutting 5 + the last....
-                [pagingLinks setValue:queryArguments forKey:rel];
+                
+                if ([_config.nextIdentifier isEqualToString:rel]) {
+                    [pagingLinks setValue:queryArguments forKey:@"AG-next-key"]; // internal key
+                } else if ([_config.previousIdentifier isEqualToString:rel]) {
+                    [pagingLinks setValue:queryArguments forKey:@"AG-prev-key"]; // internal key
+                }
             } else {
                 // ignore title etc
             }
@@ -386,13 +378,14 @@
 }
 
 -(NSDictionary *) transformQueryString:(NSString *) value {
+    // we need to get rid of the '?' and everything before that
+    // linke any URL info... (resource?params...)
     NSRange range = [value rangeOfString:@"?"];
-  
+    
     if (range.location != NSNotFound) {
         value = [value substringFromIndex:NSMaxRange(range)];
     }
-
-    // chop the query into a dictionary
+    // chop the query string into a dictionary
     NSArray *components = [value componentsSeparatedByString:@"&"];
     NSMutableDictionary *parameters = [[NSMutableDictionary alloc] init];
     for (NSString *component in components) {
@@ -400,9 +393,6 @@
     }
     return parameters;
 }
-
-
-
 
 + (BOOL) accepts:(NSString *) type {
     return [type isEqualToString:@"REST"];
