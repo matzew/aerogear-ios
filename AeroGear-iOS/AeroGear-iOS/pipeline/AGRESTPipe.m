@@ -159,6 +159,7 @@
         if ([_config.metadataLocation isEqualToString:@"webLinking"]) {
             linkInformationContainer = [self parseWebLinkInformation:[[[operation response] allHeaderFields] valueForKey:@"Link"]];
         } else if ([_config.metadataLocation isEqualToString:@"body"]) {
+            // if the response is an array, the parser returns nil
             linkInformationContainer = [self parseQueryInformation:responseObject];
         } else if ([_config.metadataLocation isEqualToString:@"header"]) {
             linkInformationContainer = [self parseQueryInformation:[[operation response] allHeaderFields]];
@@ -317,16 +318,24 @@
     failure(error);
 }
 
-// TODO could an NSArray being parsed in? (yes, with nested metainfo + payload)
 -(NSDictionary *) parseQueryInformation:(NSDictionary *)info {
+    // NSArray is ONLY being passed in, when the metadataLocation is "body"
+    // AND it is actually NOT at the root level, like twitter does
+    if (!info || ![info isKindOfClass:[NSDictionary class]] || (info.count ==0)) {
+        // for now... return NIL, since we do not support that...
+        return nil;
+    }
+
     NSString *nextIdentifier = _config.nextIdentifier;
     NSString *prevIdentifier = _config.previousIdentifier;
-    
+
     // buld the MAP of links....:
     NSMutableDictionary *mapOfLink = [NSMutableDictionary dictionary];
-    
-    [mapOfLink setValue:[self transformQueryString:[info valueForKey:nextIdentifier]] forKey:@"AG-next-key"]; /// internal key...
-    [mapOfLink setValue:[self transformQueryString:[info valueForKey:prevIdentifier]] forKey:@"AG-prev-key"]; /// internal key...
+
+    if ([info valueForKey:nextIdentifier] != nil)
+        [mapOfLink setValue:[self transformQueryString:[info valueForKey:nextIdentifier]] forKey:@"AG-next-key"]; /// internal key...
+    if ([info valueForKey:prevIdentifier] !=nil )
+        [mapOfLink setValue:[self transformQueryString:[info valueForKey:prevIdentifier]] forKey:@"AG-prev-key"]; /// internal key...
 
     return mapOfLink;
 }
