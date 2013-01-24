@@ -25,6 +25,7 @@
 + (void)setResponseData:(NSData*)data;
 + (void)setHeaders:(NSDictionary*)headers;
 + (void)addHeader:(NSString*)key value:(NSString*)value;
++ (void)removeHeader:(NSString*)key;
 + (void)setStatusCode:(NSInteger)statusCode;
 + (void)setError:(NSError*)error;
 

@@ -53,6 +53,13 @@ static NSString* sMethod = nil;
     [sHeaders setObject:value forKey:key];
 }
 
++ (void)removeHeader:(NSString*)key {
+    if (sHeaders == nil)
+        return;
+    
+    [sHeaders removeObjectForKey:key];
+}
+
 + (void)setStatusCode:(NSInteger)statusCode {
     sStatusCode = statusCode;
 }
