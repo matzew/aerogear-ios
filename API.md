@@ -15,12 +15,12 @@ To create a pipeline, you need to use the AGPipeline class. Below is an example:
     NSURL* serverURL = [NSURL URLWithString:@"http://todo-aerogear.rhcloud.com/todo-server/"];
 
     // create the 'todo' pipeline, which points to the baseURL of the REST application
-    AGPipeline* todo = [AGPipeline pipeline:serverURL];
+    AGPipeline* todo = [AGPipeline pipelineWithBaseURL:serverURL];
 
     // Add a REST pipe for the 'projects' endpoint
     id<AGPipe> projects = [pipeline pipe:^(id<AGPipeConfig> config) {
         [config setName:@"projects"];
-        [config setType:@"REST"];
+        [config setType:@"REST"]; // this is the default, can be emitted
     }];
 
 
@@ -63,7 +63,7 @@ The 'save' method (like in aerogear.js) is also responsible for updating an 'obj
     // change the title of the previous project 'object':
     [projectEntity setValue:@"Hello Update World!" forKey:@"title"];
     
-    // and now udpdate it on the server
+    // and now update it on the server
     [projects save:projectEntity success:^(id responseObject) {
 	    // LOG the JSON response, returned from the server:
         NSLog(@"UPDATE RESPONSE\n%@", [responseObject description]);
@@ -74,7 +74,7 @@ The 'save' method (like in aerogear.js) is also responsible for updating an 'obj
 
 ## Remove data
 
-The AGPipe also contains a 'remove' method to delete the data on the server. It takes the value of the 'id' property, so that it knows which resource to delete:
+The AGPipe also contains a 'remove' method to delete the data on the server. It takes the map object which must have an 'id' property/field set, so that it knows which resource to delete:
 
     // Now, just remove the project:
     [projects remove:projectEntity success:^(id responseObject) {
@@ -120,6 +120,68 @@ Since we are pointing to a RESTful endpoint, the API issues a HTTP GET request. 
 
 Of course the _collection_ behind the responseObject can be stored to a variable...
 
+Paging
+=============
+
+The library has built-in paging support, enabling the scrolling to either forward or backwards through the result set returned from the server. Paging metadata located in the server response (either in the header or in the body) are used to identify the next or the previous result set. For example, in Twitter case, paging metadata are located in the body of the response, using "next_page" or "previous_page" to identify the next or previous result set respectively. The location of this metadata as well as naminig, is fully configurable during the creation of the pipe, thus enabling greater flexibility in supporting several different paging strategies.
+
+Below is an example that goes against the AeroGear Controller Server.
+
+First we create our pipeline. Notice that in the Pipe configuration object, we explicitely declare the name of the paging identifiers supported by the server, as well as the the location of these identifiers in the response. Note that If not specified, the library will assume the server is using Web Linking paging strategy.
+
+    NSURL* baseURL = [NSURL URLWithString:@"http://controllerdemo-danbev.rhcloud.com/aerogear-controller-demo"];
+    AGPipeline* agPipeline = [AGPipeline pipelineWithBaseURL:baseURL];
+    
+    id<AGPipe> cars = [agPipeline pipe:^(id<AGPipeConfig> config) {
+        [config setName:@"cars"];
+        [config setNextIdentifier:@"AG-Links-Next"];
+        [config setPreviousIdentifier:@"AG-Links-Previous"];
+        [config setMetadataLocation:@"header"];
+    }];
+
+## Start Paging
+
+To kick-start pagination, you use the method _readWithParams_ of the underlying AGPipe, passing your desired query parameters to the server. Upon successfully completion, the _pagedResultSet_ (an enchached category of nsarray) will allow you to scroll through the result set.
+
+    __block NSMutableArray *pagedResultSet;
+
+    // fetch the first page
+    [cars readWithParams:@{@"color" : @"black", @"offset" : @"0", @"limit" : @1} success:^(id responseObject) {
+        pagedResultSet = responseObject;  // page 1
+        
+    } failure:^(NSError *error) {
+        [self setFinishRunLoop:YES];
+        STFail(@"%@", error);
+    }];
+
+## Move Forward in the result set
+
+To move forward in the result set, you simple call _next_ on the _pagedResultSet_ :
+
+// move to the next page
+[pagedResultSet next:^(id responseObject) {
+    // do something with the result
+    
+} failure:^(NSError *error) {
+    [self setFinishRunLoop:YES];
+    STFail(@"%@", error);
+}];
+
+## Move Backwards in the result set
+
+To move backwards in the result set, you simple call _previous_ on the _pagedResultSet_ :
+
+[pagedResultSet previous:^(id responseObject) {
+    // do something with the result
+    
+} failure:^(NSError *error) {
+    [self setFinishRunLoop:YES];
+    STFail(@"%@", error);
+}];
+
+## Exception cases
+
+Moving beyond last or first page is left on the behaviour of the specific server implementation, that is the library will not treat it differently. Some servers can throw an error (like Twitter or AGController does) by respondng with an http error response, or simply they return an empty list. The user is responsible to cater for exception cases like this.
 
 AGDataManager
 =============
@@ -215,9 +277,9 @@ The reset function allows you the erase all data available in the used AGStore o
 
 The reset method accepts two simple blocks that are invoked on success or in case of an failure.
 
-## Persistent Storeage system
+## Persistent Storage system
 
-A simple _Property list_ storage system is part of the library as well, The same ```AGStore``` protocol is used for reading and writing. Below is a little example on how to same to the file syste:
+A simple _Property list_ storage system is part of the library as well, The same ```AGStore``` protocol is used for reading and writing. Below is a small example on how to save to the file system:
 
     // initalize plist store (if the file does not exist it will be created)
     AGDataManager* manager = [AGDataManager manager];
