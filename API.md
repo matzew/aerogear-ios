@@ -151,7 +151,6 @@ To kick-start pagination, you use the method _readWithParams_ of the underlying 
         
     } failure:^(NSError *error) {
         [self setFinishRunLoop:YES];
-        STFail(@"%@", error);
     }];
 
 ## Move Forward in the result set
@@ -163,8 +162,6 @@ To move forward in the result set, you simple call _next_ on the _pagedResultSet
     // do something with the result
     
 } failure:^(NSError *error) {
-    [self setFinishRunLoop:YES];
-    STFail(@"%@", error);
 }];
 
 ## Move Backwards in the result set
@@ -175,8 +172,6 @@ To move backwards in the result set, you simple call _previous_ on the _pagedRes
     // do something with the result
     
 } failure:^(NSError *error) {
-    [self setFinishRunLoop:YES];
-    STFail(@"%@", error);
 }];
 
 ## Exception cases
