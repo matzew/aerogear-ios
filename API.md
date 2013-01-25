@@ -1,4 +1,3 @@
-
 AeroGear iOS API - DRAFT 0.1
 ============================
 
@@ -124,7 +123,7 @@ Of course the _collection_ behind the responseObject can be stored to a variable
 Paging
 =============
 
-The library has built-in paging support, enabling the scrolling to either forward or backwards through a result set returned from the server. Paging metadata located in the server response (either in the header or in the body) are used to identify the next or the previous result set. For example, in Twitter case, paging metadata are located in the body of the response, using "next\_page" or "previous\_page" to identify the next or previous result set respectively. The location of this metadata as well as naming, is fully configurable during the creation of the pipe, thus enabling greater flexibility in supporting several different paging strategies.
+The library has built-in paging support, enabling the scrolling to either forward or backwards through a result set returned from the server. Paging metadata located in the server response (either in the headers, in the body or using [webLinking](http://tools.ietf.org/html/rfc5988)) are used to identify the next or the previous result set. For example, in Twitter case, paging metadata are located in the body of the response, using "next\_page" or "previous\_page" to identify the next or previous result set respectively. The location of this metadata as well as naming, is fully configurable during the creation of the pipe, thus enabling greater flexibility in supporting several different paging strategies.
 
 Below is an example that goes against the AeroGear Controller Server.
 
