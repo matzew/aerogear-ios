@@ -1,3 +1,4 @@
+
 AeroGear iOS API - DRAFT 0.1
 ============================
 
@@ -40,7 +41,7 @@ The AGPipe offers an API to store newly created objects on a _remote_ server res
 
     // save the 'new' project:
     [projects save:projectEntity success:^(id responseObject) {
-	    // LOG the JSON response, returned from the server:
+        // LOG the JSON response, returned from the server:
         NSLog(@"CREATE RESPONSE\n%@", [responseObject description]);
         
         // get the id of the new project, from the JSON response...
@@ -65,7 +66,7 @@ The 'save' method (like in aerogear.js) is also responsible for updating an 'obj
     
     // and now update it on the server
     [projects save:projectEntity success:^(id responseObject) {
-	    // LOG the JSON response, returned from the server:
+        // LOG the JSON response, returned from the server:
         NSLog(@"UPDATE RESPONSE\n%@", [responseObject description]);
     } failure:^(NSError *error) {
         // when an error occurs... at least log it to the console..
@@ -78,8 +79,8 @@ The AGPipe also contains a 'remove' method to delete the data on the server. It 
 
     // Now, just remove the project:
     [projects remove:projectEntity success:^(id responseObject) {
-	    // LOG the JSON response, returned from the server:
-	    NSLog(@"DELETE RESPONSE\n%@", [responseObject description]);
+        // LOG the JSON response, returned from the server:
+        NSLog(@"DELETE RESPONSE\n%@", [responseObject description]);
     } failure:^(NSError *error) {
         // when an error occurs... at least log it to the console..
         NSLog(@"DELETE: An error occured! \n%@", error);
@@ -92,7 +93,7 @@ In this case, where we have a RESTful pipe the API issues a HTTP DELETE request.
 The 'read' method allows to (currently) read _all_ data from the server, of the underlying AGPipe:
 
     [projects read:^(id responseObject) {
-	    // LOG the JSON response, returned from the server:
+        // LOG the JSON response, returned from the server:
         NSLog(@"READ RESPONSE\n%@", [responseObject description]);
     } failure:^(NSError *error) {
         // when an error occurs... at least log it to the console..
@@ -101,29 +102,29 @@ The 'read' method allows to (currently) read _all_ data from the server, of the 
 
 Since we are pointing to a RESTful endpoint, the API issues a HTTP GET request. The JSON output of the above NSLog() call looks like this:
 
-	(
-	        {
-	        id = 8;
-	        style = "project-234-255-0";
-	        tasks =         (
-	        );
-	        title = "Created from testcase";
-	    },
-	        {
-	        id = 15;
-	        style = "project-255-255-255";
-	        tasks =         (
-	        );
-	        title = "Some title";
-	    }
-	)
+    (
+            {
+            id = 8;
+            style = "project-234-255-0";
+            tasks =         (
+            );
+            title = "Created from testcase";
+        },
+            {
+            id = 15;
+            style = "project-255-255-255";
+            tasks =         (
+            );
+            title = "Some title";
+        }
+    )
 
 Of course the _collection_ behind the responseObject can be stored to a variable...
 
 Paging
 =============
 
-The library has built-in paging support, enabling the scrolling to either forward or backwards through the result set returned from the server. Paging metadata located in the server response (either in the header or in the body) are used to identify the next or the previous result set. For example, in Twitter case, paging metadata are located in the body of the response, using "next_page" or "previous_page" to identify the next or previous result set respectively. The location of this metadata as well as naminig, is fully configurable during the creation of the pipe, thus enabling greater flexibility in supporting several different paging strategies.
+The library has built-in paging support, enabling the scrolling to either forward or backwards through a result set returned from the server. Paging metadata located in the server response (either in the header or in the body) are used to identify the next or the previous result set. For example, in Twitter case, paging metadata are located in the body of the response, using "next\_page" or "previous\_page" to identify the next or previous result set respectively. The location of this metadata as well as naming, is fully configurable during the creation of the pipe, thus enabling greater flexibility in supporting several different paging strategies.
 
 Below is an example that goes against the AeroGear Controller Server.
 
@@ -133,7 +134,7 @@ First we create our pipeline. Notice that in the Pipe configuration object, we e
     AGPipeline* agPipeline = [AGPipeline pipelineWithBaseURL:baseURL];
     
     id<AGPipe> cars = [agPipeline pipe:^(id<AGPipeConfig> config) {
-        [config setName:@"cars"];
+        [config setName:@"cars-custom"];
         [config setNextIdentifier:@"AG-Links-Next"];
         [config setPreviousIdentifier:@"AG-Links-Previous"];
         [config setMetadataLocation:@"header"];
@@ -147,36 +148,40 @@ To kick-start pagination, you use the method _readWithParams_ of the underlying 
 
     // fetch the first page
     [cars readWithParams:@{@"color" : @"black", @"offset" : @"0", @"limit" : @1} success:^(id responseObject) {
-        pagedResultSet = responseObject;  // page 1
-        
+        pagedResultSet = responseObject;
+
+        // do something
+
     } failure:^(NSError *error) {
-        [self setFinishRunLoop:YES];
+        //handle error
     }];
 
 ## Move Forward in the result set
 
 To move forward in the result set, you simple call _next_ on the _pagedResultSet_ :
 
-// move to the next page
-[pagedResultSet next:^(id responseObject) {
-    // do something with the result
-    
-} failure:^(NSError *error) {
-}];
+    // move to the next page
+    [pagedResultSet next:^(id responseObject) {
+        // do something
+
+    } failure:^(NSError *error) {
+        // handle error
+    }];
 
 ## Move Backwards in the result set
 
 To move backwards in the result set, you simple call _previous_ on the _pagedResultSet_ :
 
-[pagedResultSet previous:^(id responseObject) {
-    // do something with the result
-    
-} failure:^(NSError *error) {
-}];
+    [pagedResultSet previous:^(id responseObject) {
+        // do something
+        
+    } failure:^(NSError *error) {
+        // handle error
+    }];
 
 ## Exception cases
 
-Moving beyond last or first page is left on the behaviour of the specific server implementation, that is the library will not treat it differently. Some servers can throw an error (like Twitter or AGController does) by respondng with an http error response, or simply they return an empty list. The user is responsible to cater for exception cases like this.
+Moving beyond last or first page is left on the behaviour of the specific server implementation, that is the library will not treat it differently. Some servers can throw an error (like Twitter or AeroGear Controller does) by respondng with an http error response, or simply return an empty list. The user is responsible to cater for exception cases like this.
 
 AGDataManager
 =============
@@ -185,7 +190,7 @@ AGDataManager
 
 After receiving data from the server, your application may want to keep the data around. The AGDataManager API allows you to create AGStore instances. To create a datamanager, you need to use the AGDataManager class. Below is an example: 
 
-	// create the datamanager
+    // create the datamanager
     AGDataManager* dm = [AGDataManager manager];
     // add a new (default) store object:
     id<AGStore> myStore = [dm store:^(id<AGStoreConfig> config) {
@@ -203,16 +208,16 @@ When using a pipe to read all entries of a endpoint, you can use the AGStore to 
     ...
 
     [tasksPipe read:^(id responseObject) {
-	    // the response object represents an NSArray,
-	    // containing multile 'Tasks' (as NSDictionary objects)
-	    [myStore save:responseObject success:^(id object) {
+        // the response object represents an NSArray,
+        // containing multile 'Tasks' (as NSDictionary objects)
+        [myStore save:responseObject success:^(id object) {
 
             // Indicate that the save operation was successful
 
-        } failure:	^(NSError *error) {
+        } failure:  ^(NSError *error) {
             // when an error occurs... at least log it to the console..
             NSLog(@"Read: An error occured! \n%@", error);
-		}];    
+        }];    
 
     } failure:^(NSError *error) {
         // when an error occurs... at least log it to the console..
@@ -237,7 +242,7 @@ The read accepts the _recordID_ and two simple blocks that are invoked on succes
     // read all object from the store
     [myStore readAll:^(NSArray *objects) {
 
-	    // work with the received collection, containing all objects
+        // work with the received collection, containing all objects
 
     } failure:^(NSError *error) {
         // when an error occurs... at least log it to the console..
@@ -305,7 +310,7 @@ To create an authenticator, you need to use the AGAuthenticator class. Below is 
     // create an authenticator object
     AGAuthenticator* authenticator = [AGAuthenticator authenticator];
 
-	// add a new auth module and the required 'base url':
+    // add a new auth module and the required 'base url':
     NSURL* baseURL = [NSURL URLWithString:@"https://todoauth-aerogear.rhcloud.com/todo-server/"];
     id<AGAuthenticationModule> myMod = [authenticator auth:^(id<AGAuthConfig> config) {
         [config setName:@"authMod"];
