@@ -129,7 +129,7 @@ Below is an example that goes against the AeroGear Controller Server.
 
 First we create our pipeline. Notice that in the Pipe configuration object, we explicitely declare the name of the paging identifiers supported by the server, as well as the the location of these identifiers in the response. Note that If not specified, the library will assume the server is using Web Linking paging strategy.
 
-    NSURL* baseURL = [NSURL URLWithString:@"http://controllerdemo-danbev.rhcloud.com/aerogear-controller-demo"];
+    NSURL* baseURL = [NSURL URLWithString:@"https://controller-aerogear.rhcloud.com/aerogear-controller-demo"];
     AGPipeline* agPipeline = [AGPipeline pipelineWithBaseURL:baseURL];
     
     id<AGPipe> cars = [agPipeline pipe:^(id<AGPipeConfig> config) {
