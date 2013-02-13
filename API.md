@@ -18,7 +18,7 @@ To create a pipeline, you need to use the AGPipeline class. Below is an example:
     AGPipeline* todo = [AGPipeline pipelineWithBaseURL:serverURL];
 
     // Add a REST pipe for the 'projects' endpoint
-    id<AGPipe> projects = [pipeline pipe:^(id<AGPipeConfig> config) {
+    id<AGPipe> projects = [todo pipe:^(id<AGPipeConfig> config) {
         [config setName:@"projects"];
         [config setType:@"REST"]; // this is the default, can be emitted
     }];
