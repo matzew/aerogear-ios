@@ -276,6 +276,10 @@
     } ];
 }
 
+-(void) cancel {
+    [_restClient cancelAllHTTPOperationsWithMethod:nil path:_URL.path];
+}
+
 // extract the sting value (e.g. for read:id, or remove:id)
 -(NSString *) getStringValue:(id) value {
     NSString* objectKey;

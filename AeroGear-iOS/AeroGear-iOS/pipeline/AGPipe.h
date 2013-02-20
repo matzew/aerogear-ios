@@ -125,4 +125,12 @@
        success:(void (^)(id responseObject))success
        failure:(void (^)(NSError *error))failure;
 
+/**
+ * Cancel all running pipe operations.
+ * Note: Calling cancel has no effect on the server so if you do a save or remove and then
+ * call cancel, that action will still take place on the the server.
+ *
+ */
+-(void) cancel;
+
 @end

@@ -122,6 +122,33 @@ static NSString *const PROJECT = @"{\"id\":1,\"title\":\"First Project\",\"style
     }
 }
 
+-(void)testCancel {
+    NSDate *startTime = [NSDate date];
+    
+    [AGMockURLProtocol setResponseData:[PROJECTS dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    // simulate delay in response
+    [AGMockURLProtocol setResponseDelay:2];
+    
+    [_restPipe read:^(id responseObject) {
+        STFail(@"success should not have been called");
+        _finishedFlag = YES;
+        
+    } failure:^(NSError *error) {
+        _finishedFlag = YES;
+        STFail(@"failure should not have been called");
+    }];
+    
+    // cancel the request
+    // Note that no callbacks will be called after this
+    [_restPipe cancel];
+
+    // wait until either _finishedFlag is set to true (e.g. test failed)
+    // or timeout expired (no need to wait for more than the timeout set on the pipe) 
+    while (!_finishedFlag && [startTime timeIntervalSinceNow] > -1)
+        [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:1]];
+}
+
 -(void)testReadOneObjectWithStringArgument {
     [AGMockURLProtocol setResponseData:[PROJECT dataUsingEncoding:NSUTF8StringEncoding]];
     
