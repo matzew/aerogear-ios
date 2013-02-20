@@ -85,25 +85,33 @@ static NSTimeInterval sDelay = 0;
 }
 
 - (void)startLoading {
-    NSURLRequest *request = [self request];
+    sMethod = [[self request] HTTPMethod];
     
-    sMethod = [request HTTPMethod];
+    // schedule the completion callback to be fired after
+    // the specified delay. Note the use of a NSTimer
+    // instead of the blocking  [NSThread sleepForTimeInterval]
+    // That is to allow background processing to still continue
+    // and the [timeout] event to eventually be fired by the
+    // AFHTTPRequestOperation.
+    // The blocking issue with [NSThread] was more prominent on iOS 5 but
+    // not on iOS 6, probably by changed internal semantincs on that version.
+    [NSTimer scheduledTimerWithTimeInterval:sDelay target:self
+                                       selector:@selector(finish) userInfo:nil repeats:NO];
+}
 
-	id<NSURLProtocolClient> client = [self client];
-	
+- (void)finish {
+    id<NSURLProtocolClient> client = [self client];
+    
 	if(sResponseData) {
-		NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:[request URL]
+		NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:[[self request] URL]
 																  statusCode:sStatusCode
 																headerFields:sHeaders
 																 requestTime:0.0];
 		
-        // simulate delay in response (if set)
-        [NSThread sleepForTimeInterval:sDelay];
-        
 		[client URLProtocol:self didReceiveResponse:response cacheStoragePolicy:NSURLCacheStorageNotAllowed];
 		[client URLProtocol:self didLoadData:sResponseData];
 		[client URLProtocolDidFinishLoading:self];
-	} else if(sError) {
+    } else if(sError) {
 		[client URLProtocol:self didFailWithError:sError];
 	}
 }
