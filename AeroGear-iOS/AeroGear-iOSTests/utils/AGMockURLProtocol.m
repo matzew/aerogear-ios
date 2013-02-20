@@ -34,12 +34,12 @@ static NSTimeInterval sDelay = 0;
 @implementation AGMockURLProtocol
 
 + (BOOL)canInitWithRequest:(NSURLRequest*)request {
-	return [[[request URL] scheme] isEqualToString:@"http"] ||
-           [[[request URL] scheme] isEqualToString:@"https"] ;
+    return [[[request URL] scheme] isEqualToString:@"http"] ||
+        [[[request URL] scheme] isEqualToString:@"https"] ;
 }
 
 + (NSURLRequest*)canonicalRequestForRequest:(NSURLRequest*)request {
-	return request;
+    return request;
 }
 
 + (void)setResponseData:(NSData*)data {
@@ -77,7 +77,7 @@ static NSTimeInterval sDelay = 0;
 }
 
 - (NSCachedURLResponse*)cachedResponse {
-	return nil;
+    return nil;
 }
 
 + (NSString*)methodCalled {
@@ -96,24 +96,24 @@ static NSTimeInterval sDelay = 0;
     // The blocking issue with [NSThread] was more prominent on iOS 5 but
     // not on iOS 6, probably by changed internal semantincs on that version.
     [NSTimer scheduledTimerWithTimeInterval:sDelay target:self
-                                       selector:@selector(finish) userInfo:nil repeats:NO];
+                                   selector:@selector(finish) userInfo:nil repeats:NO];
 }
 
 - (void)finish {
     id<NSURLProtocolClient> client = [self client];
     
-	if(sResponseData) {
-		NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:[[self request] URL]
-																  statusCode:sStatusCode
-																headerFields:sHeaders
-																 requestTime:0.0];
+    if(sResponseData) {
+        NSHTTPURLResponse *response = [[NSHTTPURLResponse alloc] initWithURL:[[self request] URL]
+                                                                  statusCode:sStatusCode
+                                                                headerFields:sHeaders
+                                                                 requestTime:0.0];
 		
-		[client URLProtocol:self didReceiveResponse:response cacheStoragePolicy:NSURLCacheStorageNotAllowed];
-		[client URLProtocol:self didLoadData:sResponseData];
-		[client URLProtocolDidFinishLoading:self];
+        [client URLProtocol:self didReceiveResponse:response cacheStoragePolicy:NSURLCacheStorageNotAllowed];
+        [client URLProtocol:self didLoadData:sResponseData];
+        [client URLProtocolDidFinishLoading:self];
     } else if(sError) {
-		[client URLProtocol:self didFailWithError:sError];
-	}
+        [client URLProtocol:self didFailWithError:sError];
+    }
 }
 
 - (void)stopLoading {
