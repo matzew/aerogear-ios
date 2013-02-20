@@ -277,6 +277,7 @@
 }
 
 -(void) cancel {
+    // passing "nil" will cancel all running http operations
     [_restClient cancelAllHTTPOperationsWithMethod:nil path:_URL.path];
 }
 
