@@ -17,6 +17,8 @@
 
 #import "AGHttpClient.h"
 
+// useful macro to check iOS version
+#define SYSTEM_VERSION_LESS_THAN(v) ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
 @implementation AGHttpClient {
     // secs before a request timeouts (alternative name for primitive "double")
@@ -49,6 +51,38 @@
     return self;
 }
 
+// override to manual schedule a timeout event.
+// This is because for version of iOS < 6, if the timeout interval(for POST requests)
+// is less than 240 secs, the interval is ignored.
+// see https://devforums.apple.com/thread/25282?start=0&tstart=0
+- (void)postPath:(NSString *)path
+      parameters:(NSDictionary *)parameters
+         success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
+         failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure {
+    
+    [super postPath:path parameters:parameters success:success failure:failure];
+    
+    if (SYSTEM_VERSION_LESS_THAN(@"6.0")) {
+        [NSTimer scheduledTimerWithTimeInterval:_interval target:self selector:@selector(timeOut:) userInfo:failure repeats:NO];
+    }
+}
+
+// override to manual schedule a timeout event.
+// This is because for version of iOS < 6, if the timeout interval(for PUT requests)
+// is less than 240 secs, the interval is ignored.
+// see https://devforums.apple.com/thread/25282?start=0&tstart=0
+- (void)putPath:(NSString *)path
+     parameters:(NSDictionary *)parameters
+        success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
+        failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure {
+ 
+    [super putPath:path parameters:parameters success:success failure:failure];
+    
+    if (SYSTEM_VERSION_LESS_THAN(@"6.0")) {
+        [NSTimer scheduledTimerWithTimeInterval:_interval target:self selector:@selector(timeOut:) userInfo:failure repeats:NO];
+    }
+}
+
 // override to not handle the cookies and to add a request timeout interval
 - (NSMutableURLRequest *)requestWithMethod:(NSString *)method
                                       path:(NSString *)path
@@ -64,6 +98,25 @@
     [req setHTTPShouldHandleCookies:NO];
 
     return req;
+}
+
+// called when a timeout occurs
+- (void)timeOut:(NSTimer *)timer {
+    
+    [self cancelAllHTTPOperationsWithMethod:nil path:self.baseURL.path];
+    
+    // extract failure block for timer
+    void (^failure)(AFHTTPRequestOperation *operation, NSError *error) = [timer userInfo];
+   
+    // construct "request time out" error
+    NSError* error = [NSError errorWithDomain:NSURLErrorDomain
+                                         code:-1001
+                                     userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"The request timed out.",
+                                               NSLocalizedDescriptionKey, nil]];
+
+    dispatch_async(dispatch_get_main_queue(), ^{
+        failure(nil, error);
+    });
 }
 
 @end
