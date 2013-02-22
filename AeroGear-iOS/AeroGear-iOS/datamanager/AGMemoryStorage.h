@@ -29,7 +29,7 @@
 +(id) storeWithConfig:(id<AGStoreConfig>) storeConfig;
 -(id) initWithConfig:(id<AGStoreConfig>) storeConfig;
 
--(void) raiseError:(NSString*) domain
-               msg:(NSString*) msg
-           failure:(void (^)(NSError *error))failure;
+-(NSError *) constructError:(NSString*) domain
+                        msg:(NSString*) msg;
+
 @end

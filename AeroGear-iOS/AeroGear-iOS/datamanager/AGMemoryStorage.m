@@ -47,224 +47,140 @@
 // ======== public API (AGStore) ========
 // =====================================================
 
--(void) readAll:(void (^)(NSArray* objects))success
-        failure:(void (^)(NSError *error))failure {
-    
+-(NSArray*) readAll {
     // TODO: delegate to filter???
-
-
-    @try {
-        if (success) {
-            // pass along all the data...
-            success(_array);
-        }
-    }
-    @catch (NSException *exception) {
-        if (failure) {
-            // TODO: better Error...
-            failure(nil);
-        }
-    }
-    
+    return _array;
 }
 
--(void) read:(id) recordId
-     success:(void (^)(id object))success
-     failure:(void (^)(NSError *error))failure {
-    
+-(id) read:(id)recordId {
     id retVal;
     
-    @try {
-        for (id record in _array) {
-            // check the 'id':
-            if ([[record objectForKey:_recordId] isEqual:recordId]) {
-                // replace/update it:
-                retVal = record;
-                break;
-            }
+    for (id record in _array) {
+        // check the 'id':
+        if ([[record objectForKey:_recordId] isEqual:recordId]) {
+            // replace/update it:
+            retVal = record;
+            break;
         }
     }
-    @catch (NSException *exception) {
-        if (failure) {
-            // TODO: better Error...
-            failure(nil);
-        }
-    }
-    @finally {
-        if (success) {
-            success(retVal);
-        }
-    }
+    
+    return retVal;
 }
 
--(void) filter:(id)filterObject
-       success:(void (^)(NSArray* objects))success
-       failure:(void (^)(NSError *error))failure {
-    
+-(NSArray*) filter:(id)filterObject {
     // TODO........
-    
+    return nil;
 }
 
--(void) save:(id) data
-     success:(void (^)(id object))success
-     failure:(void (^)(NSError *error))failure {
-    
+-(BOOL) save:(id)data error:(NSError**)error {
     // a 'collection' of objects:
     if ([data isKindOfClass:[NSArray class]]) {
 
-        @try {
-            
-            // check if the array contains non-dictionary objects
-            // if yes fail fast
-            for (id record in data) {
-                if (![record isKindOfClass:[NSDictionary class]])
-                    [self raiseError:@"save" msg:@"array contains non-dictionary objects!" failure:failure];
-            }
- 
-            for (id record in data) {
-                // we pass in NO success block/callback
-                [self saveOne:record success:nil failure:failure];
+        // fail fast if the array contains non-dictionary objects
+        for (id record in data) {
+            if (![record isKindOfClass:[NSDictionary class]]) {
+                
+                if (error) {
+                    *error = [self constructError:@"save" msg:@"array contains non-dictionary objects!"];
+                    return false;
+                }
             }
         }
-        @catch (NSException *exception) {
-            // should be handles inside of the [saveOne];
+
+        for (id record in data) {
+            [self saveOne:record];
         }
-        @finally {
-            if (success) {
-                // once ALL data is stored, we invoke the callback:
-                success(data);
-            }
-        }
-        
+       
     } else if([data isKindOfClass:[NSDictionary class]]) {
         // single obj:
-        [self saveOne:data success:success failure:failure];
+        [self saveOne:data];
 
     } else { // not a dictionary, fail back
-        [self raiseError:@"save" msg:@"dictionary objects are supported only" failure:failure];
+        if (error) {
+            *error = [self constructError:@"save" msg:@"dictionary objects are supported only"];
+            return NO;
+        }
     }
-    
+
+    return YES;
 }
 
 //private save for one item:
--(void) saveOne:(NSDictionary*) data
-     success:(void (^)(id object))success
-     failure:(void (^)(NSError *error))failure {
+-(void) saveOne:(NSDictionary*)data {
+    // does the record already exist ?
+    BOOL _objFound = NO;
     
-    
-    @try {
-        
-        // does the record already exist ?
-        BOOL _objFound = NO;
-        for (id record in _array) {
-            // check the 'id':
-            if ([[record objectForKey:_recordId] isEqual:[data objectForKey:_recordId]]) {
-                // replace/update it:
-                NSUInteger index = [_array indexOfObject:record];
-                [_array removeObjectAtIndex:index];
-                [_array addObject:data];
-                //
-                _objFound = YES;
-                break;
-            }
-        }
-
-        if (!_objFound) {
-            // if the object hasnt' set a recordId property
-            if ([data objectForKey:_recordId] == nil) {
-                //generate a UIID to be used as this object recordId
-                CFUUIDRef uuid = CFUUIDCreate(NULL);
-                NSString *uuidStr = (__bridge_transfer NSString *)CFUUIDCreateString(NULL, uuid);
-                CFRelease(uuid);
-                
-                [data setValue:uuidStr forKey:_recordId];
-            }
-            
-            // add it to our list
+    for (id record in _array) {
+        // check the 'id':
+        if ([[record objectForKey:_recordId] isEqual:[data objectForKey:_recordId]]) {
+            // replace/update it:
+            NSUInteger index = [_array indexOfObject:record];
+            [_array removeObjectAtIndex:index];
             [_array addObject:data];
-        }
-        
-        
-    }
-    @catch (NSException *exception) {
-        if (failure) {
-            // TODO: better Error...
-            failure(nil);
+            //
+            _objFound = YES;
+            break;
         }
     }
-    @finally {
-        if (success) {
-            success(data);
+
+    if (!_objFound) {
+        // if the object hasnt' set a recordId property
+        if ([data objectForKey:_recordId] == nil) {
+            //generate a UIID to be used as this object recordId
+            CFUUIDRef uuid = CFUUIDCreate(NULL);
+            NSString *uuidStr = (__bridge_transfer NSString *)CFUUIDCreateString(NULL, uuid);
+            CFRelease(uuid);
+            
+            [data setValue:uuidStr forKey:_recordId];
         }
+        
+        // add it to our list
+        [_array addObject:data];
     }
 }
 
--(void) reset:(void (^)())success
-      failure:(void (^)(NSError *error))failure {
+-(BOOL) reset:(NSError**)error {
+    [_array removeAllObjects];
     
-    @try {
-        [_array removeAllObjects];
-    }
-    @catch (NSException *exception) {
-        if (failure) {
-            // TODO: better Error...
-            failure(nil);
-        }
-    }
-    @finally {
-        if (success) {
-            success();
-        }
-    }
-    
-    
+    return YES;
 }
 
--(void) remove:(id) record
-       success:(void (^)(id object))success
-       failure:(void (^)(NSError *error))failure {
-
-    // when null is provided we try to invoke the failure block
+-(BOOL) remove:(id)record error:(NSError**)error {
+    // check if null is provided and throw error
     if (record == nil || [record isKindOfClass:[NSNull class]]) {
-        [self raiseError:@"remove" msg:@"object was nil" failure:failure];
-        // do nothing
-        return;
+        
+        if (error) {
+            *error = [self constructError:@"remove" msg:@"object was nil"];
+            // do nothing
+            return FALSE;
+        }
     }
-    
     
     id objectKey = [record objectForKey:_recordId];
     // we need to check if the map representation contains the "recordID" and its value is actually set:
     if (objectKey == nil || [objectKey isKindOfClass:[NSNull class]]) {
-        [self raiseError:@"remove" msg:@"recordId not set" failure:failure];
-        // do nothing
-        return;
+        
+        if (error) {
+            *error = [self constructError:@"remove" msg:@"recordId not set"];
+            // do nothing
+            return FALSE;
+        }
     }
 
     id objectToDelete;
     
-    @try {
-        for (id item in _array) {
-            // check the 'id':
-            if ([[item objectForKey:_recordId] isEqual:objectKey]) {
-                // replace/update it:
-                objectToDelete = item;
-                NSUInteger index = [_array indexOfObject:item];
-                [_array removeObjectAtIndex:index];
-                break;
-            }
+    for (id item in _array) {
+        // check the 'id':
+        if ([[item objectForKey:_recordId] isEqual:objectKey]) {
+            // replace/update it:
+            objectToDelete = item;
+            NSUInteger index = [_array indexOfObject:item];
+            [_array removeObjectAtIndex:index];
+            break;
         }
     }
-    @catch (NSException *exception) {
-        if (failure) {
-            // TODO: better Error...
-            failure(nil);
-        }
-    }
-    @finally {
-        if (success) {
-            success(objectToDelete);
-        }
-    }
+        
+    return YES;
 }
 
 -(NSString *) description {
@@ -275,19 +191,15 @@
 // =========== private utility methods  ================
 // =====================================================
 
--(void) raiseError:(NSString*) domain
-               msg:(NSString*) msg
-           failure:(void (^)(NSError *error))failure {
-    
-    if (!failure)
-        return;
+-(NSError *) constructError:(NSString*) domain
+                       msg:(NSString*) msg {
     
     NSError* error = [NSError errorWithDomain:[NSString stringWithFormat:@"org.aerogear.stores.%@", domain]
                                          code:0
                                      userInfo:[NSDictionary dictionaryWithObjectsAndKeys:msg,
                                                NSLocalizedDescriptionKey, nil]];
     
-    failure(error);
+    return error;
 }
 
 @end

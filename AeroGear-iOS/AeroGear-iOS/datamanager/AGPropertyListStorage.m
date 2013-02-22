@@ -58,54 +58,54 @@
 // ======== public API (AGStore) ========
 // =====================================================
 
--(void) save:(id) data
-     success:(void (^)(id object))success
-     failure:(void (^)(NSError *error))failure {
+-(BOOL) save:(id)data error:(NSError**)error {
+    
+    BOOL success = [super save:data error:error];
+    
+    if (!success)
+        return FALSE;
 
-    [super save:data success:^(id object) {
-        BOOL saved = [_array writeToFile:_file atomically:YES];
-        
-        if (saved) {
-            if (success)
-                success(object);
-        } else {
-            [self raiseError:@"save" msg:@"error on save" failure:failure];
+    if (![_array writeToFile:_file atomically:YES]) {
+        if (error) {
+            *error = [self constructError:@"save" msg:@"error on save"];
+            return FALSE;
         }
-        
-    } failure:failure];
+    }
+    
+    return YES;
 }
 
--(void) reset:(void (^)())success
-      failure:(void (^)(NSError *error))failure {
+-(BOOL) reset:(NSError**)error {
+    BOOL success = [super reset:error];
     
-    [super reset:^{
-        BOOL saved = [_array writeToFile:_file atomically:YES];
-        
-        if (saved) {
-            if (success)
-                success();
-        } else {
-            [self raiseError:@"reset" msg:@"error on reset" failure:failure];
+    if (!success)
+        return FALSE;
+    
+    if (![_array writeToFile:_file atomically:YES]) {
+        if (error) {
+            *error = [self constructError:@"reset" msg:@"error on reset"];
+            return FALSE;
         }
-        
-    } failure:failure];
+    }
+    
+    return YES;
 }
 
--(void) remove:(id) record
-       success:(void (^)(id object))success
-       failure:(void (^)(NSError *error))failure {
+-(BOOL) remove:(id)record error:(NSError**)error {
     
-    [super remove:record success:^(id object) {
-        BOOL saved = [_array writeToFile:_file atomically:YES];
-        
-        if (saved) {
-            if (success)
-                success(object);
-        } else {
-            [self raiseError:@"remove" msg:@"error on remove" failure:failure];
+    BOOL success = [super remove:record error:error];
+    
+    if (!success)
+        return FALSE;
+    
+    if (![_array writeToFile:_file atomically:YES]) {
+        if (error) {
+            *error = [self constructError:@"remove" msg:@"error on remove"];
+            return FALSE;
         }
-
-    } failure:failure];
+    }
+    
+    return YES;
 }
 
 // =====================================================

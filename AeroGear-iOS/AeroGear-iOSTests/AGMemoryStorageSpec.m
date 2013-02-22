@@ -43,12 +43,8 @@ describe(@"AGMemoryStorage", ^{
             
             NSMutableDictionary* user1 = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"Matthias",@"name",@"0",@"id", nil];
             
-            [memStore save:user1 success:^(id object) {
-                
-                [object shouldNotBeNil];
-                
-            } failure:nil];
-            
+            BOOL success = [memStore save:user1 error:nil];
+            [[theValue(success) should] equal:theValue(YES)];
             
         });
         
@@ -57,58 +53,45 @@ describe(@"AGMemoryStorage", ^{
             NSMutableDictionary* user1 = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"Matthias",@"name",@"0",@"id", nil];
 
             // store it
-            [memStore save:user1 success:^(id object) {
-                [object shouldNotBeNil];
-            } failure:nil];
+            BOOL success = [memStore save:user1 error:nil];
+            [[theValue(success) should] equal:theValue(YES)];
 
             // read it
-            [memStore read:@"0" success:^(id object) {
-                [[[object objectForKey:@"name"] should] equal:@"Matthias"];
-            } failure:^(NSError *error) {
-                // todo
-            }];
+            NSMutableDictionary* object = [memStore read:@"0"];
+            [[[object objectForKey:@"name"] should] equal:@"Matthias"];
         });
 
         it(@"should read an object _after_ storing it (using readAll)", ^{
             
             NSMutableDictionary* user1 = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"Matthias",@"name",@"0815",@"id", nil];
             
-            // store it
-            [memStore save:user1 success:^(id object) {
-                [object shouldNotBeNil];
-            } failure:nil];
-            
+            BOOL success = [memStore save:user1 error:nil];
+            [[theValue(success) should] equal:theValue(YES)];
+
             // read it
-            [memStore readAll:^(NSArray *objects) {
-                [[objects should] haveCountOf:(NSUInteger)1];
-                [[objects should] containObjects:user1, nil];
-                
-                [[[[objects objectAtIndex:(NSUInteger)0] objectForKey:@"name"] should] equal:@"Matthias"];
-                [[[[objects objectAtIndex:(NSUInteger)0] objectForKey:@"id"] should] equal:@"0815"];
-                
-            } failure:^(NSError *error) {
-                
-            }];
+            NSArray* objects = [memStore readAll];
+            
+            [[objects should] haveCountOf:(NSUInteger)1];
+            [[objects should] containObjects:user1, nil];
+            
+            [[[[objects objectAtIndex:(NSUInteger)0] objectForKey:@"name"] should] equal:@"Matthias"];
+            [[[[objects objectAtIndex:(NSUInteger)0] objectForKey:@"id"] should] equal:@"0815"];
         });
         
         
         it(@"should read nothing out of an empty store", ^{
+
+            // read it
+            NSArray* objects = [memStore readAll];
             
-            [memStore readAll:^(NSArray *objects) {
-                [[objects should] beEmpty];
-            } failure:^(NSError *error) {
-                // todo
-            }];
+            [[objects should] beEmpty];
         });
         
         it(@"should read not object out of an empty store", ^{
             
-            [memStore read:@"someId" success:^(id object) {
-                [object shouldBeNil];
-            } failure:^(NSError *error) {
-                // todo
-            }];
+            NSMutableDictionary *object = [memStore read:@"someId"];
             
+            [object shouldBeNil];
         });
         
         it(@"should read and save multiple objects", ^{
@@ -120,19 +103,16 @@ describe(@"AGMemoryStorage", ^{
             NSArray* users = [NSArray arrayWithObjects:user1, user2, user3, nil];
             
             // store it
-            [memStore save:users success:^(id object) {
-                [object shouldNotBeNil];
-            } failure:nil];
+            BOOL success = [memStore save:users error:nil];
+            [[theValue(success) should] equal:theValue(YES)];
             
             // read it
-            [memStore readAll:^(NSArray *objects) {
-                [[objects should] haveCountOf:(NSUInteger)3];
-                [[objects should] containObjects:user1, nil];
-                [[objects should] containObjects:user2, nil];
-                [[objects should] containObjects:user3, nil];
-            } failure:^(NSError *error) {
-                
-            }];
+            NSArray* objects = [memStore readAll];
+
+            [[objects should] haveCountOf:(NSUInteger)3];
+            [[objects should] containObjects:user1, nil];
+            [[objects should] containObjects:user2, nil];
+            [[objects should] containObjects:user3, nil];
         });
         
         it(@"should read nothing after reset", ^{
@@ -142,36 +122,29 @@ describe(@"AGMemoryStorage", ^{
             NSMutableDictionary* user3 = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"qmx",@"name",@"5",@"id", nil];
             
             NSArray* users = [NSArray arrayWithObjects:user1, user2, user3, nil];
+
+            NSArray* objects;
+            BOOL success;
             
             // store it
-            [memStore save:users success:^(id object) {
-                [object shouldNotBeNil];
-            } failure:nil];
+            success = [memStore save:users error:nil];
+            [[theValue(success) should] equal:theValue(YES)];
             
             // read it
-            [memStore readAll:^(NSArray *objects) {
-                [[objects should] haveCountOf:(NSUInteger)3];
-                [[objects should] containObjects:user1, nil];
-                [[objects should] containObjects:user2, nil];
-                [[objects should] containObjects:user3, nil];
-            } failure:^(NSError *error) {
-                
-            }];
+            objects = [memStore readAll];
+            [[objects should] haveCountOf:(NSUInteger)3];
+            [[objects should] containObjects:user1, nil];
+            [[objects should] containObjects:user2, nil];
+            [[objects should] containObjects:user3, nil];
+
             
-            
-            [memStore reset:^{
-                // nope...
-            } failure:^(NSError *error) {
-                // todo..
-            }];
-            
+            success = [memStore reset:nil];
+            [[theValue(success) should] equal:theValue(YES)];
             
             // read from the empty store...
-            [memStore readAll:^(NSArray *objects) {
-                [[objects should] haveCountOf:(NSUInteger)0];
-            } failure:^(NSError *error) {
-                
-            }];
+            objects = [memStore readAll];
+            
+            [[objects should] haveCountOf:(NSUInteger)0];
         });
         
         it(@"should be able to do bunch of read, save, reset operations", ^{
@@ -182,117 +155,86 @@ describe(@"AGMemoryStorage", ^{
             
             NSArray* users = [NSArray arrayWithObjects:user1, user2, user3, nil];
             
+            NSArray* objects;
+
+            BOOL success;
+            
             // store it
-            [memStore save:users success:^(id object) {
-                [object shouldNotBeNil];
-            } failure:nil];
+            success = [memStore save:users error:nil];
+            [[theValue(success) should] equal:theValue(YES)];
             
             // read it
-            [memStore readAll:^(NSArray *objects) {
-                [[objects should] haveCountOf:(NSUInteger)3];
-                [[objects should] containObjects:user1, nil];
-                [[objects should] containObjects:user2, nil];
-                [[objects should] containObjects:user3, nil];
-            } failure:^(NSError *error) {
-                
-            }];
-            
-            
-            [memStore reset:^{
-                // nope...
-            } failure:^(NSError *error) {
-                // todo..
-            }];
-            
+            objects = [memStore readAll];
+            [[objects should] haveCountOf:(NSUInteger)3];
+            [[objects should] containObjects:user1, nil];
+            [[objects should] containObjects:user2, nil];
+            [[objects should] containObjects:user3, nil];
+        
+            success = [memStore reset:nil];
             
             // read from the empty store...
-            [memStore readAll:^(NSArray *objects) {
-                [[objects should] haveCountOf:(NSUInteger)0];
-            } failure:^(NSError *error) {
-                
-            }];
-            
-            
+            objects = [memStore readAll];
+            [[objects should] haveCountOf:(NSUInteger)0];
+
             // store it again...
-            [memStore save:users success:^(id object) {
-                [object shouldNotBeNil];
-            } failure:nil];
+            success = [memStore save:users error:nil];
+            [[theValue(success) should] equal:theValue(YES)];
             
             // read it again ...
-            [memStore readAll:^(NSArray *objects) {
-                [[objects should] haveCountOf:(NSUInteger)3];
-                [[objects should] containObjects:user1, nil];
-                [[objects should] containObjects:user2, nil];
-                [[objects should] containObjects:user3, nil];
-            } failure:^(NSError *error) {
-                
-            }];
+            objects = [memStore readAll];
+            [[objects should] haveCountOf:(NSUInteger)3];
+            [[objects should] containObjects:user1, nil];
+            [[objects should] containObjects:user2, nil];
+            [[objects should] containObjects:user3, nil];
         });
         
         it(@"should not read a remove object", ^{
             
             NSMutableDictionary* user1 = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"Matthias",@"name",@"0",@"id", nil];
             
-            // store it
-            [memStore save:user1 success:^(id object) {
-                [object shouldNotBeNil];
-            } failure:nil];
+            BOOL success;
             
+            success = [memStore save:user1 error:nil];
+            [[theValue(success) should] equal:theValue(YES)];
+
             // read it
-            [memStore read:@"0" success:^(id object) {
-                [[[object objectForKey:@"name"] should] equal:@"Matthias"];
-            } failure:^(NSError *error) {
-                // todo
-            }];
-            
-            
+            NSMutableDictionary *object = [memStore read:@"0"];
+            [[[object objectForKey:@"name"] should] equal:@"Matthias"];
+
             // remove the above user:
-            [memStore remove:user1 success:^(id object) {
-                [[object should] equal:user1];
-            } failure:^(NSError *error) {
-                // todo
-            }];
+            success = [memStore remove:user1 error:nil];
+            [[theValue(success) should] equal:theValue(YES)];
             
             // read from the empty store...
-            [memStore readAll:^(NSArray *objects) {
-                [[objects should] haveCountOf:(NSUInteger)0];
-            } failure:^(NSError *error) {
-                
-            }];
-            
+            NSArray* objects = [memStore readAll];
+            [[objects should] haveCountOf:(NSUInteger)0];
         });
         
         it(@"should not remove non-existing object", ^{
             
             NSMutableDictionary* user1 = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"Matthias",@"name",@"0",@"id", nil];
             
-            // store it
-            [memStore save:user1 success:^(id object) {
-                [object shouldNotBeNil];
-            } failure:nil];
+            BOOL success;
+            
+            success = [memStore save:user1 error:nil];
+            [[theValue(success) should] equal:theValue(YES)];
+
             
             // read it
-            [memStore read:@"0" success:^(id object) {
-                [[[object objectForKey:@"name"] should] equal:@"Matthias"];
-            } failure:^(NSError *error) {
-                // todo
-            }];
+            NSMutableDictionary *object = [memStore read:@"0"];
+            [[[object objectForKey:@"name"] should] equal:@"Matthias"];
+
             
             NSMutableDictionary* user2 = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"Matthias",@"name",@"1",@"id", nil];
+
             // remove the user with the id '1':
-            [memStore remove:user2 success:^(id object) {
-                [object shouldBeNil];
-            } failure:^(NSError *error) {
-                // todo
-            }];
-            
+            success = [memStore remove:user2 error:nil];
+            [[theValue(success) should] equal:theValue(YES)];
+
             // should contain the first object
-            [memStore readAll:^(NSArray *objects) {
-                [[objects should] haveCountOf:(NSUInteger)1];
-            } failure:^(NSError *error) {
-                
-            }];
+            NSArray* objects = [memStore readAll];
             
+            [[objects should] haveCountOf:(NSUInteger)1];
         });
 
     });

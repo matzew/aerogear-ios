@@ -30,97 +30,56 @@
 /**
  * Reads all the data from the underlying storage system.
  *
- * @param success A block object to be executed when the operation finishes successfully.
- * This block has no return value and takes one argument: A collection (NSArray), containing all stored
- * objects.
- *
- * @param failure A block object to be executed when the operation finishes unsuccessfully.
- * This block has no return value and takes one argument: The `NSError` object describing
- * the error that occurred.
+ * @return A collection (NSArray), containing all stored objects.
  */
--(void) readAll:(void (^)(NSArray* objects))success
-        failure:(void (^)(NSError *error))failure;
+-(NSArray*) readAll;
 
 /**
  * Reads a specific object/record from the underlying storage system.
  *
- * @param recordId id from the desired object
+ * @param recordId id from the desired object.
  *
- * @param success A block object to be executed when the operation finishes successfully.
- * This block has no return value and takes one argument: The object (or nil) read from the
- * underlying storage.
- *
- * @param failure A block object to be executed when the operation finishes unsuccessfully.
- * This block has no return value and takes one argument: The `NSError` object describing
- * the error that occurred.
+ * @return The object (or nil) read from the underlying storage.
  */
--(void) read:(id) recordId
-     success:(void (^)(id object))success
-     failure:(void (^)(NSError *error))failure;
+-(id) read:(id)recordId;
 
 /**
  * Reads all, based on a filter, from the underlying storage system.
  *
  * @param filterObject the filter criteria.
  *
- * @param success A block object to be executed when the operation finishes successfully.
- * This block has no return value and takes one argument: A collection (NSArray), containing all stored
- * objects, matching the given filter. The argument is nil, if nothing matches the criteria.
- *
- * @param failure A block object to be executed when the operation finishes unsuccessfully.
- * This block has no return value and takes one argument: The `NSError` object describing
- * the error that occurred.
+ * @return A collection (NSArray), containing all stored objects, matching the given filter.
+ * The argument is nil, if nothing matches the criteria.
  */
--(void) filter:(id)filterObject
-       success:(void (^)(NSArray* objects))success
-       failure:(void (^)(NSError *error))failure;
-
+-(NSArray*) filter:(id)filterObject;
 
 /**
  * Saves the given object in the underlying storage system.
  *
  * @param data An object or a collection (e.g. NSArray) which is being persisted.
+ * @param An error object containing details of why the save failed. 
  *
- * @param success A block object to be executed when the operation finishes successfully.
- * This block has no return value and takes one argument: The object that has been stored.
- *
- * @param failure A block object to be executed when the operation finishes unsuccessfully.
- * This block has no return value and takes one argument: The `NSError` object describing
- * the error that occurred.
+ * @return YES if the operation succeeds, otherwise NO.
  */
--(void) save:(id) data
-     success:(void (^)(id object))success
-     failure:(void (^)(NSError *error))failure;
-
+-(BOOL) save:(id)data error:(NSError**)error;
 
 /**
  * Resets the entire storage system.
  *
- * @param success A block object to be executed when the operation finishes successfully.
- * This block has no return value and takes no argument.
+ * @param An error object containing details of why the reset failed.
  *
- * @param failure A block object to be executed when the operation finishes unsuccessfully.
- * This block has no return value and takes one argument: The `NSError` object describing
- * the error that occurred.
+ * @return YES if the operation succeeds, otherwise NO.
  */
--(void) reset:(void (^)())success
-      failure:(void (^)(NSError *error))failure;
-
+-(BOOL) reset:(NSError**)error;
 
 /**
  * Removes a specific object/record from the underlying storage system.
  *
  * @param record the desired object
+ * @param An error object containing details of why the remove failed.
  *
- * @param success A block object to be executed when the operation finishes successfully.
- * This block has no return value and takes one argument: The object that has been removed.
- *
- * @param failure A block object to be executed when the operation finishes unsuccessfully.
- * This block has no return value and takes one argument: The `NSError` object describing
- * the error that occurred.
+ * @return YES if the operation succeeds, otherwise NO.
  */
--(void) remove:(id) record
-       success:(void (^)(id object))success
-       failure:(void (^)(NSError *error))failure;
+-(BOOL) remove:(id)record error:(NSError**)error;
 
 @end

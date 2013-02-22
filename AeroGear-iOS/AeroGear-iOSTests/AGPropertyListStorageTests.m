@@ -42,7 +42,7 @@
     // remove all elements from the store
     // so next test starts fresh
     AGPropertyListStorage* plistStore = [AGPropertyListStorage storeWithConfig:_config];
-    [plistStore reset:nil failure:nil];
+    [plistStore reset:nil];
 }
 
 -(void) testSaveAndRead{
@@ -56,21 +56,16 @@
     plistStore = [AGPropertyListStorage storeWithConfig:_config];
     
     // save object
-    [plistStore save:user success:^(id object) {
-        STAssertNotNil(object, @"object should not be nil");
-    } failure:^(NSError *error) {
-        STFail(@"save should not fail");
-    }];
+    BOOL success = [plistStore save:user error:nil];
+    STAssertTrue(success, @"save should have succeeded");
     
+
     // reload store
     plistStore = [AGPropertyListStorage storeWithConfig:_config];
     
     // read it
-    [plistStore read:@"0" success:^(id object) {
-        STAssertEqualObjects(@"Robert", [object valueForKey:@"name"], @"should be equal");
-    } failure:^(NSError *error) {
-        STFail(@"read should not fail");
-    }];
+    NSMutableDictionary *readSaved = [plistStore read:@"0"];
+    STAssertEqualObjects(@"Robert", [readSaved valueForKey:@"name"], @"should be equal");
 }
 
 -(void) testSaveAndRemoveAndRead{
@@ -81,40 +76,29 @@
     
     plistStore = [AGPropertyListStorage storeWithConfig:_config];
 
+    BOOL success;
+    
     //save it
-    [plistStore save:user success:^(id object) {
-        STAssertNotNil(object, @"object should not be nil");
-        
-    } failure:^(NSError *error) {
-        STFail(@"save should not fail");
-    }];
+    success = [plistStore save:user error:nil];
+    STAssertTrue(success, @"save should have succeeded");
     
     // reload store
     plistStore = [AGPropertyListStorage storeWithConfig:_config];
 
     // read it
-    [plistStore read:@"0" success:^(id object) {
-        STAssertEqualObjects(@"Robert", [object valueForKey:@"name"], @"should be equal");
-    } failure:^(NSError *error) {
-        STFail(@"read should not fail");
-    }];
+    NSMutableDictionary *readSaved = [plistStore read:@"0"];
+    STAssertEqualObjects(@"Robert", [readSaved valueForKey:@"name"], @"should be equal");
     
     // remove it
-    [plistStore remove:user success:^(id object) {
-        STAssertNotNil(object, @"object should not be nil");
-    } failure:^(NSError *error) {
-        STFail(@"remove should not fail");
-    }];
+    success = [plistStore remove:readSaved error:nil];
+    STAssertTrue(success, @"remove should have succeeded");
 
-     // reload store
-     plistStore = [AGPropertyListStorage storeWithConfig:_config];
+    // reload store
+    plistStore = [AGPropertyListStorage storeWithConfig:_config];
     
     // read it
-    [plistStore read:@"0" success:^(id object) {
-        STAssertNil(object, @"object should be nil");
-    } failure:^(NSError *error) {
-        STFail(@"read should not fail");
-    }];
+    NSMutableDictionary* readRemoved = [plistStore read:@"0"];
+    STAssertNil(readRemoved, @"object should be nil");
 }
 
 -(void) testReset {
@@ -130,55 +114,39 @@
 
     plistStore = [AGPropertyListStorage storeWithConfig:_config];
     
-    //save objects
-    [plistStore save:users success:^(id object) {
-        STAssertNotNil(object, @"object should not be nil");
-    } failure:^(NSError *error) {
-        STFail(@"save should not fail");
-    }];
+    BOOL success;
     
+    //save it
+    success = [plistStore save:users error:nil];
+    STAssertTrue(success, @"save should have succeeded");
+
     // reload store
     plistStore = [AGPropertyListStorage storeWithConfig:_config];
 
     // read first object
-    [plistStore read:@"0" success:^(id object) {
-        STAssertNotNil(object, @"object should not be nil");
-    } failure:^(NSError *error) {
-        STFail(@"read should not fail");
-    }];
+    NSMutableDictionary* readFirstObject = [plistStore read:@"0"];
+    STAssertEqualObjects(@"Robert", [readFirstObject valueForKey:@"name"], @"should be equal");
     
-    // reload store
-    plistStore = [AGPropertyListStorage storeWithConfig:_config];
-
     // read second object
-    [plistStore read:@"1" success:^(id object) {
-        STAssertNotNil(object, @"object should not be nil");
-    } failure:^(NSError *error) {
-        STFail(@"read should not fail");
-    }];
+    NSMutableDictionary* readSecondObject = [plistStore read:@"1"];
+    STAssertEqualObjects(@"John", [readSecondObject valueForKey:@"name"], @"should be equal");
     
-    [plistStore reset:nil
-             failure:^(NSError *error) {
-                    STFail(@"reset should not fail");
-             }
-    ];
+    // reset all objects
+    success = [plistStore reset:nil];
+    STAssertTrue(success, @"reset should not have failed");
     
     // reload store
     plistStore = [AGPropertyListStorage storeWithConfig:_config];
 
+    NSMutableDictionary *readRemoved;
+    
     // read first object
-    [plistStore read:@"0" success:^(id object) {
-        STAssertNil(object, @"object should be nil");
-    } failure:^(NSError *error) {
-        STFail(@"read should not fail");
-    }];
+    readRemoved = [plistStore read:@"0"];
+    STAssertNil(readRemoved, @"object should be nil");
     
     // read second object
-    [plistStore read:@"1" success:^(id object) {
-        STAssertNil(object, @"object should be nil");
-    } failure:^(NSError *error) {
-        STFail(@"read should not fail");
-    }];
+    readRemoved = [plistStore read:@"1"];
+    STAssertNil(readRemoved, @"object should be nil");   
 }
 
 -(void)testReadWithEmptyStore {
@@ -186,24 +154,17 @@
     
     plistStore = [AGPropertyListStorage storeWithConfig:_config];
     
-    [plistStore read:@"0" success:^(id object) {
-        STAssertNil(object, @"object should be nil");
-    } failure:^(NSError *error) {
-        STFail(@"read should not fail");
-    }];
+    NSMutableDictionary *user = [plistStore read:@"0"];
+    STAssertNil(user, @"object should be nil");
 }
 
 -(void)testReadAllWithEmptyStore {
-    
     AGPropertyListStorage* plistStore;
     
     plistStore = [AGPropertyListStorage storeWithConfig:_config];
     
-    [plistStore readAll:^(NSArray *objects) {
-        STAssertEquals((NSUInteger)0, [objects count], @"Must be size 0");
-    } failure:^(NSError *error) {
-        STFail(@"readAll should not fail");
-    }];
+    NSArray* objects = [plistStore readAll];
+    STAssertEquals((NSUInteger)0, [objects count], @"Must be size 0");
 }
 
 @end
