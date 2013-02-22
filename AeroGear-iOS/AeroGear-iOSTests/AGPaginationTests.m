@@ -40,7 +40,6 @@ static NSString *const RESPONSE_TWO_ITEMS = @"[{\"id\":1,\"color\":\"black\",\"b
     // register AGFakeURLProtocol to fake HTTP comm.
     [NSURLProtocol registerClass:[AGMockURLProtocol class]];
     [AGMockURLProtocol setStatusCode:200];
-	[AGMockURLProtocol setHeaders:nil];
 	[AGMockURLProtocol setResponseData:nil];
 	[AGMockURLProtocol setError:nil];
     
@@ -61,10 +60,6 @@ static NSString *const RESPONSE_TWO_ITEMS = @"[{\"id\":1,\"color\":\"black\",\"b
 
 -(void)tearDown {
     [NSURLProtocol unregisterClass:[AGMockURLProtocol class]];
-    [AGMockURLProtocol setStatusCode:200];
-	[AGMockURLProtocol setHeaders:nil];
-	[AGMockURLProtocol setResponseData:nil];
-	[AGMockURLProtocol setError:nil];
     
     [super tearDown];
 }

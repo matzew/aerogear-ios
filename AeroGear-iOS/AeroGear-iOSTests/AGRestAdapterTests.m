@@ -42,7 +42,6 @@ static NSString *const PROJECT = @"{\"id\":1,\"title\":\"First Project\",\"style
     // reset any "previous" state from the mocked URLProtocol
     // see AGMockURLProtocol class for more information
     [AGMockURLProtocol setStatusCode:200];
-	[AGMockURLProtocol setHeaders:nil];
 	[AGMockURLProtocol setResponseData:nil];
 	[AGMockURLProtocol setError:nil];
     [AGMockURLProtocol setResponseDelay:0]; // default is immediate response

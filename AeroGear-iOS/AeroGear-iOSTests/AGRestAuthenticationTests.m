@@ -49,7 +49,6 @@ static NSString *const LOGIN_SUCCESS_RESPONSE =  @"{\"username\":\"%@\",\"roles\
     // register AGFakeURLProtocol to fake HTTP comm.
     [NSURLProtocol registerClass:[AGMockURLProtocol class]];
     [AGMockURLProtocol setStatusCode:200];
-	[AGMockURLProtocol setHeaders:nil];
 	[AGMockURLProtocol setResponseData:nil];
 	[AGMockURLProtocol setError:nil];
     
@@ -78,10 +77,6 @@ static NSString *const LOGIN_SUCCESS_RESPONSE =  @"{\"username\":\"%@\",\"roles\
 
 -(void)tearDown {
     [NSURLProtocol unregisterClass:[AGMockURLProtocol class]];
-    [AGMockURLProtocol setStatusCode:200];
-	[AGMockURLProtocol setHeaders:nil];
-	[AGMockURLProtocol setResponseData:nil];
-	[AGMockURLProtocol setError:nil];
     
     _projects = nil;
     _restAuthModule = nil;

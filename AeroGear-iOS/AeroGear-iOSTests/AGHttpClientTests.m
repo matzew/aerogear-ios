@@ -39,7 +39,6 @@ static NSString *const PROJECTS = @"[{\"id\":1,\"title\":\"First Project\",\"sty
     // register AGFakeURLProtocol to fake HTTP comm.
     [NSURLProtocol registerClass:[AGMockURLProtocol class]];
     [AGMockURLProtocol setStatusCode:200];
-	[AGMockURLProtocol setHeaders:nil];
 	[AGMockURLProtocol setResponseData:nil];
 	[AGMockURLProtocol setError:nil];
     
