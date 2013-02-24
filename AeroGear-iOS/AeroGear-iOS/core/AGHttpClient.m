@@ -60,11 +60,14 @@
          success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
          failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure {
     
-    [super postPath:path parameters:parameters success:success failure:failure];
+	NSURLRequest* request = [self requestWithMethod:@"POST" path:path parameters:parameters];
+	AFHTTPRequestOperation* operation = [self HTTPRequestOperationWithRequest:request success:success failure:failure];
     
     if (SYSTEM_VERSION_LESS_THAN(@"6.0")) {
-        [NSTimer scheduledTimerWithTimeInterval:_interval target:self selector:@selector(timeOut:) userInfo:failure repeats:NO];
+        [self scheduleTimeoutHandler:operation failure:failure];
     }
+    
+    [self enqueueHTTPRequestOperation:operation];
 }
 
 // override to manual schedule a timeout event.
@@ -76,11 +79,14 @@
         success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
         failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure {
  
-    [super putPath:path parameters:parameters success:success failure:failure];
-    
+	NSURLRequest* request = [self requestWithMethod:@"PUT" path:path parameters:parameters];
+	AFHTTPRequestOperation* operation = [self HTTPRequestOperationWithRequest:request success:success failure:failure];
+
     if (SYSTEM_VERSION_LESS_THAN(@"6.0")) {
-        [NSTimer scheduledTimerWithTimeInterval:_interval target:self selector:@selector(timeOut:) userInfo:failure repeats:NO];
+        [self scheduleTimeoutHandler:operation failure:failure];
     }
+
+    [self enqueueHTTPRequestOperation:operation];
 }
 
 // override to not handle the cookies and to add a request timeout interval
@@ -100,23 +106,35 @@
     return req;
 }
 
-// called when a timeout occurs
-- (void)timeOut:(NSTimer *)timer {
-    
-    [self cancelAllHTTPOperationsWithMethod:nil path:self.baseURL.path];
-    
-    // extract failure block for timer
-    void (^failure)(AFHTTPRequestOperation *operation, NSError *error) = [timer userInfo];
-   
-    // construct "request time out" error
-    NSError* error = [NSError errorWithDomain:NSURLErrorDomain
-                                         code:-1001
-                                     userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"The request timed out.",
-                                               NSLocalizedDescriptionKey, nil]];
+// =====================================================
+// =========== private utility methods  ================
+// =====================================================
 
-    dispatch_async(dispatch_get_main_queue(), ^{
-        failure(nil, error);
-    });
+// schedule a timer to fire a time out error
+-(void)scheduleTimeoutHandler:(AFHTTPRequestOperation*) operation
+                      failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure {
+    
+    void (^timeout)(void) = ^ {
+        // cancel operation
+        [operation cancel];
+        
+        // construct error
+        NSError* error = [NSError errorWithDomain:NSURLErrorDomain
+                                             code:-1001
+                                         userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"The request timed out.",
+                                                   NSLocalizedDescriptionKey, nil]];
+        // inform client
+        dispatch_async(dispatch_get_main_queue(), ^{
+            failure(operation, error);
+        });
+    };
+    
+    // schedule it
+    [NSTimer scheduledTimerWithTimeInterval:_interval
+                                     target:[NSBlockOperation blockOperationWithBlock:timeout]
+                                   selector:@selector(main)
+                                   userInfo:nil
+                                    repeats:NO];
 }
 
 @end
