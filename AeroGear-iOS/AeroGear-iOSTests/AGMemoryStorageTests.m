@@ -209,40 +209,40 @@
                                     @"name" : @"Robert",
                                     @"city" : @"Boston",
                                     @"department" : @{@"name" : @"Software"},
-                                    @"experience" : @[@{@"language" : @"Java", @"level" : @"advanced",
-                                                        @"language" : @"C", @"level" : @"advanced"}]
+                                    @"experience" : @[@{@"language" : @"Java", @"level" : @"advanced"},
+                                                      @{@"language" : @"C", @"level" : @"advanced"}]
                                   } mutableCopy];
     
     NSMutableDictionary* user2 = [@{@"id" : @"1",
                                     @"name" : @"David",
                                     @"city" : @"Boston",
                                     @"department" : @{@"name" : @"Hardware"},
-                                    @"experience" : @[@{@"language" : @"Java", @"level" : @"intermediate",
-                                                        @"language" : @"C", @"level" : @"advanced"}]
+                                    @"experience" : @[@{@"language" : @"Java", @"level" : @"intermediate"},
+                                                      @{@"language" : @"C", @"level" : @"advanced"}]
                                   } mutableCopy];
 
     NSMutableDictionary* user3 = [@{@"id" : @"2",
                                     @"name" : @"Peter",
                                     @"city" : @"Boston",
                                     @"department" : @{@"name" : @"Software"},
-                                    @"experience" : @[@{@"language" : @"Java", @"level" : @"advanced",
-                                                        @"language" : @"C", @"level" : @"intermediate"}]
+                                    @"experience" : @[@{@"language" : @"Java", @"level" : @"advanced"},
+                                                      @{@"language" : @"C", @"level" : @"intermediate"}]
                                   } mutableCopy];
     
     NSMutableDictionary* user4 = [@{@"id" : @"3",
                                     @"name" : @"John",
                                     @"city" : @"Miami",
                                     @"department" : @{@"name" : @"Software"},
-                                    @"experience" : @[@{@"language" : @"Java", @"level" : @"advanced",
-                                                        @"language" : @"C", @"level" : @"intermediate"}]
+                                    @"experience" : @[@{@"language" : @"Java", @"level" : @"advanced"},
+                                                      @{@"language" : @"C", @"level" : @"intermediate"}]
                                   } mutableCopy];
     
     NSMutableDictionary* user5 = [@{@"id" : @"4",
                                     @"name" : @"Graham",
                                     @"city" : @"Boston",
                                     @"department" : @{@"name" : @"Software"},
-                                    @"experience" : @[@{@"language" : @"Java", @"level" : @"intermediate",
-                                                        @"language" : @"C", @"level" : @"advanced"}]
+                                    @"experience" : @[@{@"language" : @"Java", @"level" : @"intermediate"},
+                                                      @{@"language" : @"C", @"level" : @"advanced"}]
                                   } mutableCopy];
     
     NSArray* users = @[user1, user2, user3, user4, user5];
