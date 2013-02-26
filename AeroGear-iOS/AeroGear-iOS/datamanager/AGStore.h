@@ -46,12 +46,12 @@
 /**
  * Reads all, based on a filter, from the underlying storage system.
  *
- * @param filterObject the filter criteria.
+ * @param predicate The NSPredicate to apply to the data from the underlying storage system.
  *
- * @return A collection (NSArray), containing all stored objects, matching the given filter.
- * The argument is nil, if nothing matches the criteria.
+ * @return A collection (NSArray), containing all stored objects, matching the given predicate.
+ * This method only returns a copy of the data and leaves the underlying storage system intact.
  */
--(NSArray*) filter:(id)filterObject;
+-(NSArray*) filter:(NSPredicate*)predicate;
 
 /**
  * Saves the given object in the underlying storage system.

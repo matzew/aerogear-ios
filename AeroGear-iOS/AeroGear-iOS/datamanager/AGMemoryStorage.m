@@ -67,9 +67,8 @@
     return retVal;
 }
 
--(NSArray*) filter:(id)filterObject {
-    // TODO........
-    return nil;
+-(NSArray*) filter:(NSPredicate*)predicate {
+    return [_array filteredArrayUsingPredicate:predicate];
 }
 
 -(BOOL) save:(id)data error:(NSError**)error {

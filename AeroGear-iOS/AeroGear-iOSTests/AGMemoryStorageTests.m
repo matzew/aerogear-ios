@@ -204,6 +204,72 @@
     STAssertNil(readRemoved, @"object should be nil");
 }
 
+-(void) testFilter {
+    NSMutableDictionary* user1 = [@{@"id" : @"0",
+                                    @"name" : @"Robert",
+                                    @"city" : @"Boston",
+                                    @"department" : @{@"name" : @"Software"},
+                                    @"experience" : @[@{@"language" : @"Java", @"level" : @"advanced",
+                                                        @"language" : @"C", @"level" : @"advanced"}]
+                                  } mutableCopy];
+    
+    NSMutableDictionary* user2 = [@{@"id" : @"1",
+                                    @"name" : @"David",
+                                    @"city" : @"Boston",
+                                    @"department" : @{@"name" : @"Hardware"},
+                                    @"experience" : @[@{@"language" : @"Java", @"level" : @"intermediate",
+                                                        @"language" : @"C", @"level" : @"advanced"}]
+                                  } mutableCopy];
+
+    NSMutableDictionary* user3 = [@{@"id" : @"2",
+                                    @"name" : @"Peter",
+                                    @"city" : @"Boston",
+                                    @"department" : @{@"name" : @"Software"},
+                                    @"experience" : @[@{@"language" : @"Java", @"level" : @"advanced",
+                                                        @"language" : @"C", @"level" : @"intermediate"}]
+                                  } mutableCopy];
+    
+    NSMutableDictionary* user4 = [@{@"id" : @"3",
+                                    @"name" : @"John",
+                                    @"city" : @"Miami",
+                                    @"department" : @{@"name" : @"Software"},
+                                    @"experience" : @[@{@"language" : @"Java", @"level" : @"advanced",
+                                                        @"language" : @"C", @"level" : @"intermediate"}]
+                                  } mutableCopy];
+    
+    NSMutableDictionary* user5 = [@{@"id" : @"4",
+                                    @"name" : @"Graham",
+                                    @"city" : @"Boston",
+                                    @"department" : @{@"name" : @"Software"},
+                                    @"experience" : @[@{@"language" : @"Java", @"level" : @"intermediate",
+                                                        @"language" : @"C", @"level" : @"advanced"}]
+                                  } mutableCopy];
+    
+    NSArray* users = @[user1, user2, user3, user4, user5];
+    
+    // save objects
+    BOOL success = [_memStore save:users error:nil];
+    STAssertTrue(success, @"save should have succeeded");
+    
+    // filter objects
+    NSPredicate* predicate = [NSPredicate
+                              predicateWithFormat:@"city = 'Boston' AND department.name = 'Software' \
+                              AND SUBQUERY(experience, $x, $x.language = 'Java' AND $x.level == 'advanced').@count > 0" ];
+
+    NSArray* results = [_memStore filter:predicate];
+
+    // validate size
+    STAssertEquals((NSUInteger)2, [results count], @"Must be size 2");
+    // validate each object
+    for (NSDictionary* user in results) {
+        STAssertEquals(user[@"city"], @"Boston", @"city must be 'Boston'");
+        STAssertEquals(user[@"department"][@"name"],  @"Software", @"department must be 'Software'");
+
+        BOOL contains = [user[@"experience"] containsObject:@{@"language" : @"Java", @"level" : @"advanced"}];
+        STAssertTrue(contains, @"should contain object with language 'Java' and level 'advanced'");
+    }
+}
+
 -(void) testReadAll {
     NSMutableDictionary* user1 = [NSMutableDictionary
                                   dictionaryWithObjectsAndKeys:@"0",@"id", @"Robert",@"name", nil];
