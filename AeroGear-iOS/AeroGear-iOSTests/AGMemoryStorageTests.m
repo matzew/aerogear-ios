@@ -208,41 +208,46 @@
     NSMutableDictionary* user1 = [@{@"id" : @"0",
                                     @"name" : @"Robert",
                                     @"city" : @"Boston",
-                                    @"department" : @{@"name" : @"Software"},
+                                    @"salary" : [NSNumber numberWithInt:2100],
+                                    @"department" : @{@"name" : @"Software", @"address" : @"Cornwell"},
                                     @"experience" : @[@{@"language" : @"Java", @"level" : @"advanced"},
                                                       @{@"language" : @"C", @"level" : @"advanced"}]
                                   } mutableCopy];
     
     NSMutableDictionary* user2 = [@{@"id" : @"1",
                                     @"name" : @"David",
-                                    @"city" : @"Boston",
-                                    @"department" : @{@"name" : @"Hardware"},
-                                    @"experience" : @[@{@"language" : @"Java", @"level" : @"intermediate"},
-                                                      @{@"language" : @"C", @"level" : @"advanced"}]
+                                    @"city" : @"New York",
+                                    @"salary" : [NSNumber numberWithInt:1400],
+                                    @"department" : @{@"name" : @"Hardware", @"address" : @"Cornwell"},
+                                    @"experience" : @[@{@"language" : @"Java", @"level" : @"advanced"},
+                                                      @{@"language" : @"Python", @"level" : @"intermediate"}]
                                   } mutableCopy];
 
     NSMutableDictionary* user3 = [@{@"id" : @"2",
                                     @"name" : @"Peter",
-                                    @"city" : @"Boston",
-                                    @"department" : @{@"name" : @"Software"},
+                                    @"city" : @"New York",
+                                    @"salary" : [NSNumber numberWithInt:1800],
+                                    @"department" : @{@"name" : @"Software", @"address" : @"Branton"},
                                     @"experience" : @[@{@"language" : @"Java", @"level" : @"advanced"},
                                                       @{@"language" : @"C", @"level" : @"intermediate"}]
                                   } mutableCopy];
     
     NSMutableDictionary* user4 = [@{@"id" : @"3",
                                     @"name" : @"John",
-                                    @"city" : @"Miami",
-                                    @"department" : @{@"name" : @"Software"},
-                                    @"experience" : @[@{@"language" : @"Java", @"level" : @"advanced"},
-                                                      @{@"language" : @"C", @"level" : @"intermediate"}]
+                                    @"city" : @"Boston",
+                                    @"salary" : [NSNumber numberWithInt:1700],
+                                    @"department" : @{@"name" : @"Software", @"address" : @"Norwell"},
+                                    @"experience" : @[@{@"language" : @"Java", @"level" : @"intermediate"},
+                                                      @{@"language" : @"JavaScript", @"level" : @"advanced"}]
                                   } mutableCopy];
     
     NSMutableDictionary* user5 = [@{@"id" : @"4",
                                     @"name" : @"Graham",
                                     @"city" : @"Boston",
-                                    @"department" : @{@"name" : @"Software"},
-                                    @"experience" : @[@{@"language" : @"Java", @"level" : @"intermediate"},
-                                                      @{@"language" : @"C", @"level" : @"advanced"}]
+                                    @"salary" : [NSNumber numberWithInt:2400],
+                                    @"department" : @{@"name" : @"Software", @"address" : @"Underwood"},
+                                    @"experience" : @[@{@"language" : @"Java", @"level" : @"advanced"},
+                                                      @{@"language" : @"Python", @"level" : @"advanced"}]
                                   } mutableCopy];
     
     NSArray* users = @[user1, user2, user3, user4, user5];
@@ -250,13 +255,16 @@
     // save objects
     BOOL success = [_memStore save:users error:nil];
     STAssertTrue(success, @"save should have succeeded");
+
+    NSPredicate* predicate;
+    NSArray* results;
     
     // filter objects
-    NSPredicate* predicate = [NSPredicate
+    predicate = [NSPredicate
                               predicateWithFormat:@"city = 'Boston' AND department.name = 'Software' \
-                              AND SUBQUERY(experience, $x, $x.language = 'Java' AND $x.level == 'advanced').@count > 0" ];
+                              AND SUBQUERY(experience, $x, $x.language = 'Java' AND $x.level = 'advanced').@count > 0" ];
 
-    NSArray* results = [_memStore filter:predicate];
+    results = [_memStore filter:predicate];
 
     // validate size
     STAssertEquals((NSUInteger)2, [results count], @"Must be size 2");
@@ -267,6 +275,27 @@
 
         BOOL contains = [user[@"experience"] containsObject:@{@"language" : @"Java", @"level" : @"advanced"}];
         STAssertTrue(contains, @"should contain object with language 'Java' and level 'advanced'");
+    }
+    
+    // retrieve only users with knowledge of BOTH Java AND Ruby (should be none)
+    predicate = [NSPredicate
+                 predicateWithFormat:@"SUBQUERY(experience, $x, $x.language IN {'Java', 'Ruby'}).@count = 2"];
+    
+    results = [_memStore filter:predicate];
+    STAssertEquals((NSUInteger)0, [results count], @"Must be size 0");
+    
+    // retrieve users with the specified salaries
+    predicate = [NSPredicate
+                 predicateWithFormat:@"department.name = 'Software' AND salary BETWEEN {1500, 2000}"];
+    
+    results = [_memStore filter:predicate];
+    // validate size
+    STAssertEquals((NSUInteger)2, [results count], @"Must be size 2");
+
+    // validate each object
+    for (NSDictionary* user in results) {
+        STAssertEquals(user[@"department"][@"name"],  @"Software", @"department must be 'Software'");
+        STAssertTrue([user[@"salary"] intValue]>=1500 && [user[@"salary"] intValue]<=2500 , @"salary not in range");
     }
 }
 
