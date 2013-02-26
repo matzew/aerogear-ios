@@ -282,6 +282,8 @@
                  predicateWithFormat:@"SUBQUERY(experience, $x, $x.language IN {'Java', 'Ruby'}).@count = 2"];
     
     results = [_memStore filter:predicate];
+
+    // validate size
     STAssertEquals((NSUInteger)0, [results count], @"Must be size 0");
     
     // retrieve users with the specified salaries
@@ -289,13 +291,14 @@
                  predicateWithFormat:@"department.name = 'Software' AND salary BETWEEN {1500, 2000}"];
     
     results = [_memStore filter:predicate];
+
     // validate size
     STAssertEquals((NSUInteger)2, [results count], @"Must be size 2");
 
     // validate each object
     for (NSDictionary* user in results) {
         STAssertEquals(user[@"department"][@"name"],  @"Software", @"department must be 'Software'");
-        STAssertTrue([user[@"salary"] intValue]>=1500 && [user[@"salary"] intValue]<=2500 , @"salary not in range");
+        STAssertTrue([user[@"salary"] intValue]>=1500 && [user[@"salary"] intValue]<=2000 , @"salary not in range");
     }
 }
 
