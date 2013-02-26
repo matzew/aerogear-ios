@@ -17,8 +17,34 @@
 
 #import "AGHttpClient.h"
 
+#import <objc/runtime.h>
+
 // useful macro to check iOS version
 #define SYSTEM_VERSION_LESS_THAN(v) ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
+
+// -----------AFHTTPRequestOperation extension------------
+// adds an associative reference to assign a timer with
+// the operation. Will be used on success/failure callbacks
+// to invalidate it.
+@interface AFHTTPRequestOperation (Timeout)
+@property (nonatomic, retain) NSTimer* timer;
+@end
+
+static char const * const TimerTagKey = "TimerTagKey";
+
+@implementation AFHTTPRequestOperation (Timeout)
+
+@dynamic timer;
+
+- (NSTimer*)timer {
+    return objc_getAssociatedObject(self, TimerTagKey);
+}
+
+- (void)setTimer:(NSTimer*)timer {
+    objc_setAssociatedObject(self, TimerTagKey, timer, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+@end
+// -------------------------------------------------------
 
 @implementation AGHttpClient {
     // secs before a request timeouts (alternative name for primitive "double")
@@ -61,13 +87,8 @@
          failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure {
     
 	NSURLRequest* request = [self requestWithMethod:@"POST" path:path parameters:parameters];
-	AFHTTPRequestOperation* operation = [self HTTPRequestOperationWithRequest:request success:success failure:failure];
     
-    if (SYSTEM_VERSION_LESS_THAN(@"6.0")) {
-        [self scheduleTimeoutHandler:operation failure:failure];
-    }
-    
-    [self enqueueHTTPRequestOperation:operation];
+    [self processRequest:request success:success failure:failure];
 }
 
 // override to manual schedule a timeout event.
@@ -78,15 +99,10 @@
      parameters:(NSDictionary *)parameters
         success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
         failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure {
- 
+    
 	NSURLRequest* request = [self requestWithMethod:@"PUT" path:path parameters:parameters];
-	AFHTTPRequestOperation* operation = [self HTTPRequestOperationWithRequest:request success:success failure:failure];
-
-    if (SYSTEM_VERSION_LESS_THAN(@"6.0")) {
-        [self scheduleTimeoutHandler:operation failure:failure];
-    }
-
-    [self enqueueHTTPRequestOperation:operation];
+    
+    [self processRequest:request success:success failure:failure];
 }
 
 // override to not handle the cookies and to add a request timeout interval
@@ -102,7 +118,7 @@
     
     // disable the default cookie handling in the override:
     [req setHTTPShouldHandleCookies:NO];
-
+    
     return req;
 }
 
@@ -110,31 +126,57 @@
 // =========== private utility methods  ================
 // =====================================================
 
-// schedule a timer to fire a time out error
--(void)scheduleTimeoutHandler:(AFHTTPRequestOperation*) operation
-                      failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure {
+-(void)processRequest:(NSURLRequest*)request
+              success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
+              failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure {
     
-    void (^timeout)(void) = ^ {
-        // cancel operation
-        [operation cancel];
-        
-        // construct error
-        NSError* error = [NSError errorWithDomain:NSURLErrorDomain
-                                             code:-1001
-                                         userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"The request timed out.",
-                                                   NSLocalizedDescriptionKey, nil]];
-        // inform client
-        dispatch_async(dispatch_get_main_queue(), ^{
+    AFHTTPRequestOperation* operation;
+    
+    // check if the ios version honours the timeout bug
+    if (SYSTEM_VERSION_LESS_THAN(@"6.0")) {
+        operation = [self HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            
+            // invalidate the timer associated with the operation
+            [operation.timer invalidate];
+            
+            success(operation, responseObject);
+            
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            
+            // invalidate the timer associated with the operation
+            [operation.timer invalidate];
+            
             failure(operation, error);
-        });
-    };
+        }];
+        
+        
+        // the block to be executed when timeout occurs
+        void (^timeout)(void) = ^ {
+            // cancel operation
+            [operation cancel];
+            
+            // construct error
+            NSError* error = [NSError errorWithDomain:NSURLErrorDomain
+                                                 code:-1001
+                                             userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"The request timed out.",
+                                                       NSLocalizedDescriptionKey, nil]];
+            // inform client
+            dispatch_async(dispatch_get_main_queue(), ^{
+                failure(operation, error);
+            });
+        };
+        
+        // associate the timer and schedule to run
+        operation.timer = [NSTimer scheduledTimerWithTimeInterval:_interval
+                                                           target:[NSBlockOperation blockOperationWithBlock:timeout]
+                                                         selector:@selector(main)
+                                                         userInfo:nil
+                                                          repeats:NO];
+    } else {
+        operation = [self HTTPRequestOperationWithRequest:request success:success failure:failure];
+    }
     
-    // schedule it
-    [NSTimer scheduledTimerWithTimeInterval:_interval
-                                     target:[NSBlockOperation blockOperationWithBlock:timeout]
-                                   selector:@selector(main)
-                                   userInfo:nil
-                                    repeats:NO];
+    [self enqueueHTTPRequestOperation:operation];
 }
 
 @end
