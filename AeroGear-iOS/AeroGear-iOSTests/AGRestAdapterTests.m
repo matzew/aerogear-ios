@@ -56,7 +56,7 @@ static NSString *const PROJECT = @"{\"id\":1,\"title\":\"First Project\",\"style
     AGPipeConfiguration* config = [[AGPipeConfiguration alloc] init];
     [config setBaseURL:baseURL];
     [config setName:@"projects"];
-    [config setTimeout:1]; // this is just for testing of testReadWithTimeout
+    [config setTimeout:1]; // this is just for testing of testSaveWithTimeout
     
     _restPipe = [AGRESTPipe pipeWithConfig:config];
 }
@@ -97,15 +97,24 @@ static NSString *const PROJECT = @"{\"id\":1,\"title\":\"First Project\",\"style
     }
 }
 
--(void)testReadWithTimeout {
-    [AGMockURLProtocol setResponseData:[PROJECTS dataUsingEncoding:NSUTF8StringEncoding]];
+-(void)testSaveWithTimeout {
+    // here we simulate POST
+    // for iOS 5 and iOS 6 the timeout should be honoured correctly
+    // regardless of the iOS 5 bug 
+    
+    [AGMockURLProtocol setResponseData:[PROJECT dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    NSMutableDictionary* project = [NSMutableDictionary
+                                    dictionaryWithObjectsAndKeys:@"First Project", @"title",
+                                    @"project-161-58-58", @"style", nil];
+
     
     // simulate delay in response
     // Note that pipe has been default configured for a timeout in 1 sec
     // here we simulate a delay of 2 sec
     [AGMockURLProtocol setResponseDelay:2];
     
-    [_restPipe read:^(id responseObject) {
+    [_restPipe save:project success:^(id responseObject) {
         STFail(@"%@", @"should NOT have been called");
         _finishedFlag = YES;
         
@@ -113,6 +122,39 @@ static NSString *const PROJECT = @"{\"id\":1,\"title\":\"First Project\",\"style
         STAssertEquals(-1001, [error code], @"should be equal to code -1001 [request time out]");
         _finishedFlag = YES;
 
+    }];
+ 
+    // keep the run loop going
+    while(!_finishedFlag) {
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+    }
+}
+
+-(void)testSaveExistingWithTimeout {
+    // here we simulate PUT
+    // for iOS 5 and iOS 6 the timeout should be honoured correctly
+    // regardless of the iOS 5 bug
+
+    [AGMockURLProtocol setResponseData:[PROJECT dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    NSMutableDictionary* project = [NSMutableDictionary
+                                    dictionaryWithObjectsAndKeys:@"1", @"id", @"First Project", @"title",
+                                    @"project-161-58-58", @"style", nil];
+    
+    
+    // simulate delay in response
+    // Note that pipe has been default configured for a timeout in 1 sec
+    // here we simulate a delay of 2 sec
+    [AGMockURLProtocol setResponseDelay:2];
+    
+    [_restPipe save:project success:^(id responseObject) {
+        STFail(@"%@", @"should NOT have been called");
+        _finishedFlag = YES;
+        
+    } failure:^(NSError *error) {
+        STAssertEquals(-1001, [error code], @"should be equal to code -1001 [request time out]");
+        _finishedFlag = YES;
+        
     }];
     
     // keep the run loop going
