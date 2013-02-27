@@ -25,6 +25,7 @@
 @synthesize logoutEndpoint = _logoutEndpoint;
 @synthesize enrollEndpoint = _enrollEndpoint;
 @synthesize tokenHeaderName = _tokenHeaderName;
+@synthesize timeout = _timeout;
 
 @synthesize name = _name;
 @synthesize type = _type;
@@ -38,7 +39,7 @@
         _loginEndpoint = @"auth/login";
         _logoutEndpoint = @"auth/logout";
         _enrollEndpoint = @"auth/enroll";
-        
+        _timeout = 60; // the default timeout interval of NSMutableURLRequest (60 secs)
     }
     
     return self;

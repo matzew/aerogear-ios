@@ -78,7 +78,7 @@
         _baseURL = config.baseURL.absoluteString;
         _tokenHeaderName = config.tokenHeaderName;
         
-        _restClient = [AGHttpClient clientFor:config.baseURL];
+        _restClient = [AGHttpClient clientFor:config.baseURL timeout:config.timeout];
         _restClient.parameterEncoding = AFJSONParameterEncoding;
     }
 

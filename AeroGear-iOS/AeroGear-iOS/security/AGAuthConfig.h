@@ -49,4 +49,9 @@
  */
 @property (copy, nonatomic) NSString* tokenHeaderName;
 
+/**
+ * The timeout interval for a request to complete.
+ */
+@property (assign, nonatomic) NSTimeInterval timeout;
+
 @end
