@@ -51,6 +51,7 @@ static NSString *const LOGIN_SUCCESS_RESPONSE =  @"{\"username\":\"%@\",\"roles\
     [AGMockURLProtocol setStatusCode:200];
 	[AGMockURLProtocol setResponseData:nil];
 	[AGMockURLProtocol setError:nil];
+    [AGMockURLProtocol setResponseDelay:0]; // default is immediate response    
     
     // set correct content-type otherwise AFNetworking
     // will complain because it expects JSON response
@@ -64,6 +65,7 @@ static NSString *const LOGIN_SUCCESS_RESPONSE =  @"{\"username\":\"%@\",\"roles\
     AGAuthConfiguration* config = [[AGAuthConfiguration alloc] init];
     [config setBaseURL:baseURL];
     [config setEnrollEndpoint:@"auth/register"];
+    [config setTimeout:1]; // this is just for testing of timeout methods
 
     _restAuthModule = [AGRestAuthentication moduleWithConfig:config];
 
@@ -107,6 +109,31 @@ static NSString *const LOGIN_SUCCESS_RESPONSE =  @"{\"username\":\"%@\",\"roles\
     }
 }
 
+-(void) testLoginWithTimeout {
+    [AGMockURLProtocol addHeader:@"Auth-Token" value:AUTH_TOKEN];
+    [AGMockURLProtocol setResponseData:[[NSString stringWithFormat:LOGIN_SUCCESS_RESPONSE, PASSING_USERNAME]
+                                        dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    // simulate delay in response
+    // Note that pipe has been default configured for a timeout in 1 sec
+    // here we simulate a delay of 2 sec
+    [AGMockURLProtocol setResponseDelay:2];
+    
+    [_restAuthModule login:PASSING_USERNAME password:LOGIN_PASSWORD success:^(id responseObject) {
+        STFail(@"%@", @"should NOT have been called");
+        _finishedFlag = YES;
+        
+    } failure:^(NSError *error) {
+        STAssertEquals(-1001, [error code], @"should be equal to code -1001 [request time out]");
+        _finishedFlag = YES;
+    }];
+    
+    // keep the run loop going
+    while(!_finishedFlag) {
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+    }
+}
+
 -(void) testLoginFails {
     [AGMockURLProtocol setError:[NSError errorWithDomain:NSURLErrorDomain
                                                     code:401 // Unauthorized
@@ -131,9 +158,10 @@ static NSString *const LOGIN_SUCCESS_RESPONSE =  @"{\"username\":\"%@\",\"roles\
                                         dataUsingEncoding:NSUTF8StringEncoding]];
     
     [_restAuthModule login:PASSING_USERNAME password:LOGIN_PASSWORD success:^(id object) {
-        // after initial login, we issue a logout:
+        
         [_restAuthModule logout:^{
             _finishedFlag = YES;
+
         } failure:^(NSError *error) {
             _finishedFlag = YES;
             STFail(@"wrong logout...");
@@ -141,6 +169,38 @@ static NSString *const LOGIN_SUCCESS_RESPONSE =  @"{\"username\":\"%@\",\"roles\
     } failure:^(NSError *error) {
         _finishedFlag = YES;
         STFail(@"wrong login");
+    }];
+    
+    // keep the run loop going
+    while(!_finishedFlag) {
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+    }
+}
+
+-(void) testLogoutWithTimeout {
+    [AGMockURLProtocol addHeader:@"Auth-Token" value:AUTH_TOKEN];
+    [AGMockURLProtocol setResponseData:[[NSString stringWithFormat:LOGIN_SUCCESS_RESPONSE, PASSING_USERNAME]
+                                        dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    
+    [_restAuthModule login:PASSING_USERNAME password:LOGIN_PASSWORD success:^(id object) {
+
+        // simulate delay in response
+        // Note that pipe has been default configured for a timeout in 1 sec
+        // here we simulate a delay of 2 sec
+        [AGMockURLProtocol setResponseDelay:2];
+        
+        [_restAuthModule logout:^{
+            STFail(@"%@", @"should NOT have been called");
+            _finishedFlag = YES;
+       
+        } failure:^(NSError *error) {
+            STAssertEquals(-1001, [error code], @"should be equal to code -1001 [request time out]");
+            _finishedFlag = YES;
+        }];
+    } failure:^(NSError *error) {
+        STFail(@"%@", @"should NOT have been called");
+        _finishedFlag = YES;
     }];
     
     // keep the run loop going
@@ -178,6 +238,44 @@ static NSString *const LOGIN_SUCCESS_RESPONSE =  @"{\"username\":\"%@\",\"roles\
         [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
     }
 }
+
+-(void) testEnrollTimeout {
+    [AGMockURLProtocol addHeader:@"Auth-Token" value:AUTH_TOKEN];
+    [AGMockURLProtocol setResponseData:[[NSString stringWithFormat:LOGIN_SUCCESS_RESPONSE, PASSING_USERNAME]
+                                        dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    NSMutableDictionary* registerPayload = [NSMutableDictionary dictionary];
+    
+    [registerPayload setValue:@"John" forKey:@"firstname"];
+    [registerPayload setValue:@"Doe" forKey:@"lastname"];
+    [registerPayload setValue:@"emaadsil@mssssse.com" forKey:@"email"];
+    [registerPayload setValue:PASSING_USERNAME forKey:@"username"];
+    [registerPayload setValue:LOGIN_PASSWORD forKey:@"password"];
+    [registerPayload setValue:@"admin" forKey:@"role"];
+    
+    
+    // simulate delay in response
+    // Note that pipe has been default configured for a timeout in 1 sec
+    // here we simulate a delay of 2 sec
+    [AGMockURLProtocol setResponseDelay:2];
+    
+    [_restAuthModule enroll:registerPayload success:^(id responseObject) {
+
+        STFail(@"%@", @"should NOT have been called");
+        _finishedFlag = YES;
+
+    } failure:^(NSError *error) {
+
+        STAssertEquals(-1001, [error code], @"should be equal to code -1001 [request time out]");
+        _finishedFlag = YES;
+    }];
+    
+    // keep the run loop going
+    while(!_finishedFlag) {
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+    }
+}
+
 -(void) testEnrollFails {
     [AGMockURLProtocol setError:[NSError errorWithDomain:NSURLErrorDomain
                                                     code:400 // Bad Request
