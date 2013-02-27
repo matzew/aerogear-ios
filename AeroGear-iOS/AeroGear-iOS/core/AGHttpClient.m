@@ -126,6 +126,16 @@ static char const * const TimerTagKey = "TimerTagKey";
 // =========== private utility methods  ================
 // =====================================================
 
+// Gateway of both postPath and putPath methods to schedule a POST/PUT http operation.
+//
+// This is needed, cause for those two requests, extra steps should be taken that
+// will honour the timeout interval set in our AGPipeConfig (if running in versions of iOS < 6
+// where the timeout interval less than 240sec is ignored)
+//
+// In particular for those versions we:
+// - start a manual timer that upon fire (on request timeout) will invoke the client's failure block.
+// - success/failure blocks are wrapped, so that the associative timer is invalidated upon
+//   success or failure completion of the request.
 -(void)processRequest:(NSURLRequest*)request
               success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
               failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure {
