@@ -136,6 +136,19 @@ static char const * const TimerTagKey = "TimerTagKey";
     return req;
 }
 
+// override to cancel all operations regardless of the path passed in.
+- (void)cancelAllHTTPOperationsWithMethod:(NSString *)method path:(NSString *)path {
+    for (NSOperation *operation in [self.operationQueue operations]) {
+        if (![operation isKindOfClass:[AFHTTPRequestOperation class]]) {
+            continue;
+        }
+        
+        if (!method || [method isEqualToString:[[(AFHTTPRequestOperation *)operation request] HTTPMethod]]) {
+            [operation cancel];
+        }
+    }
+}
+
 // =====================================================
 // =========== private utility methods  ================
 // =====================================================

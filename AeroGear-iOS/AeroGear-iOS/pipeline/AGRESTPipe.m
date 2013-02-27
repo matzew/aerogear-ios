@@ -277,8 +277,9 @@
 }
 
 -(void) cancel {
-    // passing "nil" will cancel all running http operations
-    [_restClient cancelAllHTTPOperationsWithMethod:nil path:_URL.path];
+    // cancel all running http operations
+    // see cancelAllHTTPOperationsWithMethod in AGHttpClient
+    [_restClient cancelAllHTTPOperationsWithMethod:nil path:nil];
 }
 
 // extract the sting value (e.g. for read:id, or remove:id)
