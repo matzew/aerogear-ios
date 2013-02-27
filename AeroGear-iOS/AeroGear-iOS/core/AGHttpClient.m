@@ -138,6 +138,7 @@ static char const * const TimerTagKey = "TimerTagKey";
             
             // invalidate the timer associated with the operation
             [operation.timer invalidate];
+            operation.timer = nil;
             
             success(operation, responseObject);
             
@@ -145,6 +146,7 @@ static char const * const TimerTagKey = "TimerTagKey";
             
             // invalidate the timer associated with the operation
             [operation.timer invalidate];
+            operation.timer = nil;
             
             failure(operation, error);
         }];
@@ -154,6 +156,10 @@ static char const * const TimerTagKey = "TimerTagKey";
         void (^timeout)(void) = ^ {
             // cancel operation
             [operation cancel];
+            
+            // the timer is invalidated after calling this block(a non-repeating timer)
+            // nil out the operation timer instance var
+            operation.timer = nil;
             
             // construct error
             NSError* error = [NSError errorWithDomain:NSURLErrorDomain
