@@ -27,7 +27,12 @@
 // the operation. Will be used on success/failure callbacks
 // to invalidate it.
 @interface AFHTTPRequestOperation (Timeout)
+
+// the timer associated with the operation
 @property (nonatomic, retain) NSTimer* timer;
+
+// override to invalidate the timer oncancel
+-(void)cancel;
 @end
 
 static char const * const TimerTagKey = "TimerTagKey";
@@ -42,6 +47,15 @@ static char const * const TimerTagKey = "TimerTagKey";
 
 - (void)setTimer:(NSTimer*)timer {
     objc_setAssociatedObject(self, TimerTagKey, timer, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+-(void)cancel {
+    [super cancel];
+    
+    if (self.timer) {
+        [self.timer invalidate];
+        self.timer = nil;
+    }
 }
 @end
 // -------------------------------------------------------
