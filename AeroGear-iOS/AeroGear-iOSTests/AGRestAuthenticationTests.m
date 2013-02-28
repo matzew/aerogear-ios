@@ -303,4 +303,34 @@ static NSString *const LOGIN_SUCCESS_RESPONSE =  @"{\"username\":\"%@\",\"roles\
     }
 }
 
+-(void) testCancel {
+    NSDate *startTime = [NSDate date];
+    
+    [AGMockURLProtocol addHeader:@"Auth-Token" value:AUTH_TOKEN];
+    [AGMockURLProtocol setResponseData:[[NSString stringWithFormat:LOGIN_SUCCESS_RESPONSE, PASSING_USERNAME]
+                                        dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    // simulate delay in response
+    [AGMockURLProtocol setResponseDelay:2];
+    
+    [_restAuthModule login:PASSING_USERNAME password:LOGIN_PASSWORD success:^(id responseObject) {
+        
+        STFail(@"login should not have been called");
+        _finishedFlag = YES;
+
+    } failure:^(NSError *error) {
+        STFail(@"logout should not have been called");
+        _finishedFlag = YES;
+    }];
+    
+    // cancel the request
+    // Note that no callbacks will be called after this
+    [_restAuthModule cancel];
+    
+    // wait until either _finishedFlag is set to true (e.g. test failed)
+    // or timeout expired (no need to wait for more than the timeout set on the pipe)
+    while (!_finishedFlag && [startTime timeIntervalSinceNow] > -1)
+        [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:1]];
+}
+
 @end

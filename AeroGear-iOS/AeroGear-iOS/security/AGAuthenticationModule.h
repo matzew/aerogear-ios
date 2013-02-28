@@ -101,4 +101,11 @@
 -(void) logout:(void (^)())success
      failure:(void (^)(NSError *error))failure;
 
+/**
+ * Cancel all running pipe operations. Any registered callbacks on the auth module are NOT executed.
+ * It is your responsibility to provide any neccessary cleanups after calling this method.
+ *
+ */
+-(void) cancel;
+
 @end

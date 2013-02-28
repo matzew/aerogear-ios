@@ -170,6 +170,11 @@
     }];
 }
 
+-(void) cancel {
+    // cancel all running http operations
+    [_restClient.operationQueue cancelAllOperations];
+}
+
 // private method
 -(void) readAndStashToken:(AFHTTPRequestOperation*) operation {
     // TODO: hard-coded header name:
