@@ -42,6 +42,7 @@ static NSString *const RESPONSE_TWO_ITEMS = @"[{\"id\":1,\"color\":\"black\",\"b
     [AGMockURLProtocol setStatusCode:200];
 	[AGMockURLProtocol setResponseData:nil];
 	[AGMockURLProtocol setError:nil];
+    [AGMockURLProtocol setResponseDelay:0]; // default is immediate response    
     
     // set correct content-type otherwise AFNetworking
     // will complain because it expects JSON response
