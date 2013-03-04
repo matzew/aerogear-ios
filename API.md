@@ -209,14 +209,11 @@ When using a pipe to read all entries of a endpoint, you can use the AGStore to 
     [tasksPipe read:^(id responseObject) {
         // the response object represents an NSArray,
         // containing multile 'Tasks' (as NSDictionary objects)
-        [myStore save:responseObject success:^(id object) {
 
-            // Indicate that the save operation was successful
-
-        } failure:  ^(NSError *error) {
-            // when an error occurs... at least log it to the console..
-            NSLog(@"Read: An error occured! \n%@", error);
-        }];    
+        // Save the response object to the store
+        NSError *error;
+        if (![myStore save:responseObject error:&error])
+            NSLog(@"Save: An error occured during save! \n%@", error);    
 
     } failure:^(NSError *error) {
         // when an error occurs... at least log it to the console..
@@ -227,40 +224,72 @@ When loading all tasks from the server, the AGStore object is used inside of the
 
 ## Read an object from the AGStore
 
-    id taskObject;
     // read the task with the '0' ID:
-    [myStore read:@"0" success:^(id object) {
-        taskObject = object;
-    } failure:^(NSError *error) {
-        // when an error occurs... at least log it to the console..
-        NSLog(@"Read: An error occured! \n%@", error);
-    }];
+    id taskObject =  [myStore read:@"0"];
 
-The read accepts the _recordID_ and two simple blocks that are invoked on success or in case of an failure. The _readAll_ allows you to read the entire store, it accepts two simple blocks that are invoked on success or in case of an failure:
+The _read_ function accepts the _recordID_ of the object you want to retrieve.
+
+If you want to read _all_ the objects contained in the store, simply call the _readAll_ function
 
     // read all object from the store
-    [myStore readAll:^(NSArray *objects) {
-
-        // work with the received collection, containing all objects
-
-    } failure:^(NSError *error) {
-        // when an error occurs... at least log it to the console..
-        NSLog(@"Read: An error occured! \n%@", error);
-    }];
+    NSArray *objects = [myStore readAll];
 
 ## Remove one object
 
 The remove function allows you to delete a single entry in the collection, if present:
 
     // remove the task with the '0' ID:
-    [myStore remove:@"0" success:^(id object) {
-        taskObject = object;
-    } failure:^(NSError *error) {
-        // when an error occurs... at least log it to the console..
-        NSLog(@"Read: An error occured! \n%@", error);
-    }];
+    NSError *error;
 
-The remove method accepts the _recordID_ and two simple blocks that are invoked on success or in case of an failure.
+    if (![myStore remove:@"0" error:error])
+        NSLog(@"Save: An error occured during remove! \n%@", error);    
+
+The remove method accepts the _recordID_ of the object you want to remove.
+
+## Filter the entire store
+
+Filtering of the data available in the AGStore is also supported, by using the familiar NSPredicate class available in iOS. In the following example, after storing a pair of dictionaries representing user information details in the store, we simple call the _filter_ method  to filter out the desired information:
+     
+     NSMutableDictionary *user1 = [@{@"id" : @"0",
+                                    @"name" : @"Robert",
+                                    @"city" : @"Boston",
+                                    @"department" : @{@"name" : @"Software", @"address" : @"Cornwell"},
+                                    @"experience" : @[@{@"language" : @"Java", @"level" : @"advanced"},
+                                                      @{@"language" : @"C", @"level" : @"advanced"}]
+                                  } mutableCopy];
+    
+    NSMutableDictionary *user2 = [@{@"id" : @"1",
+                                    @"name" : @"David",
+                                    @"city" : @"Boston",
+                                    @"department" : @{@"name" : @"Software", @"address" : @"Cornwell"},
+                                    @"experience" : @[@{@"language" : @"Java", @"level" : @"intermediate"},
+                                                      @{@"language" : @"Python", @"level" : @"intermediate"}]
+                                  } mutableCopy];
+
+    NSMutableDictionary *user3 = [@{@"id" : @"2",
+                                    @"name" : @"Peter",
+                                    @"city" : @"Boston",
+                                    @"department" : @{@"name" : @"Software", @"address" : @"Branton"},
+                                    @"experience" : @[@{@"language" : @"Java", @"level" : @"advanced"},
+                                                      @{@"language" : @"C", @"level" : @"intermediate"}]
+                                  } mutableCopy];
+
+    // save objects
+    BOOL success = [_memStore save:users error:nil];
+
+    if (success) { // if save succeeded, query the data
+        NSPredicate *predicate = [NSPredicate
+                                  predicateWithFormat:@"city = 'Boston' AND department.name = 'Software' \
+                                  AND SUBQUERY(experience, $x, $x.language = 'Java' AND $x.level = 'advanced').@count > 0" ];
+
+        NSArray *results = [_memStore filter:predicate];
+
+        // The array now contains the dictionaries _user1_ and _user_2, since they both satisfy the query predicate.
+        // do something with the 'results'
+        // ...
+    }
+
+Using NSPredicate to filter desired data, is a powerful mechanism offered in iOS and we strongly suggest to familiarize yourself with it, if not already. Take a look at Apple's own [documentation](http://tinyurl.com/chmgwv5) for more information.
 
 ## Reset the entire store
 
