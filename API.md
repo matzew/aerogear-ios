@@ -212,6 +212,7 @@ When using a pipe to read all entries of a endpoint, you can use the AGStore to 
 
         // Save the response object to the store
         NSError *error;
+        
         if (![myStore save:responseObject error:&error])
             NSLog(@"Save: An error occured during save! \n%@", error);    
 
@@ -227,11 +228,11 @@ When loading all tasks from the server, the AGStore object is used inside of the
     // read the task with the '0' ID:
     id taskObject =  [myStore read:@"0"];
 
-The _read_ function accepts the _recordID_ of the object you want to retrieve.
+The _read_ function accepts the _recordID_ of the object you want to retrieve. If the object does not exist in the store, _nil_ is returned.
 
 If you want to read _all_ the objects contained in the store, simply call the _readAll_ function
 
-    // read all object from the store
+    // read all objects from the store
     NSArray *objects = [myStore readAll];
 
 ## Remove one object
@@ -244,11 +245,11 @@ The remove function allows you to delete a single entry in the collection, if pr
     if (![myStore remove:@"0" error:error])
         NSLog(@"Save: An error occured during remove! \n%@", error);    
 
-The remove method accepts the _recordID_ of the object you want to remove.
+The remove method accepts the _recordID_ of the object you want to remove. If the object does not exist in the store, FALSE is returned.
 
 ## Filter the entire store
 
-Filtering of the data available in the AGStore is also supported, by using the familiar NSPredicate class available in iOS. In the following example, after storing a pair of dictionaries representing user information details in the store, we simple call the _filter_ method  to filter out the desired information:
+Filtering of the data available in the AGStore is also supported, by using the familiar NSPredicate class available in iOS. In the following example, after storing a pair of dictionaries representing user information details in the store (which can be easily come from a response from a server), we simple call the _filter_ method to filter out the desired information:
      
      NSMutableDictionary *user1 = [@{@"id" : @"0",
                                     @"name" : @"Robert",
@@ -296,14 +297,11 @@ Using NSPredicate to filter desired data, is a powerful mechanism offered in iOS
 The reset function allows you the erase all data available in the used AGStore object:
 
     // clears the entire store
-    [myStore reset:^{
-        // nope...
-    } failure:^(NSError *error) {
-        // when an error occurs... at least log it to the console..
-        NSLog(@"Read: An error occured! \n%@", error);
-    }];
+    NSError *error;
 
-The reset method accepts two simple blocks that are invoked on success or in case of an failure.
+    if (![myStore reset:&error])
+        NSLog(@"Reset: An error occured during reset! \n%@", error);    
+    
 
 ## Persistent Storage system
 
@@ -320,11 +318,11 @@ A simple _Property list_ storage system is part of the library as well, The same
     NSDictionary *otp = [NSDictionary dictionaryWithObjectsAndKeys:@"19a01df0281afcdbe", @"otp", @"1", @"id", nil];
 
     // save it
-    [plistStore save:otp success:^(id object) {
-        // success callback...
-    } failure:^(NSError *error) {
-        NSLog(@"error: %@", error);
-    }];
+    NSError *error;
+        
+    if (![plistStore save:otp error:&error])
+        NSLog(@"Save: An error occured during save! \n%@", error);    
+
     
 The ```read```, ```reset``` or ```remove``` API behave the same, as on the default ("in memory") store. 
 
