@@ -135,7 +135,8 @@ From the todo example above:
 ### Cancel
 At any time after starting your operations, you can call 'cancel' on the Pipe object to cancel all running Pipe operations. Any registered callbacks on the pipe are NOT executed so it is your responsibility to provide any neccessary cleanups after calling this method.
 
-   [projects read:^(id responseObject) {
+
+    [projects read:^(id responseObject) {
         // LOG the JSON response, returned from the server:
         NSLog(@"READ RESPONSE\n%@", [responseObject description]);
     } failure:^(NSError *error) {
