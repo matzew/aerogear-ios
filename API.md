@@ -279,7 +279,7 @@ The remove method accepts the _recordID_ of the object you want to remove. If th
 
 Filtering of the data available in the AGStore is also supported, by using the familiar NSPredicate class available in iOS. In the following example, after storing a pair of dictionaries representing user information details in the store (which can be easily come from a response from a server), we simple call the _filter_ method to filter out the desired information:
      
-     NSMutableDictionary *user1 = [@{@"id" : @"0",
+     NSMutableDictionary *user1 = [@{@"id" : @"1",
                                     @"name" : @"Robert",
                                     @"city" : @"Boston",
                                     @"department" : @{@"name" : @"Software", @"address" : @"Cornwell"},
@@ -287,7 +287,7 @@ Filtering of the data available in the AGStore is also supported, by using the f
                                                       @{@"language" : @"C", @"level" : @"advanced"}]
                                   } mutableCopy];
     
-    NSMutableDictionary *user2 = [@{@"id" : @"1",
+    NSMutableDictionary *user2 = [@{@"id" : @"2",
                                     @"name" : @"David",
                                     @"city" : @"Boston",
                                     @"department" : @{@"name" : @"Software", @"address" : @"Cornwell"},
@@ -295,7 +295,7 @@ Filtering of the data available in the AGStore is also supported, by using the f
                                                       @{@"language" : @"Python", @"level" : @"intermediate"}]
                                   } mutableCopy];
 
-    NSMutableDictionary *user3 = [@{@"id" : @"2",
+    NSMutableDictionary *user3 = [@{@"id" : @"3",
                                     @"name" : @"Peter",
                                     @"city" : @"Boston",
                                     @"department" : @{@"name" : @"Software", @"address" : @"Branton"},
@@ -313,7 +313,7 @@ Filtering of the data available in the AGStore is also supported, by using the f
 
         NSArray *results = [_memStore filter:predicate];
 
-        // The array now contains the dictionaries _user1_ and _user_2, since they both satisfy the query predicate.
+        // The array now contains the dictionaries _user1_ and _user_3, since they both satisfy the query predicate.
         // do something with the 'results'
         // ...
     }
