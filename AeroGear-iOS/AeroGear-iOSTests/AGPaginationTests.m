@@ -39,11 +39,7 @@ static NSString *const RESPONSE_TWO_ITEMS = @"[{\"id\":1,\"color\":\"black\",\"b
     
     // register AGFakeURLProtocol to fake HTTP comm.
     [NSURLProtocol registerClass:[AGMockURLProtocol class]];
-    [AGMockURLProtocol setStatusCode:200];
-	[AGMockURLProtocol setResponseData:nil];
-	[AGMockURLProtocol setError:nil];
-    [AGMockURLProtocol setResponseDelay:0]; // default is immediate response    
-    
+
     // set correct content-type otherwise AFNetworking
     // will complain because it expects JSON response
     [AGMockURLProtocol setHeaders:[NSDictionary
@@ -60,6 +56,13 @@ static NSString *const RESPONSE_TWO_ITEMS = @"[{\"id\":1,\"color\":\"black\",\"b
 }
 
 -(void)tearDown {
+    // reset http mock state so it is not propagated to other tests
+    [AGMockURLProtocol setStatusCode:200];
+	[AGMockURLProtocol setResponseData:nil];
+	[AGMockURLProtocol setError:nil];
+    [AGMockURLProtocol setResponseDelay:0];
+    [AGMockURLProtocol setHeaders:nil];
+    // finally, unregister it from the runtime
     [NSURLProtocol unregisterClass:[AGMockURLProtocol class]];
     
     [super tearDown];

@@ -24,6 +24,11 @@
 // AGMockURLProtocol instances are created by the runtime at the time
 // and "static" was a way to set parameters on those instances.
 // See NSURLProtocol documentation for more details.
+//
+// IMPORTANT:
+// you need to reset those params on your test's "+tearDown" method,
+// to avoid incorrect state being propagated between tests.
+
 static NSData* sResponseData = nil;
 static NSMutableDictionary* sHeaders = nil;
 static NSInteger sStatusCode = 200;

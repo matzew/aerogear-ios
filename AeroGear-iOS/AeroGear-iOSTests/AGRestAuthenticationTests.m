@@ -48,11 +48,7 @@ static NSString *const LOGIN_SUCCESS_RESPONSE =  @"{\"username\":\"%@\",\"roles\
     
     // register AGFakeURLProtocol to fake HTTP comm.
     [NSURLProtocol registerClass:[AGMockURLProtocol class]];
-    [AGMockURLProtocol setStatusCode:200];
-	[AGMockURLProtocol setResponseData:nil];
-	[AGMockURLProtocol setError:nil];
-    [AGMockURLProtocol setResponseDelay:0]; // default is immediate response    
-    
+
     // set correct content-type otherwise AFNetworking
     // will complain because it expects JSON response
     [AGMockURLProtocol setHeaders:[NSDictionary
@@ -78,10 +74,19 @@ static NSString *const LOGIN_SUCCESS_RESPONSE =  @"{\"username\":\"%@\",\"roles\
 }
 
 -(void)tearDown {
+    // reset http mock state so it is not propagated to other tests
+    [AGMockURLProtocol setStatusCode:200];
+	[AGMockURLProtocol setResponseData:nil];
+	[AGMockURLProtocol setError:nil];
+    [AGMockURLProtocol setResponseDelay:0];
+    [AGMockURLProtocol setHeaders:nil];
+    // finally, unregister it from the runtime
     [NSURLProtocol unregisterClass:[AGMockURLProtocol class]];
     
     _projects = nil;
     _restAuthModule = nil;
+    
+    [super tearDown];
 }
 
 -(void)testRestAuthenticationCreation {
