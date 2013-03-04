@@ -120,6 +120,33 @@ Since we are pointing to a RESTful endpoint, the API issues a HTTP GET request. 
 
 Of course the _collection_ behind the responseObject can be stored to a variable...
 
+## Time out and Cancel pending operations
+
+### Timeout
+During construction of the Pipe object, you can optionally specify a timeout interval (default is 60 secs) for an operation to complete. If the time interval is exceeded with no response from the server, then the _failure_ callback is executed. 
+
+From the todo example above:
+
+    id<AGPipe> projects = [todo pipe:^(id<AGPipeConfig> config) {
+        ... 
+        [config setTimeout:20];  // set the time interval to 20 secs
+    }];
+
+### Cancel
+At any time after starting your operations, you can call 'cancel' on the Pipe object to cancel all running Pipe operations. Any registered callbacks on the pipe are NOT executed so it is your responsibility to provide any neccessary cleanups after calling this method.
+
+   [projects read:^(id responseObject) {
+        // LOG the JSON response, returned from the server:
+        NSLog(@"READ RESPONSE\n%@", [responseObject description]);
+    } failure:^(NSError *error) {
+        // when an error occurs... at least log it to the console..
+        NSLog(@"Read: An error occured! \n%@", error);
+    }];
+
+    // cancel operations. NOTE that no 'success' or 'failure' callbacks are executed after this.
+    [projects cancel];
+
+
 Paging
 =============
 
@@ -223,7 +250,7 @@ When using a pipe to read all entries of a endpoint, you can use the AGStore to 
 
 When loading all tasks from the server, the AGStore object is used inside of the _read_ block from the AGPipe object. The returned collection of tasks is stored inside our in-memory store, from where the data can be accessed.
 
-## Read an object from the AGStore
+## Read an object from the Store
 
     // read the task with the '0' ID:
     id taskObject =  [myStore read:@"0"];
@@ -235,7 +262,7 @@ If you want to read _all_ the objects contained in the store, simply call the _r
     // read all objects from the store
     NSArray *objects = [myStore readAll];
 
-## Remove one object
+## Remove one object from the Store
 
 The remove function allows you to delete a single entry in the collection, if present:
 
@@ -417,3 +444,7 @@ The logout from the server can be archived by using the _logout_ function:
     }];
 
 The default (REST) auth module issues for the above a request against _https://todoauth-aerogear.rhcloud.com/todo-server/auth/logout_. The function accepts two simple blocks that are invoked on success or in case of an failure.
+
+## Time out and Cancel pending operations
+
+As with the case of Pipe, configured timeout interval (in the config object) and cancel operation in _AGAuthenticationModule_ is supported too.
