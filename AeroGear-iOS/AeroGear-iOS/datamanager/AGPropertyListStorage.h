@@ -21,6 +21,34 @@
 
 #import "AGMemoryStorage.h"
 
+/**
+ An AGStore implementation that uses a [Property List](http://tinyurl.com/ccbo327) for storage.
+
+ *IMPORTANT:* Users are not required to instantiate this class directly, instead an instance of this class is returned automatically when an DataStore with the _type_ config option is set to _"PLIST"_. See AGDataManager and AGStore class documentation for more information.
+
+ ## Create a DataManager with a Property List store backend
+ 
+ Below is a small example on how to save to the file system:
+
+    // initalize plist store (if the file does not exist it will be created)
+    AGDataManager* manager = [AGDataManager manager];
+    id<AGStore> plistStore = [manager store:^(id<AGStoreConfig> config) {
+        [config setName:@"secrets"]; // will be used as the filename for the plist
+        [config setType:@"PLIST"]; // specify that a Property List is required
+    }];
+ 
+    // the object to save (e.g. a dictionary)
+    NSDictionary *otp = [NSDictionary dictionaryWithObjectsAndKeys:@"19a01df0281afcdbe", @"otp", @"1", @"id", nil];
+
+    // save it
+    NSError *error;
+        
+    if (![plistStore save:otp error:&error])
+        NSLog(@"Save: An error occured during save! \n%@", error);    
+
+    
+The ```read```, ```reset``` or ```remove``` methods found in AGStore behave the same, as on the default ("in memory") store. 
+*/
 @interface AGPropertyListStorage : AGMemoryStorage
 
 @end

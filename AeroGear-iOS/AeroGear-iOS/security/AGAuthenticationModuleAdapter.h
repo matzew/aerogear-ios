@@ -19,7 +19,7 @@
 #import "AGAuthenticationModule.h"
 
 /**
- * AGAuthenticationModuleAdapter represents the INTERNAL authentication module 'interface'
+ * AGAuthenticationModuleAdapter represents the _internal_ authentication module 'interface'
  */
 @protocol AGAuthenticationModuleAdapter <AGAuthenticationModule>
 

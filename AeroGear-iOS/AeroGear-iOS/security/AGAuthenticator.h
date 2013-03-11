@@ -20,13 +20,27 @@
 #import "AGAuthConfig.h"
 
 /**
- * AGAuthenticator manages different AGAuthenticationModule implementations. It is basically a
- * factory that hides the concrete instantiation of a specific AGAuthenticationModule implementation.
- * The class offers simple APIs to add, remove, or get access to a 'authentication module'.
- *
+  AGAuthenticator manages different AGAuthenticationModule implementations. It is basically a
+  factory that hides the concrete instantiation of a specific AGAuthenticationModule implementation.
+  The class offers simple APIs to add, remove, or get access to a 'authentication module'.
+ 
+## Creating an Authenticator with an Authentication module
+
+Below is an example that creates an Authenticator that points to the remote AeroGear TODO server application.
+
+    // create an authenticator object
+    AGAuthenticator* authenticator = [AGAuthenticator authenticator];
+
+    // the base URL of the application we want to authenticate to
+    NSString* baseURL = @"http://todo-aerogear.rhcloud.com/todo-server/";
+ 
+    // add a new auth module and the required 'base URL':
+    id<AGAuthenticationModule> myMod = [authenticator auth:^(id<AGAuthConfig> config) {
+        [config setName:@"authMod"];
+        [config setBaseURL:[NSURL URLWithString:baseURL]];
+    }];
  */
 @interface AGAuthenticator : NSObject
-
 
 /**
  * A factory method to instantiate an empty AGAuthenticator.

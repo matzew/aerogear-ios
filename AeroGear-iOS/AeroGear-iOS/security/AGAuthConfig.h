@@ -28,7 +28,6 @@
  */
 @property (strong, nonatomic) NSURL* baseURL;
 
-
 /**
  * Applies the "login endpoint" to the configuration.
  */

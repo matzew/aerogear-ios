@@ -57,7 +57,7 @@
  * Saves the given object in the underlying storage system.
  *
  * @param data An object or a collection (e.g. NSArray) which is being persisted.
- * @param An error object containing details of why the save failed. 
+ * @param error An error object containing details of why the save failed. 
  *
  * @return YES if the operation succeeds, otherwise NO.
  */
@@ -66,7 +66,7 @@
 /**
  * Resets the entire storage system.
  *
- * @param An error object containing details of why the reset failed.
+ * @param error An error object containing details of why the reset failed.
  *
  * @return YES if the operation succeeds, otherwise NO.
  */
@@ -76,7 +76,7 @@
  * Removes a specific object/record from the underlying storage system.
  *
  * @param record the desired object
- * @param An error object containing details of why the remove failed.
+ * @param error An error object containing details of why the remove failed.
  *
  * @return YES if the operation succeeds, otherwise NO.
  */

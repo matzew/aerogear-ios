@@ -19,6 +19,12 @@
 #import "AGStore.h"
 #import "AGStoreConfiguration.h"
 
+/**
+ An internal AGStore implementation that uses "in-memory" storage.
+ 
+ *IMPORTANT:* Users are not required to instantiate this class directly, instead an instance of this class is returned automatically when an DataStore with default configuration is constructed or with the _type_ config option set to _"MEMORY"_. See AGDataManager and AGStore class documentation for more information.
+
+ */
 @interface AGMemoryStorage : NSObject <AGStore> {
 
 @protected
