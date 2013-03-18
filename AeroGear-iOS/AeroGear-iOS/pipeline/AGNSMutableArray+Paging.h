@@ -19,7 +19,7 @@
 #import "AGPipe.h"
 
 /**
-The library has built-in paging support, enabling the scrolling to either forward or backwards through a result set returned from the server. Paging metadata located in the server response (either in the headers, in the body or using [webLinking](http://tools.ietf.org/html/rfc5988)) are used to identify the _next_ or the _previous_ result set. For example, in Twitter case, paging metadata are located in the body of the response, using _"next\_page"_ or _"previous\_page"_ to identify the next or previous result set respectively. The location of this metadata as well as naming, is fully configurable during the creation of the [Pipe](AGPipe), thus enabling greater flexibility in supporting several different paging strategies.
+The library has built-in paging support, enabling the scrolling to either forward or backwards through a result set returned from the server. Paging metadata located in the server response (either in the headers by [webLinking](http://tools.ietf.org/html/rfc5988) or custom headers, or in the body) are used to identify the _next_ or the _previous_ result set. For example, in Twitter case, paging metadata are located in the body of the response, using _"next\_page"_ or _"previous\_page"_ to identify the next or previous result set respectively. The location of this metadata as well as naming, is fully configurable during the creation of the [Pipe](AGPipe), thus enabling greater flexibility in supporting several different paging strategies.
 
 Below is an example that goes against the AeroGear Controller Server:
 
