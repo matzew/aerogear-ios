@@ -3,8 +3,7 @@ aerogear-ios
 
 iOS/Objective-C client library implementation for AeroGear
 
-Not much yet here.... Only an early draft for a potential AeroGear iOS client lib,
-based on the [AFNetworking](https://github.com/AFNetworking/AFNetworking/) library.
+The AeroGear iOS client lib is based on the [AFNetworking](https://github.com/AFNetworking/AFNetworking/) library.
 
 The project requires [CocoaPods](http://cocoapods.org/) for dependency management;
 
