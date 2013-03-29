@@ -28,8 +28,6 @@
     id<AGAuthenticationModuleAdapter> _authModule;
     NSString* _recordId;
     AGPipeConfiguration* _config;
-    // the state of the paging object reference.
-    NSMutableArray* _pagingObject;
 }
 
 // =====================================================
@@ -66,8 +64,6 @@
         
         _restClient = [AGHttpClient clientFor:finalURL timeout:_config.timeout];
         _restClient.parameterEncoding = AFJSONParameterEncoding;
-
-        _pagingObject = [NSMutableArray array];
     }
     return self;
 }
@@ -165,20 +161,22 @@
             linkInformationContainer = [self parseQueryInformation:[[operation response] allHeaderFields]];
         }
         
-        if ([responseObject isKindOfClass:[NSDictionary class]]) {
-            [_pagingObject setArray:[NSArray arrayWithObject:responseObject]];
-        } else {
-            [_pagingObject setArray:(NSMutableArray*) responseObject];
-        }
+        NSMutableArray* pagingObject;
         
+        if ([responseObject isKindOfClass:[NSDictionary class]]) {
+            pagingObject = [NSMutableArray arrayWithObject:responseObject];
+        } else {
+            pagingObject = (NSMutableArray*) [responseObject mutableCopy];
+        }
+
         // stash pipe reference:
-        _pagingObject.pipe = self;
+        pagingObject.pipe = self;
         // stash the SCROLLING params:
-        _pagingObject.parameterProvider = linkInformationContainer;
+        pagingObject.parameterProvider = linkInformationContainer;
         
         if (success) {
             //TODO: NSLog(@"Invoking successblock....");
-            success(_pagingObject);
+            success(pagingObject);
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         
