@@ -49,8 +49,15 @@ static char const * const AGParamProviderKey = "AGParamProviderKey";
      failure:(void (^)(NSError *error))failure {
     
     [self.pipe readWithParams:[self.parameterProvider valueForKey:@"AG-prev-key"] success:^(id responseObject) {
+        NSMutableArray* pagingObject = (NSMutableArray*) responseObject;
+        
+        // update link information
+        self.parameterProvider = pagingObject.parameterProvider;
+        // update data
+        [self setArray:pagingObject];
+        
         if (success) {
-            success(responseObject);
+            success(self);
         }
     } failure:^(NSError *error) {
         if (failure) {
