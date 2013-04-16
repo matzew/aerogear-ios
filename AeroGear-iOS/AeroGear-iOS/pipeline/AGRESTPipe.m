@@ -288,9 +288,7 @@
 // helper method:
 -(void) applyAuthToken {
     if ([_authModule isAuthenticated]) {
-        NSDictionary *authHeaders = [_authModule authHeaderParams];
-
-        [authHeaders enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        [[_authModule authTokens] enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
             [_restClient setDefaultHeader:key value:obj];
         }];
     }

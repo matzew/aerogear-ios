@@ -25,10 +25,7 @@
 @implementation AGRestAuthentication {
     // ivars
     AGHttpClient* _restClient;
-    
-    NSString* _tokenHeaderName;
-    
-    NSMutableDictionary *_authHeaderParams;
+    NSArray* _tokenHeaderNames;
 }
 
 // =====================================================
@@ -56,7 +53,7 @@
 // ==============================================================
 // ======== internal API (AGAuthenticationModuleAdapter) ========
 // ==============================================================
-//@synthesize authToken = _authToken;
+@synthesize authTokens = _authTokens;
 
 
 
@@ -78,7 +75,7 @@
         _logoutEndpoint = config.logoutEndpoint;
         _enrollEndpoint = config.enrollEndpoint;
         _baseURL = config.baseURL.absoluteString;
-        _tokenHeaderName = config.tokenHeaderName;
+        _tokenHeaderNames = config.tokenHeaderNames;
         
         _restClient = [AGHttpClient clientFor:config.baseURL timeout:config.timeout];
         _restClient.parameterEncoding = AFJSONParameterEncoding;
@@ -89,7 +86,7 @@
 
 -(void)dealloc {
     _restClient = nil;
-    _tokenHeaderName = nil;
+    _tokenHeaderNames = nil;
 }
 
 
@@ -150,9 +147,11 @@
 
 -(void) logout:(void (^)())success
      failure:(void (^)(NSError *error))failure {
-    
+
     // stash the token to the header:
-    [_restClient setDefaultHeader:_tokenHeaderName value:[_authHeaderParams objectForKey:_tokenHeaderName]];
+    [_authTokens enumerateKeysAndObjectsUsingBlock:^(id header, id value, BOOL *stop) {
+        [_restClient setDefaultHeader:header value:value];
+    }];
     
     // logoff:
     [_restClient postPath:_logoutEndpoint parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
@@ -172,14 +171,6 @@
     }];
 }
 
--(NSDictionary*)authHeaderParams {
-    return (_authHeaderParams != nil? [_authHeaderParams copy]: nil);
-}
-
--(NSDictionary*)authQueryParams {
-    return nil;
-}
-
 -(void) cancel {
     // cancel all running http operations
     [_restClient.operationQueue cancelAllOperations];
@@ -187,13 +178,12 @@
 
 // private method
 -(void) readAndStashToken:(AFHTTPRequestOperation*) operation {
-    // init at first access
-    if (!_authHeaderParams)
-        _authHeaderParams = [[NSMutableDictionary alloc] init];
+    _authTokens = [[NSMutableDictionary alloc] init];
+    NSDictionary* response = [[operation response] allHeaderFields];
     
-    NSString* authToken = [[[operation response] allHeaderFields] objectForKey:_tokenHeaderName];
-
-    [_authHeaderParams setObject:authToken forKey:_tokenHeaderName];
+    for (NSString* header in _tokenHeaderNames) {
+        [_authTokens setValue:[response objectForKey:header] forKey:header];
+    };
 }
 
 // ==============================================================
@@ -201,12 +191,12 @@
 // ==============================================================
 - (BOOL)isAuthenticated {
     //return !!_authToken;
-    return (nil != _authHeaderParams);
+    return (nil != _authTokens);
 }
 
 - (void)deauthorize {
     // TODO ?
-    //_authToken = nil;
+    _authTokens = nil;
 }
 
 

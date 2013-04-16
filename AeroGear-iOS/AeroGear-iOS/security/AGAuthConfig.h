@@ -46,7 +46,7 @@
 /**
  * Applies the tokenHeaderName header name to the configuration.
  */
-@property (copy, nonatomic) NSString* tokenHeaderName;
+@property (copy, nonatomic) NSArray* tokenHeaderNames;
 
 /**
  * The timeout interval for a request to complete.

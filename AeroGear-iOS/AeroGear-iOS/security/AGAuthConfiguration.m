@@ -24,7 +24,7 @@
 @synthesize loginEndpoint = _loginEndpoint;
 @synthesize logoutEndpoint = _logoutEndpoint;
 @synthesize enrollEndpoint = _enrollEndpoint;
-@synthesize tokenHeaderName = _tokenHeaderName;
+@synthesize tokenHeaderNames = _tokenHeaderNames;
 @synthesize timeout = _timeout;
 
 @synthesize name = _name;
@@ -35,7 +35,7 @@
     if (self) {
         // default values:
         _type = @"AG_SECURITY";
-        _tokenHeaderName = @"Auth-Token";
+        _tokenHeaderNames = [NSArray arrayWithObjects:@"Auth-Token", nil];
         _loginEndpoint = @"auth/login";
         _logoutEndpoint = @"auth/logout";
         _enrollEndpoint = @"auth/enroll";
