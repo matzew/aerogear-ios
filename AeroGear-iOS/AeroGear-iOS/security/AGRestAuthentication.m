@@ -182,7 +182,7 @@
     NSDictionary* response = [[operation response] allHeaderFields];
     
     for (NSString* header in _tokenHeaderNames) {
-        [_authTokens setValue:[response objectForKey:header] forKey:header];
+        [_authTokens setObject:[response objectForKey:header] forKey:header];
     };
 }
 

@@ -26,7 +26,7 @@
 /**
  * Returns the type of the underlying 'auth module implementation'
  */
-@property (nonatomic, readonly) NSDictionary* authTokens;
+@property (nonatomic, readonly) NSMutableDictionary* authTokens;
 
 /**
  * Performs a simple check if the user of the module impl. is authenticated.
