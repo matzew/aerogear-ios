@@ -25,7 +25,7 @@
 @implementation AGRestAuthentication {
     // ivars
     AGHttpClient* _restClient;
-    NSArray* _tokenHeaderNames;
+    NSString* _tokenHeaderName;
 }
 
 // =====================================================
@@ -75,7 +75,7 @@
         _logoutEndpoint = config.logoutEndpoint;
         _enrollEndpoint = config.enrollEndpoint;
         _baseURL = config.baseURL.absoluteString;
-        _tokenHeaderNames = config.tokenHeaderNames;
+        _tokenHeaderName = config.tokenHeaderName;
         
         _restClient = [AGHttpClient clientFor:config.baseURL timeout:config.timeout];
         _restClient.parameterEncoding = AFJSONParameterEncoding;
@@ -86,7 +86,7 @@
 
 -(void)dealloc {
     _restClient = nil;
-    _tokenHeaderNames = nil;
+    _tokenHeaderName = nil;
 }
 
 
@@ -178,12 +178,10 @@
 
 // private method
 -(void) readAndStashToken:(AFHTTPRequestOperation*) operation {
-    _authTokens = [[NSMutableDictionary alloc] init];
-    NSDictionary* response = [[operation response] allHeaderFields];
-    
-    for (NSString* header in _tokenHeaderNames) {
-        [_authTokens setObject:[response objectForKey:header] forKey:header];
-    };
+    // extract auth token value from the response
+    NSString *tokenHeaderValue =  [[[operation response] allHeaderFields] valueForKey:_tokenHeaderName];
+
+    [_authTokens setObject:tokenHeaderValue forKey:_tokenHeaderName];
 }
 
 // ==============================================================
@@ -198,8 +196,6 @@
     // TODO ?
     _authTokens = nil;
 }
-
-
 
 // general override...
 -(NSString *) description {

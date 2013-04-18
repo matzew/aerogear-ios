@@ -24,7 +24,7 @@
 @protocol AGAuthenticationModuleAdapter <AGAuthenticationModule>
 
 /**
- * Returns the type of the underlying 'auth module implementation'
+ *  A key/value pair of the authentication tokens.
  */
 @property (nonatomic, readonly) NSMutableDictionary* authTokens;
 
