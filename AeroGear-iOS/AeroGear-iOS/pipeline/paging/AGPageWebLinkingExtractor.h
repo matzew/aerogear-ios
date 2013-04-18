@@ -19,6 +19,12 @@
 
 #import "AGPageParameterExtractor.h"
 
+/**
+ *  An internal AGPageParameterExtractor implementation that uses
+ *  the WebLinking standard to parse paging information.
+ *
+ *  See http://tools.ietf.org/html/rfc5988
+ */
 @interface AGPageWebLinkingExtractor : NSObject<AGPageParameterExtractor>
 
 @end

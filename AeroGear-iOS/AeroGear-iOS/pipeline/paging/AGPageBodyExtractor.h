@@ -19,6 +19,10 @@
 
 #import "AGPageParameterExtractor.h"
 
+/**
+ *  An internal AGPageParameterExtractor implementation that uses
+ *  the response body to parse paging information.
+ */
 @interface AGPageBodyExtractor : NSObject<AGPageParameterExtractor>
 
 @end

@@ -17,8 +17,23 @@
 
 #import <Foundation/Foundation.h>
 
+/**
+ * Classes which implement this protocol are responsible for consuming 
+ * a response from a server and extracting paging information (if any).
+ */
 @protocol AGPageParameterExtractor<NSObject>
 
+/**
+ * Parse a response and extract paging information
+ *
+ * @param response The response from the server
+ * @param next     The 'next page' identifier
+ * @param previous The 'previous page' identifier
+ *
+ * @return An NSDictionary with keys 'AG-next-key' and 'AG-prev-key' with
+ *         the next and previous page information respectively. 
+ *         See AGPageBodyExtractor, AGPageWebLinkingExtractor
+ */
 - (NSDictionary*) parse:(id)response
                 headers:(NSDictionary*)headers
                    next:(NSString*)nextIdentifier
