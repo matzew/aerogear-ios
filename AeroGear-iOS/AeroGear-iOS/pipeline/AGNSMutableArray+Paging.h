@@ -33,9 +33,11 @@ Below is an example that goes against the AeroGear Controller Server:
         [config setMetadataLocation:@"header"];
     }];
 
-First we create our [Pipeline](AGPipeline) object. Notice that in the Pipe configuration object, we explicitely declare the name of the paging identifiers supported by the server, as well as the the location of these identifiers in the response. Note that If not specified, the library will assume the server is using Web Linking paging strategy.
+First we create our [Pipeline](AGPipeline) object. Notice that in the Pipe configuration object, we explicitely declare the name of the paging identifiers supported by the server, as well as the location of these identifiers in the response. Note that, if the metadataLocation is not specified, the library will assume the server is using Web Linking pagination strategy and will default to it. 
+ 
+For cases that a custom pagination strategy is followed in the server application, the library also allows the user to plug in a user-defined one, by the means of the [config setPageParameterExtractor] configuration setting. If set, the library will follow this strategy, overriding the build-in provided ones. In that case, the metadata location is not required and is ignored if set. The strategy should follow the protocol AGPageParameterExtractor, allowing the library to determine the 'next' and 'previous' parameters.
 
-## Start Paging
+ ## Start Paging
 
 To kick-start pagination, you use the method ```readWithParams``` of the underlying [Pipe](AGPipe), passing your desired query parameters to the server. Upon successfully completion, the _pagedResultSet_ (an enchached category of NSArray) will allow you to scroll through the result set.
 

@@ -69,6 +69,11 @@
  * Indicates whether paging information (see identifiers) is received
  * from the response 'header', the response 'body' or via RFC 5988 ('webLinking'),
  * which is the default. Other values are ignored and the default is being used.
+ *
+ * Note: if the pageExtractor option is not set, the library will default to use
+ *       an appropriate pagination strategy according to the metadataLocation. If set
+ *       this option is not required and is ignored if set. See pageExtraction
+ *       configuration property for more information.
  */
 @property (copy, nonatomic) NSString* metadataLocation;
 
@@ -93,7 +98,16 @@ sb */
 @property (assign, nonatomic) NSTimeInterval timeout;
 
 /**
- * The paging strategy configured for this pipe.
+ * An extension point to override the default strategies provided by the library. If set,
+ * the library will use this strategy to determine server paging. The strategy should
+ * conform to the protocol AGPageParameterExtractor.
+ *
+ * Note: If this config setting is NOT set, the library will default to use an internal
+ *       defined paging extractor implementation as defined by the metadataLocation
+ *       configuration setting. See AGNSMutableArray+Paging API doc for example usage.
+ *       See internal AGPageWebLinkingExtractor, AGPageHeaderExtractor and
+ *       AGPageBodyExtractor for example pagination strategies.
+ *
  */
 @property (strong, nonatomic) id<AGPageParameterExtractor> pageExtractor;
 

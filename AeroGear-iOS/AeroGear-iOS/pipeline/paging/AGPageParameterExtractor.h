@@ -33,6 +33,7 @@
  * @return An NSDictionary with keys 'AG-next-key' and 'AG-prev-key' with
  *         the next and previous page information respectively. 
  *         See AGPageBodyExtractor, AGPageWebLinkingExtractor
+ *
  */
 - (NSDictionary*) parse:(id)response
                 headers:(NSDictionary*)headers
