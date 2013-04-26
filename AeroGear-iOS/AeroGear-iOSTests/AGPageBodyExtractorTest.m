@@ -22,12 +22,6 @@
 
 @end
 
-// exposing private methods on the testing category
-// to test internal API methods of AGPageBodyExtractor
-@interface AGPageBodyExtractor (Testing)
--(NSDictionary *) transformQueryString:(NSString *) value;
-@end
-
 static NSString *const NEXT_PAGE_IDENTIFIER     = @"next_page";
 static NSString *const PREVIOUS_PAGE_IDENTIFIER = @"previous_page";
 
@@ -136,30 +130,6 @@ static NSString *const PREVIOUS_PAGE_IDENTIFIER = @"previous_page";
     // using internal next-prev keys:
     STAssertNil([parsedInfo valueForKey:NEXT_PAGE_IDENTIFIER], @"should not be found, since we are looking for a wrong key");
     STAssertNil([parsedInfo valueForKey:PREVIOUS_PAGE_IDENTIFIER], @"should not be found, since we are looking for a wrong key");
-}
-
-#pragma mark - internal testTansformQueryString test
--(void) testTransformQueryStringWithNil {
-    NSDictionary *parsedQuery = [_extractor transformQueryString:nil];
-    STAssertTrue(parsedQuery.count==0, @"empty dictionary");
-}
-
--(void) testTransformQueryStringWithTwoArgs {
-    // like from NSURL.query
-    NSDictionary *parsedQuery = [_extractor transformQueryString:@"foo=1&bar=2"];
-    STAssertTrue(parsedQuery.count==2, @"should be 2 elements");
-}
-
--(void) testTransformQueryStringWithTwoArgsAndResource {
-    // returned from the controller
-    NSDictionary *parsedQuery = [_extractor transformQueryString:@"cars?foo=1&bar=2"];
-    STAssertTrue(parsedQuery.count==2, @"should be 2 elements");
-}
-
--(void) testTransformQueryStringWithTwoArgsAndLeadingQuestionmark {
-    // header parasms
-    NSDictionary *parsedQuery = [_extractor transformQueryString:@"?foo=1&bar=2"];
-    STAssertTrue(parsedQuery.count==2, @"should be 2 elements");
 }
 
 @end
