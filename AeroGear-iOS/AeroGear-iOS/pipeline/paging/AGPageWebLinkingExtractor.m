@@ -17,6 +17,8 @@
 
 #import "AGPageWebLinkingExtractor.h"
 
+#import "NSString+AeroGear.h"
+
 @implementation AGPageWebLinkingExtractor
 
 - (NSDictionary*) parse:(id)response
@@ -36,7 +38,7 @@
             NSString *tmpElem = [elem stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
             if ([tmpElem hasPrefix:@"<"] && [tmpElem hasSuffix:@">"]) {
                 NSURL *parsedURL = [NSURL URLWithString:[[tmpElem substringFromIndex:1] substringToIndex:tmpElem.length-2]]; //2 because, the first did already cut one char...
-                queryArguments = [self transformQueryString:parsedURL.query];
+                queryArguments = [parsedURL.query transformQueryString];
             } else if ([tmpElem hasPrefix:@"rel="]) {
                 // only those 'rel' links that we need (prev/next)
                 NSString *rel = [[tmpElem substringFromIndex:5] substringToIndex:tmpElem.length-6]; // cutting 5 + the last....
@@ -53,23 +55,6 @@
     }
     
     return pagingLinks;
-}
-
--(NSDictionary *) transformQueryString:(NSString *) value {
-    // we need to get rid of the '?' and everything before that
-    // linke any URL info... (resource?params...)
-    NSRange range = [value rangeOfString:@"?"];
-    
-    if (range.location != NSNotFound) {
-        value = [value substringFromIndex:NSMaxRange(range)];
-    }
-    // chop the query string into a dictionary
-    NSArray *components = [value componentsSeparatedByString:@"&"];
-    NSMutableDictionary *parameters = [[NSMutableDictionary alloc] init];
-    for (NSString *component in components) {
-        [parameters setObject:[[component componentsSeparatedByString:@"="] objectAtIndex:1] forKey:[[component componentsSeparatedByString:@"="] objectAtIndex:0]];
-    }
-    return parameters;
 }
 
 @end

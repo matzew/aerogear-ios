@@ -24,6 +24,8 @@
                    next:(NSString*)nextIdentifier
                    prev:(NSString*)prevIdentifier {
     
+    // simular to body extractor, but this time the headers are parsed
+    // for the 'previous' and 'next' page parameters.
     return [super parse:headers headers:headers next:nextIdentifier prev:prevIdentifier];
 }
 

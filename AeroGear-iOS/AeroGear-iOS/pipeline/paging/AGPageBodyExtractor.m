@@ -17,6 +17,8 @@
 
 #import "AGPageBodyExtractor.h"
 
+#import "NSString+AeroGear.h"
+
 @implementation AGPageBodyExtractor
 
 - (NSDictionary*) parse:(id)response
@@ -35,30 +37,13 @@
 
     // buld the MAP of links....:
     NSMutableDictionary *mapOfLink = [NSMutableDictionary dictionary];
-    
+
     if ([info valueForKey:nextIdentifier] != nil)
-        [mapOfLink setValue:[self transformQueryString:[info valueForKey:nextIdentifier]] forKey:@"AG-next-key"]; /// internal key...
+        [mapOfLink setValue:[[info valueForKey:nextIdentifier] transformQueryString] forKey:@"AG-next-key"]; /// internal key...
     if ([info valueForKey:prevIdentifier] !=nil )
-        [mapOfLink setValue:[self transformQueryString:[info valueForKey:prevIdentifier]] forKey:@"AG-prev-key"]; /// internal key...
+        [mapOfLink setValue:[[info valueForKey:prevIdentifier] transformQueryString] forKey:@"AG-prev-key"]; /// internal key...
     
     return mapOfLink;
-}
-
--(NSDictionary *) transformQueryString:(NSString *) value {
-    // we need to get rid of the '?' and everything before that
-    // linke any URL info... (resource?params...)
-    NSRange range = [value rangeOfString:@"?"];
-    
-    if (range.location != NSNotFound) {
-        value = [value substringFromIndex:NSMaxRange(range)];
-    }
-    // chop the query string into a dictionary
-    NSArray *components = [value componentsSeparatedByString:@"&"];
-    NSMutableDictionary *parameters = [[NSMutableDictionary alloc] init];
-    for (NSString *component in components) {
-        [parameters setObject:[[component componentsSeparatedByString:@"="] objectAtIndex:1] forKey:[[component componentsSeparatedByString:@"="] objectAtIndex:0]];
-    }
-    return parameters;
 }
 
 @end
