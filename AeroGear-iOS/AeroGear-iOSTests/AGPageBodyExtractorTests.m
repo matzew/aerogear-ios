@@ -18,14 +18,14 @@
 
 #import "AGPageBodyExtractor.h"
 
-@interface AGPageBodyExtractorTest : SenTestCase
+@interface AGPageBodyExtractorTests : SenTestCase
 
 @end
 
 static NSString *const NEXT_PAGE_IDENTIFIER     = @"next_page";
 static NSString *const PREVIOUS_PAGE_IDENTIFIER = @"previous_page";
 
-@implementation AGPageBodyExtractorTest {
+@implementation AGPageBodyExtractorTests {
     NSDictionary *_headers;
     NSDictionary *_response;
     

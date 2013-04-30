@@ -17,15 +17,13 @@
 
 #import "AGPageWebLinkingExtractor.h"
 
-#import "NSString+AeroGear.h"
-
 @implementation AGPageWebLinkingExtractor
 
 - (NSDictionary*) parse:(id)response
                 headers:(NSDictionary*)headers
                    next:(NSString*)nextIdentifier
                    prev:(NSString*)prevIdentifier {
-
+    
     NSString* headerValue = [headers objectForKey:@"Link"];
     
     NSMutableDictionary *pagingLinks = [NSMutableDictionary dictionary];
@@ -38,7 +36,7 @@
             NSString *tmpElem = [elem stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
             if ([tmpElem hasPrefix:@"<"] && [tmpElem hasSuffix:@">"]) {
                 NSURL *parsedURL = [NSURL URLWithString:[[tmpElem substringFromIndex:1] substringToIndex:tmpElem.length-2]]; //2 because, the first did already cut one char...
-                queryArguments = [parsedURL.query transformQueryString];
+                queryArguments = [self transformQueryString:parsedURL.query];
             } else if ([tmpElem hasPrefix:@"rel="]) {
                 // only those 'rel' links that we need (prev/next)
                 NSString *rel = [[tmpElem substringFromIndex:5] substringToIndex:tmpElem.length-6]; // cutting 5 + the last....

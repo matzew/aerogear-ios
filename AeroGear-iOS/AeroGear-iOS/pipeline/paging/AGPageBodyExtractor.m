@@ -17,31 +17,29 @@
 
 #import "AGPageBodyExtractor.h"
 
-#import "NSString+AeroGear.h"
-
 @implementation AGPageBodyExtractor
 
 - (NSDictionary*) parse:(id)response
                 headers:(NSDictionary*)headers
                    next:(NSString*)nextIdentifier
                    prev:(NSString*)prevIdentifier {
-
+    
     // NSArray is ONLY being passed in, when the metadataLocation is "body"
     // AND it is actually NOT at the root level, like twitter does
     if (!response || ![response isKindOfClass:[NSDictionary class]]) {
         // for now... return NIL, since we do not support that...
         return nil;
     }
-
+    
     NSDictionary* info = (NSDictionary*)response;
-
+    
     // buld the MAP of links....:
     NSMutableDictionary *mapOfLink = [NSMutableDictionary dictionary];
-
+    
     if ([info valueForKey:nextIdentifier] != nil)
-        [mapOfLink setValue:[[info valueForKey:nextIdentifier] transformQueryString] forKey:@"AG-next-key"]; /// internal key...
+        [mapOfLink setValue:[self transformQueryString:[info valueForKey:nextIdentifier]] forKey:@"AG-next-key"]; /// internal key...
     if ([info valueForKey:prevIdentifier] !=nil )
-        [mapOfLink setValue:[[info valueForKey:prevIdentifier] transformQueryString] forKey:@"AG-prev-key"]; /// internal key...
+        [mapOfLink setValue:[self transformQueryString:[info valueForKey:prevIdentifier]] forKey:@"AG-prev-key"]; /// internal key...
     
     return mapOfLink;
 }

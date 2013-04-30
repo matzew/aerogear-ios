@@ -17,14 +17,17 @@
 
 #import <Foundation/Foundation.h>
 
-#import "AGPageBaseExtractor.h"
+#import "AGPageParameterExtractor.h"
+
+@interface AGPageBaseExtractor : NSObject<AGPageParameterExtractor>
 
 /**
- *  An internal AGPageParameterExtractor implementation that uses
- *  the WebLinking standard to parse paging information.
+ * Parses a query string of the form "?param1=val1&param2=val&.." and
+ * returns a dictionary with the params encapsulated as a key/value pairs.
+ * Note: If a prefix of 'http://.." location is present, it is choped prior parsing.
  *
- *  See http://tools.ietf.org/html/rfc5988
+ * @returns an NSDictionary with the parsed key-value params.
  */
-@interface AGPageWebLinkingExtractor : AGPageBaseExtractor
+- (NSDictionary *) transformQueryString:(NSString *)value;
 
 @end

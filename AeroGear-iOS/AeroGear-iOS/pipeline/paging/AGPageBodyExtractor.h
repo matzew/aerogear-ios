@@ -17,12 +17,12 @@
 
 #import <Foundation/Foundation.h>
 
-#import "AGPageParameterExtractor.h"
+#import "AGPageBaseExtractor.h"
 
 /**
  *  An internal AGPageParameterExtractor implementation that uses
  *  the response body to parse paging information.
  */
-@interface AGPageBodyExtractor : NSObject<AGPageParameterExtractor>
+@interface AGPageBodyExtractor : AGPageBaseExtractor
 
 @end

@@ -20,7 +20,7 @@
 #import "AGPageBodyExtractor.h"
 
 /**
- *  An internal AGPageParameterExtractor implementation that uses 
+ *  An internal AGPageParameterExtractor implementation that uses
  *  the response headers to parse paging information.
  */
 @interface AGPageHeaderExtractor : AGPageBodyExtractor

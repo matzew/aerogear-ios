@@ -18,14 +18,14 @@
 
 #import "AGPageWebLinkingExtractor.h"
 
-@interface AGPageWebLinkingExtractorTest : SenTestCase
+@interface AGPageWebLinkingExtractorTests : SenTestCase
 
 @end
 
 static NSString *const NEXT_PAGE_IDENTIFIER     = @"next";
 static NSString *const PREVIOUS_PAGE_IDENTIFIER = @"previous";
 
-@implementation AGPageWebLinkingExtractorTest {
+@implementation AGPageWebLinkingExtractorTests {
     NSDictionary *_headers;
     NSArray      *_response;
     
