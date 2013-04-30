@@ -19,6 +19,10 @@
 
 #import "AGPageParameterExtractor.h"
 
+/**
+ * Abstract base class that concrete page extractor implementations can derive for.
+ * Used to provide useful methods, that implementions can use.
+ */
 @interface AGPageBaseExtractor : NSObject<AGPageParameterExtractor>
 
 /**
