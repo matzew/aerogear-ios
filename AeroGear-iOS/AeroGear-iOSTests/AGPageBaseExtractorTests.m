@@ -17,6 +17,8 @@
 
 #import <SenTestingKit/SenTestingKit.h>
 
+#import "OCMock.h"
+
 #import "AGPageBaseExtractor.h"
 
 /**
@@ -45,6 +47,17 @@
 
 -(void)tearDown {
     [super tearDown];
+}
+
+-(void) testTransformQueryStringWithNil {
+    NSDictionary *parsedQuery = [_extractor transformQueryString:nil];
+    STAssertTrue(parsedQuery.count==0, @"empty dictionary");
+}
+
+-(void) testTransformQueryStringWithTwoArgs {
+    // like from NSURL.query
+    NSDictionary *parsedQuery = [_extractor transformQueryString:@"foo=1&bar=2"];
+    STAssertTrue(parsedQuery.count==2, @"should be 2 elements");
 }
 
 -(void) testTransformQueryStringWithTwoArgsAndResource {
