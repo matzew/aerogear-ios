@@ -48,9 +48,12 @@ static NSString *const RESPONSE_TWO_ITEMS = @"[{\"id\":1,\"color\":\"black\",\"b
     AGPipeConfiguration* config = [[AGPipeConfiguration alloc] init];
     [config setBaseURL:[NSURL URLWithString:@"http://server.com/context/"]];
     [config setName:@"cars"];
-    [config setNextIdentifier:@"AG-Links-Next"];
-    [config setPreviousIdentifier:@"AG-Links-Previous"];
-    [config setMetadataLocation:@"header"];
+    
+    [config setPageConfig:^(id<AGPageConfig> pageConfig) {
+        [pageConfig setNextIdentifier:@"AG-Links-Next"];
+        [pageConfig setPreviousIdentifier:@"AG-Links-Previous"];
+        [pageConfig setMetadataLocation:@"header"];
+    }];
 
     _pipe = [AGRESTPipe pipeWithConfig:config];
 }
@@ -228,13 +231,16 @@ static NSString *const RESPONSE_TWO_ITEMS = @"[{\"id\":1,\"color\":\"black\",\"b
     AGPipeConfiguration* config = [[AGPipeConfiguration alloc] init];
     [config setBaseURL:[NSURL URLWithString:@"http://server.com/context/"]];    
     [config setName:@"cars"];
-    [config setNextIdentifier:@"AG-Links-Next"];
-    [config setPreviousIdentifier:@"AG-Links-Previous"];
-    [config setParameterProvider:@{@"color" : @"black", @"offset" : @"0", @"limit" : [NSNumber numberWithInt:1]}];
-    [config setMetadataLocation:@"header"];
+    [config setPageConfig:^(id<AGPageConfig> pageConfig) {
+        [pageConfig setNextIdentifier:@"AG-Links-Next"];
+        [pageConfig setPreviousIdentifier:@"AG-Links-Previous"];
+        [pageConfig setParameterProvider:@{@"color" : @"black", @"offset" : @"0", @"limit" : [NSNumber numberWithInt:1]}];
+        [pageConfig setMetadataLocation:@"header"];
+    }];
     
     _pipe = [AGRESTPipe pipeWithConfig:config];
     
+
     // add the mocked paged identifiers
     [AGMockURLProtocol addHeader:@"AG-Links-Next" value:@"http://server.com/context/?color=black&offset=1&limit=1]"];
 
@@ -274,10 +280,12 @@ static NSString *const RESPONSE_TWO_ITEMS = @"[{\"id\":1,\"color\":\"black\",\"b
   AGPipeConfiguration* config = [[AGPipeConfiguration alloc] init];
     [config setBaseURL:[NSURL URLWithString:@"http://server.com/context/"]];        
     [config setName:@"cars"];
-    [config setMetadataLocation:@"header"];
-        
-    // wrong setting:
-    [config setNextIdentifier:@"foo"];
+    [config setPageConfig:^(id<AGPageConfig> pageConfig) {
+        [pageConfig setMetadataLocation:@"header"];
+        // wrong setting:
+        [pageConfig setNextIdentifier:@"foo"];
+
+    }];
     
     _pipe = [AGRESTPipe pipeWithConfig:config];
     
@@ -326,10 +334,11 @@ static NSString *const RESPONSE_TWO_ITEMS = @"[{\"id\":1,\"color\":\"black\",\"b
     AGPipeConfiguration* config = [[AGPipeConfiguration alloc] init];
     [config setBaseURL:[NSURL URLWithString:@"http://server.com/context/"]];
     [config setName:@"cars"];
-    [config setMetadataLocation:@"header"];
-    
-    // wrong setting:
-    [config setPreviousIdentifier:@"foo"];
+    [config setPageConfig:^(id<AGPageConfig> pageConfig) {
+        [pageConfig setMetadataLocation:@"header"];
+        // wrong setting:
+        [pageConfig setPreviousIdentifier:@"foo"];
+    }];
     
     _pipe = [AGRESTPipe pipeWithConfig:config];
     
@@ -378,9 +387,10 @@ static NSString *const RESPONSE_TWO_ITEMS = @"[{\"id\":1,\"color\":\"black\",\"b
     AGPipeConfiguration* config = [[AGPipeConfiguration alloc] init];
     [config setBaseURL:[NSURL URLWithString:@"http://server.com/context/"]];
     [config setName:@"cars"];
-    
-    // wrong setting:
-    [config setMetadataLocation:@"body"];
+    [config setPageConfig:^(id<AGPageConfig> pageConfig) {
+        // wrong setting:
+        [pageConfig setMetadataLocation:@"body"];
+    }];
 
     _pipe = [AGRESTPipe pipeWithConfig:config];
     

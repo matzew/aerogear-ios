@@ -38,47 +38,19 @@ describe(@"AGPipeConfig.h", ^{
         });
         
         it(@"should have defaults", ^{
-            [[config.metadataLocation should] equal:@"webLinking"];
-            [[config.nextIdentifier should] equal:@"next"];
-            [[config.previousIdentifier should] equal:@"previous"];
-            [[config.offset should] equal:@"0"];
-            [[theValue([config.limit integerValue]) should] equal:theValue(10)];
-            
-            
-            // If no "parameter provider" has been provided, the values for
-            // limit/offset are used
-            [[config.parameterProvider objectForKey:@"limit"] shouldNotBeNil];
-            [[config.parameterProvider objectForKey:@"offset"] shouldNotBeNil];
+            [[config.type should] equal:@"REST"];
+            [[config.recordId should] equal:@"id"];
+            [[theValue(config.timeout) should] equal:theValue(60)];
         });
 
         it(@"should allow overriding defaults", ^{
             
             // set up:
-            config.metadataLocation = @"body";
-            config.nextIdentifier = @"tw-next";
-            config.previousIdentifier = @"tw-prev";
-            config.parameterProvider = [NSDictionary dictionaryWithObjectsAndKeys:@"foo", @"key1", @"bar", @"key2", nil];
+            config.recordId = @"recordId";
+            config.timeout = 20;
             
-            [[config.metadataLocation should] equal:@"body"];
-            [[config.nextIdentifier should] equal:@"tw-next"];
-            [[config.previousIdentifier should] equal:@"tw-prev"];
-            
-            
-            // If no "parameter provider" has been provided, the values for
-            // limit/offset are used
-            [[config.parameterProvider objectForKey:@"key1"] shouldNotBeNil];
-            [[config.parameterProvider objectForKey:@"key1"] shouldNotBeNil];
-            [[config.parameterProvider objectForKey:@"limit"] shouldBeNil];
-            [[config.parameterProvider objectForKey:@"offset"] shouldBeNil];
-        });
-        
-        it(@"should ignore bogus values", ^{
-            
-            // set up:
-            config.metadataLocation = @"baar";
-
-            // check:
-            [[config.metadataLocation should] equal:@"webLinking"];
+            [[config.recordId should] equal:@"recordId"];
+            [[theValue(config.timeout) should] equal:theValue(20)];
             
         });
     });
