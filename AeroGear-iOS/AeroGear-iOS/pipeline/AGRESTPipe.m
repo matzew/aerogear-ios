@@ -31,7 +31,9 @@
     // TODO make properties on a PRIVATE category...
     id<AGAuthenticationModuleAdapter> _authModule;
     NSString* _recordId;
+
     AGPipeConfiguration* _config;
+    AGPageConfiguration* _pageConfig;
 }
 
 // =====================================================
@@ -69,13 +71,19 @@
         _restClient = [AGHttpClient clientFor:finalURL timeout:_config.timeout];
         _restClient.parameterEncoding = AFJSONParameterEncoding;
 
-        if (!_config.pageExtractor) {
-            if ([_config.metadataLocation isEqualToString:@"webLinking"]) {
-                [_config setPageExtractor:[[AGPageWebLinkingExtractor alloc] init]];
-            } else if ([_config.metadataLocation isEqualToString:@"header"]) {
-                [_config setPageExtractor:[[AGPageHeaderExtractor alloc] init]];
-            }else if ([_config.metadataLocation isEqualToString:@"body"]) {
-                [_config setPageExtractor:[[AGPageBodyExtractor alloc] init]];
+        _pageConfig = [[AGPageConfiguration alloc] init];
+        
+        // set up paging config from the user supplied block
+        if (pipeConfig.pageConfig)
+            pipeConfig.pageConfig(_pageConfig);
+        
+        if (!_pageConfig.pageExtractor) {
+            if ([_pageConfig.metadataLocation isEqualToString:@"webLinking"]) {
+                [_pageConfig setPageExtractor:[[AGPageWebLinkingExtractor alloc] init]];
+            } else if ([_pageConfig.metadataLocation isEqualToString:@"header"]) {
+                [_pageConfig setPageExtractor:[[AGPageHeaderExtractor alloc] init]];
+            }else if ([_pageConfig.metadataLocation isEqualToString:@"body"]) {
+                [_pageConfig setPageExtractor:[[AGPageBodyExtractor alloc] init]];
             }
         }
     }
@@ -146,7 +154,7 @@
     // which can be the default limit/offset OR what has
     // been configured on the PIPE level.....:
     if (!parameterProvider)
-        parameterProvider = _config.parameterProvider;
+        parameterProvider = _pageConfig.parameterProvider;
 
     [_restClient getPath:_URL.path parameters:parameterProvider success:^(AFHTTPRequestOperation *operation, id responseObject) {
 
@@ -160,10 +168,10 @@
 
         // stash pipe reference:
         pagingObject.pipe = self;
-        pagingObject.parameterProvider = [_config.pageExtractor parse:responseObject
+        pagingObject.parameterProvider = [_pageConfig.pageExtractor parse:responseObject
                                                                headers:[[operation response] allHeaderFields]
-                                                                  next:_config.nextIdentifier
-                                                                  prev:_config.previousIdentifier];
+                                                                  next:_pageConfig.nextIdentifier
+                                                                  prev:_pageConfig.previousIdentifier];
         if (success) {
             //TODO: NSLog(@"Invoking successblock....");
             success(pagingObject);
