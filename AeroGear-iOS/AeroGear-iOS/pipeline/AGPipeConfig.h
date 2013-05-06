@@ -52,6 +52,8 @@
 
 /**
  * A block specifying paging configuration for this Pipe.
+ * See AGPageConfig and for the available paging configuration parameters 
+ * and category AGNSMutableArray(Paging) for example usage.
  */
 @property (copy, nonatomic) void (^pageConfig)(id<AGPageConfig>);
 
