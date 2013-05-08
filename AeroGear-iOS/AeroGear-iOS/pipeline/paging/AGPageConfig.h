@@ -26,7 +26,7 @@
 
 /**
  * A dictionary containing all the HTTP request parameters and their values,
- * that are passed to the server, used used when issuing paging requests.
+ * that are passed to the server, used when issuing paging requests.
  *
  * If no "parameter provider" has been provided, the values for
  * limit/offset are used
