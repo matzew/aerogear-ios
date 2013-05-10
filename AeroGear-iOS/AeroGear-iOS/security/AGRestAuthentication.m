@@ -75,7 +75,6 @@
         _logoutEndpoint = config.logoutEndpoint;
         _enrollEndpoint = config.enrollEndpoint;
         _baseURL = config.baseURL.absoluteString;
-        _tokenHeaderName = config.tokenHeaderName;
         
         _restClient = [AGHttpClient clientFor:config.baseURL timeout:config.timeout];
         _restClient.parameterEncoding = AFJSONParameterEncoding;
@@ -179,11 +178,6 @@
 // private method
 -(void) readAndStashToken:(AFHTTPRequestOperation*) operation {
     _authTokens = [[NSMutableDictionary alloc] init];
-    
-    // extract auth token value from the response
-    NSString *tokenHeaderValue =  [[[operation response] allHeaderFields] valueForKey:_tokenHeaderName];
-
-    [_authTokens setObject:tokenHeaderValue forKey:_tokenHeaderName];
 }
 
 // ==============================================================
