@@ -22,7 +22,6 @@
 
 #import "AGMockURLProtocol.h"
 
-static NSString *const AUTH_TOKEN = @"f36d937c-28d1-4426-98d2-ddab11e954d6";
 static NSString *const PASSING_USERNAME = @"john";
 
 static NSString *const FAILING_USERNAME = @"fail";
@@ -94,7 +93,6 @@ static NSString *const LOGIN_SUCCESS_RESPONSE =  @"{\"username\":\"%@\",\"roles\
 }
 
 -(void) testLoginSuccess {
-    [AGMockURLProtocol addHeader:@"Auth-Token" value:AUTH_TOKEN];
     [AGMockURLProtocol setResponseData:[[NSString stringWithFormat:LOGIN_SUCCESS_RESPONSE, PASSING_USERNAME]
                                         dataUsingEncoding:NSUTF8StringEncoding]];
 
@@ -114,7 +112,6 @@ static NSString *const LOGIN_SUCCESS_RESPONSE =  @"{\"username\":\"%@\",\"roles\
 }
 
 -(void) testLoginWithTimeout {
-    [AGMockURLProtocol addHeader:@"Auth-Token" value:AUTH_TOKEN];
     [AGMockURLProtocol setResponseData:[[NSString stringWithFormat:LOGIN_SUCCESS_RESPONSE, PASSING_USERNAME]
                                         dataUsingEncoding:NSUTF8StringEncoding]];
     
@@ -157,7 +154,6 @@ static NSString *const LOGIN_SUCCESS_RESPONSE =  @"{\"username\":\"%@\",\"roles\
 }
 
 -(void) testLogout {
-    [AGMockURLProtocol addHeader:@"Auth-Token" value:AUTH_TOKEN];
     [AGMockURLProtocol setResponseData:[[NSString stringWithFormat:LOGIN_SUCCESS_RESPONSE, PASSING_USERNAME]
                                         dataUsingEncoding:NSUTF8StringEncoding]];
     
@@ -182,7 +178,6 @@ static NSString *const LOGIN_SUCCESS_RESPONSE =  @"{\"username\":\"%@\",\"roles\
 }
 
 -(void) testLogoutWithTimeout {
-    [AGMockURLProtocol addHeader:@"Auth-Token" value:AUTH_TOKEN];
     [AGMockURLProtocol setResponseData:[[NSString stringWithFormat:LOGIN_SUCCESS_RESPONSE, PASSING_USERNAME]
                                         dataUsingEncoding:NSUTF8StringEncoding]];
     
@@ -214,7 +209,6 @@ static NSString *const LOGIN_SUCCESS_RESPONSE =  @"{\"username\":\"%@\",\"roles\
 }
 
 -(void) testEnrollSuccess {
-    [AGMockURLProtocol addHeader:@"Auth-Token" value:AUTH_TOKEN];
     [AGMockURLProtocol setResponseData:[[NSString stringWithFormat:LOGIN_SUCCESS_RESPONSE, PASSING_USERNAME]
                                         dataUsingEncoding:NSUTF8StringEncoding]];
     
@@ -243,7 +237,6 @@ static NSString *const LOGIN_SUCCESS_RESPONSE =  @"{\"username\":\"%@\",\"roles\
 }
 
 -(void) testEnrollTimeout {
-    [AGMockURLProtocol addHeader:@"Auth-Token" value:AUTH_TOKEN];
     [AGMockURLProtocol setResponseData:[[NSString stringWithFormat:LOGIN_SUCCESS_RESPONSE, PASSING_USERNAME]
                                         dataUsingEncoding:NSUTF8StringEncoding]];
     
@@ -309,7 +302,6 @@ static NSString *const LOGIN_SUCCESS_RESPONSE =  @"{\"username\":\"%@\",\"roles\
 -(void) testCancel {
     NSDate *startTime = [NSDate date];
     
-    [AGMockURLProtocol addHeader:@"Auth-Token" value:AUTH_TOKEN];
     [AGMockURLProtocol setResponseData:[[NSString stringWithFormat:LOGIN_SUCCESS_RESPONSE, PASSING_USERNAME]
                                         dataUsingEncoding:NSUTF8StringEncoding]];
     
