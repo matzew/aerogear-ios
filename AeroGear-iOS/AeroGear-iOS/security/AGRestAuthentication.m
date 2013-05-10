@@ -25,7 +25,6 @@
 @implementation AGRestAuthentication {
     // ivars
     AGHttpClient* _restClient;
-    NSString* _tokenHeaderName;
 }
 
 // =====================================================
@@ -85,7 +84,6 @@
 
 -(void)dealloc {
     _restClient = nil;
-    _tokenHeaderName = nil;
 }
 
 
