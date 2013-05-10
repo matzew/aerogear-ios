@@ -178,6 +178,8 @@
 
 // private method
 -(void) readAndStashToken:(AFHTTPRequestOperation*) operation {
+    _authTokens = [[NSMutableDictionary alloc] init];
+    
     // extract auth token value from the response
     NSString *tokenHeaderValue =  [[[operation response] allHeaderFields] valueForKey:_tokenHeaderName];
 
