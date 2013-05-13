@@ -25,7 +25,6 @@
 @implementation AGRestAuthentication {
     // ivars
     AGHttpClient* _restClient;
-    NSString* _tokenHeaderName;
 }
 
 // =====================================================
@@ -75,7 +74,6 @@
         _logoutEndpoint = config.logoutEndpoint;
         _enrollEndpoint = config.enrollEndpoint;
         _baseURL = config.baseURL.absoluteString;
-        _tokenHeaderName = config.tokenHeaderName;
         
         _restClient = [AGHttpClient clientFor:config.baseURL timeout:config.timeout];
         _restClient.parameterEncoding = AFJSONParameterEncoding;
@@ -86,7 +84,6 @@
 
 -(void)dealloc {
     _restClient = nil;
-    _tokenHeaderName = nil;
 }
 
 
@@ -178,10 +175,7 @@
 
 // private method
 -(void) readAndStashToken:(AFHTTPRequestOperation*) operation {
-    // extract auth token value from the response
-    NSString *tokenHeaderValue =  [[[operation response] allHeaderFields] valueForKey:_tokenHeaderName];
-
-    [_authTokens setObject:tokenHeaderValue forKey:_tokenHeaderName];
+    _authTokens = [[NSMutableDictionary alloc] init];
 }
 
 // ==============================================================

@@ -295,7 +295,7 @@
 
 // helper method:
 -(void) applyAuthToken {
-    if ([_authModule isAuthenticated]) {
+    if (_authModule && [_authModule isAuthenticated]) {
         [[_authModule authTokens] enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
             [_restClient setDefaultHeader:key value:obj];
         }];
