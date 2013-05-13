@@ -1,5 +1,4 @@
-aerogear-ios
-============
+# aerogear-ios [![Build Status](https://travis-ci.org/aerogear/aerogear-ios.png)](https://travis-ci.org/aerogear/aerogear-ios)
 
 iOS/Objective-C client library implementation for AeroGear
 
