@@ -1,6 +1,6 @@
 # aerogear-ios [![Build Status](https://travis-ci.org/aerogear/aerogear-ios.png)](https://travis-ci.org/aerogear/aerogear-ios)
 
-iOS/Objective-C client library implementation for AeroGear
+iOS/Objective-C client library implementation for AeroGear!
 
 The AeroGear iOS client lib is based on the [AFNetworking](https://github.com/AFNetworking/AFNetworking/) library.
 
