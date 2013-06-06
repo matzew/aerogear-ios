@@ -16,8 +16,9 @@
  */
 
 #import <SenTestingKit/SenTestingKit.h>
+#import "AGHTTPMockHelper.h"
+
 #import "AGRESTPipe.h"
-#import "AGMockURLProtocol.h"
 
 static NSString *const PROJECTS = @"[{\"id\":1,\"title\":\"First Project\",\"style\":\"project-161-58-58\",\"tasks\":[]},{\"id\":                 2,\"title\":\"Second Project\",\"style\":\"project-64-144-230\",\"tasks\":[]}]";
 
@@ -35,15 +36,7 @@ static NSString *const PROJECT = @"{\"id\":1,\"title\":\"First Project\",\"style
 
 -(void)setUp {
     [super setUp];
-
-    // register AGFakeURLProtocol to fake HTTP comm.
-    [NSURLProtocol registerClass:[AGMockURLProtocol class]];
-
-    // set correct content-type otherwise AFNetworking
-    // will complain because it expects JSON response
-    [AGMockURLProtocol setHeaders:[NSDictionary
-                                   dictionaryWithObject:@"application/json; charset=utf-8" forKey:@"Content-Type"]];
-
+    
     NSURL* baseURL = [NSURL URLWithString:@"http://server.com/context/"];
     
     AGPipeConfiguration* config = [[AGPipeConfiguration alloc] init];
@@ -55,15 +48,10 @@ static NSString *const PROJECT = @"{\"id\":1,\"title\":\"First Project\",\"style
 }
 
 -(void)tearDown {
-    // reset http mock state so it is not propagated to other tests
-    [AGMockURLProtocol setStatusCode:200];
-	[AGMockURLProtocol setResponseData:nil];
-	[AGMockURLProtocol setError:nil];
-    [AGMockURLProtocol setResponseDelay:0];
-    [AGMockURLProtocol setHeaders:nil];
-    // finally, unregister it from the runtime
-    [NSURLProtocol unregisterClass:[AGMockURLProtocol class]];
-
+    // remove all handlers installed by test methods
+    // to avoid any interference
+    [AGHTTPMockHelper clearAllMockedRequests];
+    
     [super tearDown];
 }
 
@@ -80,14 +68,15 @@ static NSString *const PROJECT = @"{\"id\":1,\"title\":\"First Project\",\"style
 }
 
 -(void)testRead {
-    [AGMockURLProtocol setResponseData:[PROJECTS dataUsingEncoding:NSUTF8StringEncoding]];
-
+    // install the mock:
+    [AGHTTPMockHelper mockResponse:[PROJECTS dataUsingEncoding:NSUTF8StringEncoding]];
+    
     [_restPipe read:^(id responseObject) {
         STAssertNotNil(responseObject, @"response should not be nil");
         _finishedFlag = YES;
-
+        
     } failure:^(NSError *error) {
-        _finishedFlag = YES;        
+        _finishedFlag = YES;
         STFail(@"should not fail");
     }];
     
@@ -100,19 +89,17 @@ static NSString *const PROJECT = @"{\"id\":1,\"title\":\"First Project\",\"style
 -(void)testSaveWithTimeout {
     // here we simulate POST
     // for iOS 5 and iOS 6 the timeout should be honoured correctly
-    // regardless of the iOS 5 bug 
+    // regardless of the iOS 5 bug
     
-    [AGMockURLProtocol setResponseData:[PROJECT dataUsingEncoding:NSUTF8StringEncoding]];
-    
+    // install the mock:
+    [AGHTTPMockHelper mockResponseTimeout:[PROJECT dataUsingEncoding:NSUTF8StringEncoding]
+                                   status:200
+                             responseTime:2]; // two secs delay
+
     NSMutableDictionary* project = [NSMutableDictionary
                                     dictionaryWithObjectsAndKeys:@"First Project", @"title",
                                     @"project-161-58-58", @"style", nil];
-
     
-    // simulate delay in response
-    // Note that pipe has been default configured for a timeout in 1 sec
-    // here we simulate a delay of 2 sec
-    [AGMockURLProtocol setResponseDelay:2];
     
     [_restPipe save:project success:^(id responseObject) {
         STFail(@"%@", @"should NOT have been called");
@@ -121,9 +108,9 @@ static NSString *const PROJECT = @"{\"id\":1,\"title\":\"First Project\",\"style
     } failure:^(NSError *error) {
         STAssertEquals(-1001, [error code], @"should be equal to code -1001 [request time out]");
         _finishedFlag = YES;
-
+        
     }];
- 
+    
     // keep the run loop going
     while(!_finishedFlag) {
         [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
@@ -134,18 +121,15 @@ static NSString *const PROJECT = @"{\"id\":1,\"title\":\"First Project\",\"style
     // here we simulate PUT
     // for iOS 5 and iOS 6 the timeout should be honoured correctly
     // regardless of the iOS 5 bug
-
-    [AGMockURLProtocol setResponseData:[PROJECT dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    [AGHTTPMockHelper mockResponseTimeout:[PROJECT dataUsingEncoding:NSUTF8StringEncoding]
+                                   status:200
+                             responseTime:2]; // two secs delay
     
     NSMutableDictionary* project = [NSMutableDictionary
                                     dictionaryWithObjectsAndKeys:@"1", @"id", @"First Project", @"title",
                                     @"project-161-58-58", @"style", nil];
     
-    
-    // simulate delay in response
-    // Note that pipe has been default configured for a timeout in 1 sec
-    // here we simulate a delay of 2 sec
-    [AGMockURLProtocol setResponseDelay:2];
     
     [_restPipe save:project success:^(id responseObject) {
         STFail(@"%@", @"should NOT have been called");
@@ -166,10 +150,9 @@ static NSString *const PROJECT = @"{\"id\":1,\"title\":\"First Project\",\"style
 -(void)testCancel {
     NSDate *startTime = [NSDate date];
     
-    [AGMockURLProtocol setResponseData:[PROJECTS dataUsingEncoding:NSUTF8StringEncoding]];
-    
-    // simulate delay in response
-    [AGMockURLProtocol setResponseDelay:2];
+    [AGHTTPMockHelper mockResponseTimeout:[PROJECT dataUsingEncoding:NSUTF8StringEncoding]
+                                   status:200
+                             responseTime:2]; // two secs delay
     
     [_restPipe read:^(id responseObject) {
         STFail(@"success should not have been called");
@@ -183,15 +166,15 @@ static NSString *const PROJECT = @"{\"id\":1,\"title\":\"First Project\",\"style
     // cancel the request
     // Note that no callbacks will be called after this
     [_restPipe cancel];
-
+    
     // wait until either _finishedFlag is set to true (e.g. test failed)
-    // or timeout expired (no need to wait for more than the timeout set on the pipe) 
+    // or timeout expired (no need to wait for more than the timeout set on the pipe)
     while (!_finishedFlag && [startTime timeIntervalSinceNow] > -1)
         [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:1]];
 }
 
 -(void)testReadOneObjectWithStringArgument {
-    [AGMockURLProtocol setResponseData:[PROJECT dataUsingEncoding:NSUTF8StringEncoding]];
+    [AGHTTPMockHelper mockResponse:[PROJECT dataUsingEncoding:NSUTF8StringEncoding]];
     
     [_restPipe read:@"1"
             success:^(id responseObject) {
@@ -210,7 +193,7 @@ static NSString *const PROJECT = @"{\"id\":1,\"title\":\"First Project\",\"style
 }
 
 -(void)testReadOneObjectWithIntegerArgument {
-    [AGMockURLProtocol setResponseData:[PROJECT dataUsingEncoding:NSUTF8StringEncoding]];
+    [AGHTTPMockHelper mockResponse:[PROJECT dataUsingEncoding:NSUTF8StringEncoding]];    
     
     [_restPipe read:[NSNumber numberWithInt:1]
             success:^(id responseObject) {
@@ -244,17 +227,17 @@ static NSString *const PROJECT = @"{\"id\":1,\"title\":\"First Project\",\"style
 }
 
 -(void)testSaveNew {
-    [AGMockURLProtocol setResponseData:[PROJECT dataUsingEncoding:NSUTF8StringEncoding]];
+    [AGHTTPMockHelper mockResponse:[PROJECT dataUsingEncoding:NSUTF8StringEncoding]];
     
     NSMutableDictionary* project = [NSMutableDictionary
                                     dictionaryWithObjectsAndKeys:@"First Project", @"title",
                                     @"project-161-58-58", @"style", nil];
-
+    
     [_restPipe save:project success:^(id responseObject) {
         STAssertNotNil(responseObject, @"response should not be nil");
-        STAssertEqualObjects(@"POST", [AGMockURLProtocol methodCalled], @"POST should have been called");
+        STAssertEqualObjects(@"POST", [AGHTTPMockHelper lastHTTPMethodCalled], @"POST should have been called");
         _finishedFlag = YES;
-
+        
     } failure:^(NSError *error) {
         _finishedFlag = YES;
         STFail(@"should not fail");
@@ -267,7 +250,7 @@ static NSString *const PROJECT = @"{\"id\":1,\"title\":\"First Project\",\"style
 }
 
 -(void)testSaveExisting {
-    [AGMockURLProtocol setResponseData:[PROJECT dataUsingEncoding:NSUTF8StringEncoding]];
+    [AGHTTPMockHelper mockResponse:[PROJECT dataUsingEncoding:NSUTF8StringEncoding]];
     
     NSMutableDictionary* project = [NSMutableDictionary
                                     dictionaryWithObjectsAndKeys:@"1", @"id", @"First Project", @"title",
@@ -275,7 +258,7 @@ static NSString *const PROJECT = @"{\"id\":1,\"title\":\"First Project\",\"style
     
     [_restPipe save:project success:^(id responseObject) {
         STAssertNotNil(responseObject, @"response should not be nil");
-        STAssertEqualObjects(@"PUT", [AGMockURLProtocol methodCalled], @"PUT should have been called");
+        STAssertEqualObjects(@"PUT", [AGHTTPMockHelper lastHTTPMethodCalled], @"PUT should have been called");
         _finishedFlag = YES;
         
     } failure:^(NSError *error) {
@@ -290,17 +273,17 @@ static NSString *const PROJECT = @"{\"id\":1,\"title\":\"First Project\",\"style
 }
 
 -(void)testRemove {
-    [AGMockURLProtocol setResponseData:[PROJECT dataUsingEncoding:NSUTF8StringEncoding]];
+    [AGHTTPMockHelper mockResponse:[PROJECT dataUsingEncoding:NSUTF8StringEncoding]];
     
     NSMutableDictionary* project = [NSMutableDictionary
                                     dictionaryWithObjectsAndKeys:@"1", @"id", @"First Project", @"title",
                                     @"project-161-58-58", @"style", nil];
-
+    
     
     [_restPipe remove:project success:^(id responseObject) {
         STAssertNotNil(responseObject, @"response should not be nil");
         _finishedFlag = YES;
-
+        
     } failure:^(NSError *error) {
         _finishedFlag = YES;
         STFail(@"should not fail");
@@ -313,17 +296,17 @@ static NSString *const PROJECT = @"{\"id\":1,\"title\":\"First Project\",\"style
 }
 
 -(void)testNSNullValueOnSave {
-    [AGMockURLProtocol setResponseData:[PROJECT dataUsingEncoding:NSUTF8StringEncoding]];
+    [AGHTTPMockHelper mockResponse:[PROJECT dataUsingEncoding:NSUTF8StringEncoding]];
     
     //fake Tag: id + title
     NSDictionary* fakeTag = [NSDictionary dictionaryWithObjectsAndKeys:[NSNull null], @"id", @"Fake TAG", @"title", nil];
     
     [_restPipe save:fakeTag success:^(id responseObject) {
-        STAssertNotNil(responseObject, @"response should not be nil");        
+        STAssertNotNil(responseObject, @"response should not be nil");
         _finishedFlag = YES;
- 
+        
     } failure:^(NSError *error) {
-        _finishedFlag = YES;        
+        _finishedFlag = YES;
     }];
     
     // keep the run loop going
@@ -333,7 +316,7 @@ static NSString *const PROJECT = @"{\"id\":1,\"title\":\"First Project\",\"style
 }
 
 -(void)testNSNullValueOnRemove {
-    [AGMockURLProtocol setResponseData:[PROJECT dataUsingEncoding:NSUTF8StringEncoding]];
+    [AGHTTPMockHelper mockResponse:[PROJECT dataUsingEncoding:NSUTF8StringEncoding]];
     
     //fake Tag: id + title
     NSDictionary* fakeTag = [NSDictionary dictionaryWithObjectsAndKeys:[NSNull null], @"id", @"Fake TAG", @"title", nil];
@@ -353,7 +336,7 @@ static NSString *const PROJECT = @"{\"id\":1,\"title\":\"First Project\",\"style
 }
 
 -(void)testRemoveNilValue {
-    [AGMockURLProtocol setResponseData:[PROJECT dataUsingEncoding:NSUTF8StringEncoding]];
+    [AGHTTPMockHelper mockResponse:[PROJECT dataUsingEncoding:NSUTF8StringEncoding]];
     
     [_restPipe remove:nil success:^(id responseObject) {
         STFail(@"success not expected");
