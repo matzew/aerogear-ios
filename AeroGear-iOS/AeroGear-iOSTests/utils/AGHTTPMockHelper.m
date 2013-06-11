@@ -22,7 +22,7 @@
 static NSString* HTTPMethodCalled;
 
 + (void)mockResponse:(NSData*)data {
-    return [self mockResponse:data headers:nil status:200 responseTime:1];
+    return [self mockResponse:data headers:nil status:200 responseTime:0];
 }
 
 + (void)mockResponseTimeout:(NSData*)data status:(int)status responseTime:(NSTimeInterval)responseTime {
@@ -30,11 +30,11 @@ static NSString* HTTPMethodCalled;
 }
 
 + (void)mockResponseHeaders:(NSData*)data headers:(NSDictionary*)headers {
-    return [self mockResponse:data headers:headers status:200 responseTime:1];
+    return [self mockResponse:data headers:headers status:200 responseTime:0];
 }
 
 + (void)mockResponseStatus:(int)status {
-    return [self mockResponse:[NSData data] headers:nil status:status responseTime:1];    
+    return [self mockResponse:[NSData data] headers:nil status:status responseTime:0];
 }
 
 + (void)mockResponse:(NSData*)data
