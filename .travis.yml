@@ -2,8 +2,6 @@ language: objective-c
 
 before_script: travis/before_script.sh
 script: travis/script.sh
-script: "~/xctool/xctool.sh -workspace AeroGear-iOSTests.xcworkspace -scheme AeroGear-iOS test"
-
 
 notifications:
   irc: "irc.freenode.org#aerogear"
