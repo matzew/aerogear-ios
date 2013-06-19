@@ -51,8 +51,13 @@
 @property (assign, nonatomic) NSTimeInterval timeout;
 
 /**
+ * The NSURLCredential to use if the request requires authentication
+ */
+@property (strong, nonatomic) NSURLCredential *credential;
+
+/**
  * A block specifying paging configuration for this Pipe.
- * See AGPageConfig and for the available paging configuration parameters 
+ * See AGPageConfig and for the available paging configuration parameters
  * and category AGNSMutableArray(Paging) for example usage.
  */
 @property (copy, nonatomic) void (^pageConfig)(id<AGPageConfig>);
