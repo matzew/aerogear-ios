@@ -39,7 +39,6 @@
 		573CBDAD15E546B70071E7A6 /* AGRestAdapterSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 573CBDAC15E546B70071E7A6 /* AGRestAdapterSpec.m */; };
 		57737FDD15E3D01D006B97BB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57737FDC15E3D01D006B97BB /* Foundation.framework */; };
 		57737FEC15E3D01D006B97BB /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57737FEB15E3D01D006B97BB /* SenTestingKit.framework */; };
-		57737FEE15E3D01D006B97BB /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57737FED15E3D01D006B97BB /* UIKit.framework */; };
 		57737FEF15E3D01D006B97BB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 57737FDC15E3D01D006B97BB /* Foundation.framework */; };
 		57737FF215E3D01D006B97BB /* libAeroGear-iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 57737FD915E3D01D006B97BB /* libAeroGear-iOS.a */; };
 		57737FF815E3D01D006B97BB /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 57737FF615E3D01D006B97BB /* InfoPlist.strings */; };
@@ -56,6 +55,15 @@
 		6F693EAF171FEB4900E1DB63 /* AGPageBodyExtractorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F693EAE171FEB4900E1DB63 /* AGPageBodyExtractorTests.m */; };
 		6F693EB2171FF6BA00E1DB63 /* AGPageHeaderExtractorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F693EB1171FF6BA00E1DB63 /* AGPageHeaderExtractorTests.m */; };
 		6F693EB5171FFBED00E1DB63 /* AGPageWebLinkingExtractorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F693EB4171FFBED00E1DB63 /* AGPageWebLinkingExtractorTests.m */; };
+		6F6C39BF1771996B009B3A57 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F6C39BE1771996B009B3A57 /* SystemConfiguration.framework */; };
+		6F6C39C117719970009B3A57 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F6C39C017719970009B3A57 /* MobileCoreServices.framework */; };
+		6F6C39C217719986009B3A57 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F6C39BE1771996B009B3A57 /* SystemConfiguration.framework */; };
+		6F6C39C31771998B009B3A57 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F6C39C017719970009B3A57 /* MobileCoreServices.framework */; };
+		6F6C39C517719990009B3A57 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F6C39C417719990009B3A57 /* Security.framework */; };
+		6F6C39C617719995009B3A57 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F6C39C417719990009B3A57 /* Security.framework */; };
+		6F6C39D017719A1E009B3A57 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F6C39CF17719A1E009B3A57 /* CoreGraphics.framework */; };
+		6F6C39D117719A24009B3A57 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F6C39CF17719A1E009B3A57 /* CoreGraphics.framework */; };
+		6F6C39D517719B98009B3A57 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F6C39D417719B98009B3A57 /* UIKit.framework */; };
 		6F7B5EED17325A7D00ED4F83 /* AGPageConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F7B5EEC17325A7D00ED4F83 /* AGPageConfiguration.m */; };
 		6F7B5EF017326E0A00ED4F83 /* AGPageConfigSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F7B5EEF17326E0A00ED4F83 /* AGPageConfigSpec.m */; };
 		6FA3FFF016B176D900BD6C56 /* AGPaginationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FA3FFEF16B176D900BD6C56 /* AGPaginationTests.m */; };
@@ -140,7 +148,6 @@
 		57737FE015E3D01D006B97BB /* AeroGear-iOS-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AeroGear-iOS-Prefix.pch"; sourceTree = "<group>"; };
 		57737FEA15E3D01D006B97BB /* AeroGear-iOSTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "AeroGear-iOSTests.octest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		57737FEB15E3D01D006B97BB /* SenTestingKit.framework */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
-		57737FED15E3D01D006B97BB /* UIKit.framework */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
 		57737FF515E3D01D006B97BB /* AeroGear-iOSTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "AeroGear-iOSTests-Info.plist"; sourceTree = "<group>"; };
 		57737FF715E3D01D006B97BB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		57C2616116402B2D00793C0F /* AGConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AGConfig.h; path = config/AGConfig.h; sourceTree = "<group>"; };
@@ -167,6 +174,11 @@
 		6F693EAE171FEB4900E1DB63 /* AGPageBodyExtractorTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGPageBodyExtractorTests.m; sourceTree = "<group>"; };
 		6F693EB1171FF6BA00E1DB63 /* AGPageHeaderExtractorTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGPageHeaderExtractorTests.m; sourceTree = "<group>"; };
 		6F693EB4171FFBED00E1DB63 /* AGPageWebLinkingExtractorTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGPageWebLinkingExtractorTests.m; sourceTree = "<group>"; };
+		6F6C39BE1771996B009B3A57 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		6F6C39C017719970009B3A57 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		6F6C39C417719990009B3A57 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		6F6C39CF17719A1E009B3A57 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		6F6C39D417719B98009B3A57 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		6F7B5EE8173259AA00ED4F83 /* AGPageConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AGPageConfig.h; path = pipeline/paging/AGPageConfig.h; sourceTree = "<group>"; };
 		6F7B5EEB17325A7D00ED4F83 /* AGPageConfiguration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AGPageConfiguration.h; path = pipeline/paging/AGPageConfiguration.h; sourceTree = "<group>"; };
 		6F7B5EEC17325A7D00ED4F83 /* AGPageConfiguration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AGPageConfiguration.m; path = pipeline/paging/AGPageConfiguration.m; sourceTree = "<group>"; };
@@ -194,6 +206,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6F6C39D117719A24009B3A57 /* CoreGraphics.framework in Frameworks */,
+				6F6C39C617719995009B3A57 /* Security.framework in Frameworks */,
+				6F6C39C117719970009B3A57 /* MobileCoreServices.framework in Frameworks */,
+				6F6C39BF1771996B009B3A57 /* SystemConfiguration.framework in Frameworks */,
 				57737FDD15E3D01D006B97BB /* Foundation.framework in Frameworks */,
 				08D43362329A46488E585071 /* libPods.a in Frameworks */,
 			);
@@ -203,8 +219,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6F6C39D517719B98009B3A57 /* UIKit.framework in Frameworks */,
+				6F6C39D017719A1E009B3A57 /* CoreGraphics.framework in Frameworks */,
+				6F6C39C517719990009B3A57 /* Security.framework in Frameworks */,
+				6F6C39C31771998B009B3A57 /* MobileCoreServices.framework in Frameworks */,
+				6F6C39C217719986009B3A57 /* SystemConfiguration.framework in Frameworks */,
 				57737FEC15E3D01D006B97BB /* SenTestingKit.framework in Frameworks */,
-				57737FEE15E3D01D006B97BB /* UIKit.framework in Frameworks */,
 				57737FEF15E3D01D006B97BB /* Foundation.framework in Frameworks */,
 				57737FF215E3D01D006B97BB /* libAeroGear-iOS.a in Frameworks */,
 				1D0A1358119648AFB949959A /* libPods-AeroGear-iOSTests.a in Frameworks */,
@@ -268,11 +288,11 @@
 		57737FCE15E3D01D006B97BB = {
 			isa = PBXGroup;
 			children = (
-				DD46252015EF437500A5040C /* common.xcconfig */,
 				57737FDE15E3D01D006B97BB /* AeroGear-iOS */,
 				57737FF315E3D01D006B97BB /* AeroGear-iOSTests */,
 				57737FDB15E3D01D006B97BB /* Frameworks */,
 				57737FDA15E3D01D006B97BB /* Products */,
+				DD46252015EF437500A5040C /* common.xcconfig */,
 				B8AB37EC1AA3464892D758C1 /* Pods.xcconfig */,
 				D6A7A8124B23447DA65BC0DE /* Pods-AeroGear-iOSTests.xcconfig */,
 			);
@@ -290,9 +310,13 @@
 		57737FDB15E3D01D006B97BB /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6F6C39D417719B98009B3A57 /* UIKit.framework */,
 				57737FDC15E3D01D006B97BB /* Foundation.framework */,
 				57737FEB15E3D01D006B97BB /* SenTestingKit.framework */,
-				57737FED15E3D01D006B97BB /* UIKit.framework */,
+				6F6C39CF17719A1E009B3A57 /* CoreGraphics.framework */,
+				6F6C39C417719990009B3A57 /* Security.framework */,
+				6F6C39C017719970009B3A57 /* MobileCoreServices.framework */,
+				6F6C39BE1771996B009B3A57 /* SystemConfiguration.framework */,
 				65D1DA06FAB24A18AB6A5963 /* libPods.a */,
 				E065C8DDD305422BBB3237D5 /* libPods-AeroGear-iOSTests.a */,
 			);
