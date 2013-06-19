@@ -78,7 +78,7 @@ static NSString *const LOGIN_SUCCESS_RESPONSE =  @"{\"username\":\"%@\",\"roles\
 -(void) testLoginSuccess {
     // install the mock:
     [AGHTTPMockHelper mockResponse:[[NSString stringWithFormat:LOGIN_SUCCESS_RESPONSE, PASSING_USERNAME]
-                  dataUsingEncoding:NSUTF8StringEncoding]];
+                                    dataUsingEncoding:NSUTF8StringEncoding]];
     
     [_restAuthModule login:PASSING_USERNAME password:LOGIN_PASSWORD success:^(id responseObject) {
         STAssertEqualObjects(PASSING_USERNAME, [responseObject valueForKey:@"username"], @"should be equal");
@@ -105,7 +105,7 @@ static NSString *const LOGIN_SUCCESS_RESPONSE =  @"{\"username\":\"%@\",\"roles\
                                            dataUsingEncoding:NSUTF8StringEncoding]
                                    status:200
                              responseTime:2]; // two secs delay
-
+    
     [_restAuthModule login:PASSING_USERNAME password:LOGIN_PASSWORD success:^(id responseObject) {
         STFail(@"%@", @"should NOT have been called");
         _finishedFlag = YES;
@@ -264,7 +264,7 @@ static NSString *const LOGIN_SUCCESS_RESPONSE =  @"{\"username\":\"%@\",\"roles\
 -(void) testEnrollFails {
     // Simulate 'Bad Request' status
     [AGHTTPMockHelper mockResponseStatus:400];
-
+    
     NSMutableDictionary* registerPayload = [NSMutableDictionary dictionary];
     
     [registerPayload setValue:@"John" forKey:@"firstname"];
@@ -288,8 +288,6 @@ static NSString *const LOGIN_SUCCESS_RESPONSE =  @"{\"username\":\"%@\",\"roles\
 }
 
 -(void) testCancel {
-    NSDate *startTime = [NSDate date];
-    
     // install the mock:
     [AGHTTPMockHelper mockResponseTimeout:[[NSString stringWithFormat:LOGIN_SUCCESS_RESPONSE, PASSING_USERNAME]
                                            dataUsingEncoding:NSUTF8StringEncoding]
@@ -302,18 +300,17 @@ static NSString *const LOGIN_SUCCESS_RESPONSE =  @"{\"username\":\"%@\",\"roles\
         _finishedFlag = YES;
         
     } failure:^(NSError *error) {
-        STFail(@"logout should not have been called");
+        STAssertEquals(-999, [error code], @"should be equal to code -999 [request cancelled]");
         _finishedFlag = YES;
     }];
     
     // cancel the request
-    // Note that no callbacks will be called after this
     [_restAuthModule cancel];
     
-    // wait until either _finishedFlag is set to true (e.g. test failed)
-    // or timeout expired (no need to wait for more than the timeout set on the pipe)
-    while (!_finishedFlag && [startTime timeIntervalSinceNow] > -1)
-        [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:1]];
+    // keep the run loop going
+    while(!_finishedFlag) {
+        [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+    }
 }
 
 @end
