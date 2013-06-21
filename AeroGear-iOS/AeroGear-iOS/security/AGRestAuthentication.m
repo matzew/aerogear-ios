@@ -90,7 +90,7 @@
 // =====================================================
 // ======== public API (AGAuthenticationModule) ========
 // =====================================================
--(void) enroll:(id) userData
+-(void) enroll:(NSDictionary*) userData
      success:(void (^)(id object))success
      failure:(void (^)(NSError *error))failure {
     
@@ -114,12 +114,9 @@
     
 }
 
--(void) login:(NSString*) username
-   password:(NSString*) password
+-(void) login:(NSDictionary*) loginData
     success:(void (^)(id object))success
     failure:(void (^)(NSError *error))failure {
-    
-    NSDictionary* loginData = [NSDictionary dictionaryWithObjectsAndKeys:username,@"username",password,@"password", nil];
     
     [_restClient postPath:_loginEndpoint parameters:loginData success:^(AFHTTPRequestOperation *operation, id responseObject) {
         

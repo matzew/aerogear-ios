@@ -23,8 +23,8 @@
 #import "AGPipeline.h"
 
 static NSString *const PASSING_USERNAME = @"john";
-
 static NSString *const FAILING_USERNAME = @"fail";
+
 static NSString *const LOGIN_PASSWORD = @"passwd";
 static NSString *const ENROLL_PASSWORD = @"passwd";
 
@@ -80,7 +80,7 @@ static NSString *const LOGIN_SUCCESS_RESPONSE =  @"{\"username\":\"%@\",\"roles\
     [AGHTTPMockHelper mockResponse:[[NSString stringWithFormat:LOGIN_SUCCESS_RESPONSE, PASSING_USERNAME]
                                     dataUsingEncoding:NSUTF8StringEncoding]];
     
-    [_restAuthModule login:PASSING_USERNAME password:LOGIN_PASSWORD success:^(id responseObject) {
+    [_restAuthModule login:@{@"loginName": PASSING_USERNAME, @"password": LOGIN_PASSWORD} success:^(id responseObject) {
         STAssertEqualObjects(PASSING_USERNAME, [responseObject valueForKey:@"username"], @"should be equal");
         
         _finishedFlag = YES;
@@ -106,7 +106,7 @@ static NSString *const LOGIN_SUCCESS_RESPONSE =  @"{\"username\":\"%@\",\"roles\
                                    status:200
                              responseTime:2]; // two secs delay
     
-    [_restAuthModule login:PASSING_USERNAME password:LOGIN_PASSWORD success:^(id responseObject) {
+    [_restAuthModule login:@{@"loginName": PASSING_USERNAME, @"password": LOGIN_PASSWORD} success:^(id responseObject) {
         STFail(@"%@", @"should NOT have been called");
         _finishedFlag = YES;
         
@@ -124,7 +124,7 @@ static NSString *const LOGIN_SUCCESS_RESPONSE =  @"{\"username\":\"%@\",\"roles\
 -(void) testLoginFails {
     [AGHTTPMockHelper mockResponseStatus:401];
     
-    [_restAuthModule login:FAILING_USERNAME password:LOGIN_PASSWORD success:^(id responseObject) {
+    [_restAuthModule login:@{@"loginName": FAILING_USERNAME, @"password": LOGIN_PASSWORD} success:^(id responseObject) {
         STFail(@"should not work");
         _finishedFlag = YES;
     } failure:^(NSError *error) {
@@ -142,7 +142,7 @@ static NSString *const LOGIN_SUCCESS_RESPONSE =  @"{\"username\":\"%@\",\"roles\
     [AGHTTPMockHelper mockResponse:[[NSString stringWithFormat:LOGIN_SUCCESS_RESPONSE, PASSING_USERNAME]
                                     dataUsingEncoding:NSUTF8StringEncoding]];
     
-    [_restAuthModule login:PASSING_USERNAME password:LOGIN_PASSWORD success:^(id object) {
+    [_restAuthModule login:@{@"loginName": PASSING_USERNAME, @"password": LOGIN_PASSWORD} success:^(id object) {
         
         [_restAuthModule logout:^{
             _finishedFlag = YES;
@@ -167,7 +167,7 @@ static NSString *const LOGIN_SUCCESS_RESPONSE =  @"{\"username\":\"%@\",\"roles\
     [AGHTTPMockHelper mockResponse:[[NSString stringWithFormat:LOGIN_SUCCESS_RESPONSE, PASSING_USERNAME]
                                     dataUsingEncoding:NSUTF8StringEncoding]];
     
-    [_restAuthModule login:PASSING_USERNAME password:LOGIN_PASSWORD success:^(id object) {
+    [_restAuthModule login:@{@"loginName": PASSING_USERNAME, @"password": LOGIN_PASSWORD} success:^(id object) {
         
         // install the mock:
         [AGHTTPMockHelper mockResponseTimeout:[[NSString stringWithFormat:LOGIN_SUCCESS_RESPONSE, PASSING_USERNAME]
@@ -294,7 +294,7 @@ static NSString *const LOGIN_SUCCESS_RESPONSE =  @"{\"username\":\"%@\",\"roles\
                                    status:200
                              responseTime:2]; // two secs delay
     
-    [_restAuthModule login:PASSING_USERNAME password:LOGIN_PASSWORD success:^(id responseObject) {
+    [_restAuthModule login:@{@"loginName": PASSING_USERNAME, @"password": LOGIN_PASSWORD} success:^(id responseObject) {
         
         STFail(@"login should not have been called");
         _finishedFlag = YES;
