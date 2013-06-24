@@ -114,6 +114,14 @@
     
 }
 
+-(void) login:(NSString*) username
+     password:(NSString*) password
+      success:(void (^)(id object))success
+      failure:(void (^)(NSError *error))failure {
+
+    [self login:@{@"username": username, @"password": password} success:success failure:failure];
+}
+
 -(void) login:(NSDictionary*) loginData
     success:(void (^)(id object))success
     failure:(void (^)(NSError *error))failure {

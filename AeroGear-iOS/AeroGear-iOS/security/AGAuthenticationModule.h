@@ -147,13 +147,35 @@ As with the case of Pipe, configured timeout interval (in the config object) and
      failure:(void (^)(NSError *error))failure;
 
 /**
+ * DEPREACTED.
+ *
+ * Performs the login for the given user. Since the data will be sent in plaintext, it is IMPORTANT,
+ * to run the signin via TLS/HTTPS.
+ *
+ * @param username username
+ *
+ * @param password password
+ *
+ * @param success A block object to be executed when the operation finishes successfully.
+ * This block has no return value and takes one argument: A collection (NSDictionary), containing the response
+ * from the 'login' service.
+ *
+ * @param failure A block object to be executed when the operation finishes unsuccessfully.
+ * This block has no return value and takes one argument: The `NSError` object describing
+ * the error that occurred.
+ */
+
+-(void) login:(NSString*) username
+     password:(NSString*) password
+      success:(void (^)(id object))success
+      failure:(void (^)(NSError *error))failure;
+
+/**
  * Performs the login for the given user. Since the data will be sent in plaintext, it is IMPORTANT,
  * to run the signin via TLS/HTTPS.
  *
  * @param loginData A map (NSDictionary) containing the credentials required by the
  * 'log in' service.
- *
- * @param password password
  *
  * @param success A block object to be executed when the operation finishes successfully.
  * This block has no return value and takes one argument: A collection (NSDictionary), containing the response
