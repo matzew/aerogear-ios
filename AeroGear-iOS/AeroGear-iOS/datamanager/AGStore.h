@@ -75,7 +75,7 @@
 /**
  * Checks if the storage system contains no stored elements.
  *
- * @return YES if the storage is empyt, otherwise NO.
+ * @return YES if the storage is empty, otherwise NO.
  */
 -(BOOL) isEmpty;
 
