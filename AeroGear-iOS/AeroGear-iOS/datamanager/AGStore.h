@@ -73,6 +73,13 @@
 -(BOOL) reset:(NSError**)error;
 
 /**
+ * Checks if the storage system contains no stored elements.
+ *
+ * @return YES if the storage is empyt, otherwise NO.
+ */
+-(BOOL) isEmpty;
+
+/**
  * Removes a specific object/record from the underlying storage system.
  *
  * @param record the desired object

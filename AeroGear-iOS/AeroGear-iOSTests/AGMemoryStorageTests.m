@@ -46,6 +46,24 @@
     STAssertNotNil(_memStore, @"storage should not be nil");
 }
 
+-(void) testIsEmpty {
+    // should be empty...:
+    STAssertTrue([_memStore isEmpty], @"should be empty");
+    
+}
+
+-(void) testIsNotEmpty {
+    NSMutableDictionary* user = [NSMutableDictionary
+                                 dictionaryWithObjectsAndKeys:@"Robert",@"name",@"0",@"id", nil];
+    // _memStore something:
+    [_memStore save:user error:nil];
+
+    // should NOT be empty...:
+    STAssertFalse([_memStore isEmpty], @"should not be empty");
+}
+
+
+
 -(void) testSave {
     NSMutableDictionary* user = [NSMutableDictionary
                                  dictionaryWithObjectsAndKeys:@"Robert",@"name",@"0",@"id", nil];

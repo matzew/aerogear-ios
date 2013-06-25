@@ -80,11 +80,18 @@ describe(@"AGMemoryStorage", ^{
         
         
         it(@"should read nothing out of an empty store", ^{
-
+            
             // read it
             NSArray* objects = [memStore readAll];
             
             [[objects should] beEmpty];
+        });
+        
+        it(@"should read nothing out of an empty store", ^{
+            
+            // read it, should be empty
+            [[theValue([memStore isEmpty]) should] equal:theValue(YES)];
+            
         });
         
         it(@"should read not object out of an empty store", ^{
@@ -114,7 +121,22 @@ describe(@"AGMemoryStorage", ^{
             [[objects should] containObjects:user2, nil];
             [[objects should] containObjects:user3, nil];
         });
-        
+
+        it(@"should not be empty after storing objects", ^{
+            
+            NSMutableDictionary* user1 = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"Matthias",@"name",@"123",@"id", nil];
+            NSMutableDictionary* user2 = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"abstractj",@"name",@"456",@"id", nil];
+            NSMutableDictionary* user3 = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"qmx",@"name",@"5",@"id", nil];
+            
+            NSArray* users = [NSArray arrayWithObjects:user1, user2, user3, nil];
+            
+            // store it
+            [memStore save:users error:nil];
+           
+            // check if empty:
+            [[theValue([memStore isEmpty]) should] equal:theValue(NO)];
+        });
+
         it(@"should read nothing after reset", ^{
             
             NSMutableDictionary* user1 = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"Matthias",@"name",@"123",@"id", nil];
