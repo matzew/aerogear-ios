@@ -20,6 +20,20 @@
                ReferencedContainer = "container:AeroGear-iOS.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "57737FE915E3D01D006B97BB"
+               BuildableName = "AeroGear-iOSTests.octest"
+               BlueprintName = "AeroGear-iOSTests"
+               ReferencedContainer = "container:AeroGear-iOS.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction

@@ -45,6 +45,32 @@
     [plistStore reset:nil];
 }
 
+-(void) testIsEmpty {
+    AGPropertyListStorage *plistStore;
+    
+    // create store
+    plistStore = [AGPropertyListStorage storeWithConfig:_config];
+    
+    // should be empty...:
+    STAssertTrue([plistStore isEmpty], @"should be empty");
+    
+}
+
+-(void) testIsNotEmpty {
+    NSMutableDictionary* user = [NSMutableDictionary
+                                 dictionaryWithObjectsAndKeys:@"Robert",@"name",@"0",@"id", nil];
+    AGPropertyListStorage *plistStore;
+    
+    // create store
+    plistStore = [AGPropertyListStorage storeWithConfig:_config];
+    // save something:
+    [plistStore save:user error:nil];
+    
+    // should NOT be empty...:
+    STAssertFalse([plistStore isEmpty], @"should not be empty");
+    
+}
+
 -(void) testSaveAndRead{
     NSMutableDictionary* user = [NSMutableDictionary
                                   dictionaryWithObjectsAndKeys:@"Robert",@"name",@"0",@"id", nil];
