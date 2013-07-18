@@ -168,7 +168,7 @@ As with the case of Pipe, configured timeout interval (in the config object) and
 -(void) login:(NSString*) username
      password:(NSString*) password
       success:(void (^)(id object))success
-      failure:(void (^)(NSError *error))failure;
+      failure:(void (^)(NSError *error))failure DEPRECATED_ATTRIBUTE;
 
 /**
  * Performs the login for the given user. Since the data will be sent in plaintext, it is IMPORTANT,
