@@ -17,27 +17,44 @@
 
 #import <Kiwi/Kiwi.h>
 #import "AGRESTPipe.h"
+#import "AGHTTPMockHelper.h"
 
 SPEC_BEGIN(AGRestAdapterSpec)
 
 describe(@"AGRestAdapter", ^{
     context(@"when newly created", ^{
-        
-        //A 'RESTful' pipe object:
+
+        __block NSString *PROJECTS = nil;
+        __block NSString *PROJECT = nil;
+
         __block AGRESTPipe* restPipe = nil;
-        
+        __block BOOL finishedFlag;
+
+        beforeAll(^{
+            PROJECTS = @"[{\"id\":1,\"title\":\"First Project\",\"style\":\"project-161-58-58\",\"tasks\":[]},{\"id\":                 2,\"title\":\"Second Project\",\"style\":\"project-64-144-230\",\"tasks\":[]}]";
+            PROJECT = @"{\"id\":1,\"title\":\"First Project\",\"style\":\"project-161-58-58\",\"tasks\":[]}";
+        });
         
         beforeEach(^{
-            NSURL* baseURL = [NSURL URLWithString:@"http://server.com"];
-            
             AGPipeConfiguration* config = [[AGPipeConfiguration alloc] init];
-            [config setBaseURL:baseURL];
+            [config setBaseURL:[NSURL URLWithString:@"http://server.com"]];
             [config setName:@"projects"];
+
+            // Note: we set the timeout(sec) to a low level so that
+            // we can test the timeout methods with adjusting response delay
+            [config setTimeout:1];
             
             restPipe = [AGRESTPipe pipeWithConfig:config];
         });
-        
-        
+
+        afterEach(^{
+            // remove all handlers installed by test methods
+            // to avoid any interference
+            [AGHTTPMockHelper clearAllMockedRequests];
+
+            finishedFlag = NO;
+        });
+
         it(@"should not be nil", ^{
             [restPipe shouldNotBeNil];
         });
@@ -45,7 +62,219 @@ describe(@"AGRestAdapter", ^{
         it(@"should have an expected url", ^{
             [[restPipe.URL should] equal:[NSURL URLWithString:@"http://server.com/projects"]];
         });
-        
+
+        it(@"should have an expected type", ^{
+            [[restPipe.type should] equal:@"REST"];
+        });
+
+        it(@"should successfully read", ^{
+            // install the mock:
+            [AGHTTPMockHelper mockResponse:[PROJECTS dataUsingEncoding:NSUTF8StringEncoding]];
+
+            [restPipe read:^(id responseObject) {
+                [responseObject shouldNotBeNil];
+                finishedFlag = YES;
+
+            } failure:^(NSError *error) {
+                // nope
+            }];
+
+            [[expectFutureValue(theValue(finishedFlag)) shouldEventually] beYes];
+        });
+
+        it(@"should successfully save (POST)", ^{
+            [AGHTTPMockHelper mockResponse:[PROJECT dataUsingEncoding:NSUTF8StringEncoding]];
+
+            NSMutableDictionary* project = [NSMutableDictionary
+                    dictionaryWithObjectsAndKeys:@"First Project", @"title",
+                                                 @"project-161-58-58", @"style", nil];
+
+            [restPipe save:project success:^(id responseObject) {
+                [responseObject shouldNotBeNil];
+                [[[AGHTTPMockHelper lastHTTPMethodCalled] should] equal:@"POST"];
+                finishedFlag = YES;
+
+            } failure:^(NSError *error) {
+                // nope
+            }];
+
+            [[expectFutureValue(theValue(finishedFlag)) shouldEventually] beYes];
+        });
+
+        it(@"should successfully save (PUT)", ^{
+            [AGHTTPMockHelper mockResponse:[PROJECT dataUsingEncoding:NSUTF8StringEncoding]];
+
+            NSMutableDictionary* project = [NSMutableDictionary
+                    dictionaryWithObjectsAndKeys:@"1", @"id", @"First Project", @"title",
+                                                 @"project-161-58-58", @"style", nil];
+
+            [restPipe save:project success:^(id responseObject) {
+                [responseObject shouldNotBeNil];
+                [[[AGHTTPMockHelper lastHTTPMethodCalled] should] equal:@"PUT"];
+                finishedFlag = YES;
+            } failure:^(NSError *error) {
+                // nope
+            }];
+
+            [[expectFutureValue(theValue(finishedFlag)) shouldEventually] beYes];
+        });
+
+        it(@"should successfully remove (DELETE)", ^{
+            [AGHTTPMockHelper mockResponse:[PROJECT dataUsingEncoding:NSUTF8StringEncoding]];
+
+            NSMutableDictionary* project = [NSMutableDictionary
+                    dictionaryWithObjectsAndKeys:@"1", @"id", @"First Project", @"title",
+                                                 @"project-161-58-58", @"style", nil];
+
+
+            [restPipe remove:project success:^(id responseObject) {
+                [responseObject shouldNotBeNil];
+                finishedFlag = YES;
+
+            } failure:^(NSError *error) {
+                // nope
+            }];
+
+            [[expectFutureValue(theValue(finishedFlag)) shouldEventually] beYes];
+        });
+
+        it(@"should honour timeout on save (POST)", ^{
+            // here we simulate POST
+            // for iOS 5 and iOS 6 the timeout should be honoured correctly
+            // regardless of the iOS 5 bug
+
+            // install the mock:
+            [AGHTTPMockHelper mockResponseTimeout:[PROJECT dataUsingEncoding:NSUTF8StringEncoding]
+                                           status:200
+                                     responseTime:2]; // two secs delay
+
+            NSMutableDictionary* project = [NSMutableDictionary
+                    dictionaryWithObjectsAndKeys:@"First Project", @"title",
+                                                 @"project-161-58-58", @"style", nil];
+
+
+            [restPipe save:project success:^(id responseObject) {
+                // nope
+
+            } failure:^(NSError *error) {
+                //[[theValue(error.code) should] equal:theValue(-1001)];
+                finishedFlag = YES;
+            }];
+
+            [[expectFutureValue(theValue(finishedFlag)) shouldEventuallyBeforeTimingOutAfter(5)] beYes];
+        });
+
+        it(@"should honour timeout on save (PUT)", ^{
+            // here we simulate PUT
+            // for iOS 5 and iOS 6 the timeout should be honoured correctly
+            // regardless of the iOS 5 bug
+
+            [AGHTTPMockHelper mockResponseTimeout:[PROJECT dataUsingEncoding:NSUTF8StringEncoding]
+                                           status:200
+                                     responseTime:2]; // two secs delay
+
+            NSMutableDictionary* project = [NSMutableDictionary
+                    dictionaryWithObjectsAndKeys:@"1", @"id", @"First Project", @"title",
+                                                 @"project-161-58-58", @"style", nil];
+
+
+            [restPipe save:project success:^(id responseObject) {
+                // nope
+            } failure:^(NSError *error) {
+                //[[theValue(error.code) should] equal:theValue(-1001)];
+                finishedFlag = YES;
+            }];
+
+            [[expectFutureValue(theValue(finishedFlag)) shouldEventuallyBeforeTimingOutAfter(5)] beYes];
+        });
+
+        /*
+        it(@"should successfully cancel a request", ^{
+            [AGHTTPMockHelper mockResponseTimeout:[PROJECT dataUsingEncoding:NSUTF8StringEncoding]
+                                           status:200
+                                     responseTime:2]; // two secs delay
+
+            [restPipe read:^(id responseObject) {
+                // nope
+            } failure:^(NSError *error) {
+                [[theValue(error.code) should] equal:theValue(-999)];  // request cancelled code
+                finishedFlag = YES;
+            }];
+
+            // cancel the request
+            [restPipe cancel];
+
+            [[expectFutureValue(theValue(finishedFlag)) shouldEventuallyBeforeTimingOutAfter(5)] beYes];
+        });
+         */
+
+        it(@"should read an object with string argument", ^{
+            [AGHTTPMockHelper mockResponse:[PROJECT dataUsingEncoding:NSUTF8StringEncoding]];
+
+            [restPipe read:@"1"
+                    success:^(id responseObject) {
+                        [responseObject shouldNotBeNil];
+                        finishedFlag = YES;
+
+                    } failure:^(NSError *error) {
+                        // nope
+                    }
+            ];
+
+            [[expectFutureValue(theValue(finishedFlag)) shouldEventually] beYes];
+        });
+
+        it(@"should read an object with integer argument", ^{
+            [AGHTTPMockHelper mockResponse:[PROJECT dataUsingEncoding:NSUTF8StringEncoding]];
+
+            [restPipe read:[NSNumber numberWithInt:1]
+                    success:^(id responseObject) {
+                        [responseObject shouldNotBeNil];
+                        finishedFlag = YES;
+
+                    } failure:^(NSError *error) {
+                // nope
+                    }
+            ];
+
+            [[expectFutureValue(theValue(finishedFlag)) shouldEventually] beYes];
+        });
+
+        it(@"should fail to read an object with nil argument", ^{
+            [restPipe read:nil
+                    success:^(id responseObject) {
+                        // nope
+                    } failure:^(NSError *error) {
+                        finishedFlag = YES;
+                    }
+            ];
+
+            [[expectFutureValue(theValue(finishedFlag)) shouldEventually] beYes];
+        });
+
+        it(@"should fail to remove an object with nil argument", ^{
+            [AGHTTPMockHelper mockResponse:[PROJECT dataUsingEncoding:NSUTF8StringEncoding]];
+
+            [restPipe remove:nil success:^(id responseObject) {
+                // nope
+            } failure:^(NSError *error) {
+                finishedFlag = YES;
+            }];
+
+            [[expectFutureValue(theValue(finishedFlag)) shouldEventually] beYes];
+        });
+
+        it(@"should accept valid types", ^{
+            [[theValue([AGRESTPipe accepts:@"REST"]) should] equal:theValue(YES)];
+            // TODO more types as we add
+        });
+
+        it(@"should not accept invalid types", ^{
+            [[theValue([AGRESTPipe accepts:nil]) should] equal:theValue(NO)];
+            [[theValue([AGRESTPipe accepts:@"bogus"]) should] equal:theValue(NO)];
+            // REST lowecase should not be accepted
+            [[theValue([AGRESTPipe accepts:@"rest"]) should] equal:theValue(NO)];
+        });
     });
 });
 
