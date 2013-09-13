@@ -61,6 +61,51 @@
                <Test
                   Identifier = "AGRestPipeUnitTests">
                </Test>
+               <Test
+                  Identifier = "AGAuthenticatorSpec">
+               </Test>
+               <Test
+                  Identifier = "AGBaseAdapterSpec">
+               </Test>
+               <Test
+                  Identifier = "AGHttpClientSpec">
+               </Test>
+               <Test
+                  Identifier = "AGMemoryStorageSpec">
+               </Test>
+               <Test
+                  Identifier = "AGPageBaseExtractorSpec">
+               </Test>
+               <Test
+                  Identifier = "AGPageBodyExtractorSpec">
+               </Test>
+               <Test
+                  Identifier = "AGPageConfigSpec">
+               </Test>
+               <Test
+                  Identifier = "AGPageHeaderExtractorSpec">
+               </Test>
+               <Test
+                  Identifier = "AGPageWebLinkingExtractorSpec">
+               </Test>
+               <Test
+                  Identifier = "AGPaginationSpec">
+               </Test>
+               <Test
+                  Identifier = "AGPipeConfigSpec">
+               </Test>
+               <Test
+                  Identifier = "AGPipelineSpec">
+               </Test>
+               <Test
+                  Identifier = "AGRestAdapterSpec">
+               </Test>
+               <Test
+                  Identifier = "AGRestAuthenticationSpec">
+               </Test>
+               <Test
+                  Identifier = "AGDataManagerSpec">
+               </Test>
             </SkippedTests>
          </TestableReference>
       </Testables>

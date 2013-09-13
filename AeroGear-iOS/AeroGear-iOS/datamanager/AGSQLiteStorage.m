@@ -16,7 +16,7 @@
  */
 
 #import "AGSQLiteStorage.h"
-#import "AGStatementBuilder.h"
+#import "AGSQLiteStatementBuilder.h"
 
 @implementation AGSQLiteStorage {
     NSString* _databaseName;
@@ -56,21 +56,27 @@
 
 -(NSError *) constructError:(NSString*) domain
                         msg:(NSString*) msg {
-    return nil;
+    
+    NSError* error = [NSError errorWithDomain:[NSString stringWithFormat:@"org.aerogear.stores.%@", domain]
+                                         code:0
+                                     userInfo:[NSDictionary dictionaryWithObjectsAndKeys:msg,
+                                               NSLocalizedDescriptionKey, nil]];
+    
+    return error;
 }
 
 // =====================================================
-// ======== public API (AGStore) ========
+// ======== public API (AGStore)                ========
 // =====================================================
 
 -(NSArray*) readAll {
-    NSString *query = [NSString stringWithFormat:@"select oid,* from %@", _databaseName];
+    NSString *query = [NSString stringWithFormat:@"select oid, * from %@", _databaseName];
     NSArray* results = [self readWithQuery:query];
     return results;
 }
 
 -(id) read:(id)recordId {
-    NSString *query = [NSString stringWithFormat:@"select oid,* from %@ where oid=%@", _databaseName, recordId];
+    NSString *query = [NSString stringWithFormat:@"select oid, * from %@ where oid=%@", _databaseName, recordId];
     NSArray* results = [self readWithQuery:query];
     if ([results count] == 0) {
         return nil;
@@ -86,27 +92,46 @@
 
 
 -(BOOL) save:(id)data error:(NSError**)error {
+    BOOL statusCode = YES;
     // a 'collection' of objects:
     if ([data isKindOfClass:[NSArray class]]) {
-        
         // fail fast if the array contains non-dictionary objects
         for (id record in data) {
             if (![record isKindOfClass:[NSDictionary class]]) {
-                
                 if (error) {
                     *error = [self constructError:@"save" msg:@"array contains non-dictionary objects!"];
-                    return false;
+                    return NO;
                 }
             }
         }
-        
+
+        if ([data count] != 0) {
+            statusCode = [self createTableWith: data[0]];
+        } else {
+            if (error) {
+                *error = [self constructError:@"save" msg:@"create table failed"];
+            }
+        }
         for (id record in data) {
-            [self saveOne:record];
+            statusCode = [self saveOne:record];
+            if (!statusCode && error) {
+                *error = [self constructError:@"save" msg:@"insert into table failed"];
+            }
         }
         
     } else if([data isKindOfClass:[NSDictionary class]]) {
         // single obj:
-        [self saveOne:data];
+        statusCode = [self createTableWith: data];
+        if (statusCode) {
+            statusCode = [self saveOne:data];
+            if (!statusCode && error) {
+                *error = [self constructError:@"save" msg:@"insert into table failed"];
+            }
+        } else {
+            if (error) {
+                *error = [self constructError:@"save" msg:@"create table failed"];
+            }
+        }
         
     } else { // not a dictionary, fail back
         if (error) {
@@ -115,66 +140,78 @@
         }
     }
     
-    return YES;
+    return statusCode;
 }
 
 //private save for one item:
--(void) saveOne:(NSDictionary*)data {
-    NSString *createStatement = [[AGStatementBuilder sharedInstance] buildCreateStatementWithData:data forStore:_databaseName];
-    NSString *insertStatement = [[AGStatementBuilder sharedInstance] buildInsertStatementWithData:data forStore:_databaseName];
+-(BOOL) saveOne:(NSDictionary*)data {
+    BOOL statusCode = YES;
+    NSString *insertStatement = [[AGSQLiteStatementBuilder sharedInstance] buildInsertStatementWithData:data forStore:_databaseName];
        
     [_database open];
-    [_database executeUpdate:createStatement];
-    [_database executeUpdate:insertStatement];
+    statusCode = [_database executeUpdate:insertStatement];
+    
+    int lastId = [_database lastInsertRowId];
+    [data setValue:[NSString stringWithFormat:@"%d", lastId] forKey:_recordId];
     [_database close];
+    return statusCode;
 }
 
+// create if not exist
+-(BOOL) createTableWith:(NSDictionary*)data {
+    BOOL statusCode = YES;
+    NSString *createStatement = [[AGSQLiteStatementBuilder sharedInstance] buildCreateStatementWithData:data forStore:_databaseName];
+    [_database open];
+    if (createStatement != nil) {
+        [_database executeUpdate:createStatement];
+    } else {
+        statusCode = NO;
+    }
+    [_database close];
+    return statusCode;
+}
 
 
 -(BOOL) reset:(NSError**)error {
-    return YES;
+    BOOL statusCode = YES;
+    NSString *dropStatement = [[AGSQLiteStatementBuilder sharedInstance] buildDropStatementForStore:_databaseName];
+    [_database open];
+    if (dropStatement != nil) {
+         [_database executeUpdate:dropStatement];
+    } else {
+        statusCode = NO;
+        if (!statusCode && error) {
+            *error = [self constructError:@"reset" msg:@"drop table failed"];
+        }
+    }
+    [_database close];
+    return statusCode;
 }
 
 -(BOOL) isEmpty {
-    return YES;
+    NSArray *all = [self readAll];
+    if ([all count] == 0) {
+        return YES;
+    }
+    return NO;
 }
 
 -(BOOL) remove:(id)record error:(NSError**)error {
-    return YES;
+    BOOL statusCode = YES;
+    NSString *deleteStatement = [[AGSQLiteStatementBuilder sharedInstance] buildDeleteStatementForId:record forStore:_databaseName];
+    [_database open];
+    if (deleteStatement != nil) {
+        [_database executeUpdate:deleteStatement];
+    } else {
+        statusCode = NO;
+        if (!statusCode && error) {
+            *error = [self constructError:@"reset" msg:@"drop table failed"];
+        }
+    }
+    [_database close];
+    return statusCode;
 }
 
-//-(BOOL) save:(id)data error:(NSError**)error {
-    
-//    BOOL success = [super save:data error:error];
-//    
-//    if (!success)
-//        return FALSE;
-//
-//    if (![_array writeToFile:_file atomically:YES]) {
-//        if (error) {
-//            *error = [self constructError:@"save" msg:@"error on save"];
-//            return FALSE;
-//        }
-//    }
-//
-//    return YES;
-//}
-
-//-(BOOL) reset:(NSError**)error {
-//    BOOL success = [super reset:error];
-//    
-//    if (!success)
-//        return FALSE;
-//    
-//    if (![_array writeToFile:_file atomically:YES]) {
-//        if (error) {
-//            *error = [self constructError:@"reset" msg:@"error on reset"];
-//            return FALSE;
-//        }
-//    }
-    
-//    return YES;
-//}
 
 //-(BOOL) remove:(id)record error:(NSError**)error {
     
