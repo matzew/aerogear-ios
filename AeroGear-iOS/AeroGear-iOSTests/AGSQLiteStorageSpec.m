@@ -157,7 +157,7 @@ describe(@"AGSQLiteStorage", ^{
 
         });
 
-        it(@"should read not object out of an empty store", ^{
+        it(@"shouldn't read object out of an empty store", ^{
             NSMutableDictionary *object = [sqliteStorage read:@"someId"];
 
             [object shouldBeNil];
@@ -184,138 +184,134 @@ describe(@"AGSQLiteStorage", ^{
             NSArray* objects = [sqliteStorage readAll];
 
             [[objects should] haveCountOf:(NSUInteger)3];
+        });
+
+        it(@"should not be empty after storing objects", ^{
+            NSMutableDictionary* user1 = [NSMutableDictionary
+                                          dictionaryWithObjectsAndKeys:@"Matthias", @"name", nil];
+            NSMutableDictionary* user2 = [NSMutableDictionary
+                                          dictionaryWithObjectsAndKeys:@"abstractj", @"name", nil];
+            NSMutableDictionary* user3 = [NSMutableDictionary
+                                          dictionaryWithObjectsAndKeys:@"qmx", @"name", nil];
+
+            NSArray* users = [NSArray arrayWithObjects:user1, user2, user3, nil];
+
+            // store it
+            [sqliteStorage save:users error:nil];
+
+            // reload store
+            sqliteStorage = [AGSQLiteStorage storeWithConfig:config];
+
+            // check if empty:
+            [[theValue([sqliteStorage isEmpty]) should] equal:theValue(NO)];
+        });
+
+        it(@"should read nothing after reset", ^{
+            NSMutableDictionary* user1 = [NSMutableDictionary
+                                          dictionaryWithObjectsAndKeys:@"Matthias",@"name",@"123",@"id", nil];
+            NSMutableDictionary* user2 = [NSMutableDictionary
+                                          dictionaryWithObjectsAndKeys:@"abstractj",@"name",@"456",@"id", nil];
+            NSMutableDictionary* user3 = [NSMutableDictionary
+                                          dictionaryWithObjectsAndKeys:@"qmx",@"name",@"5",@"id", nil];
+
+            NSArray* users = [NSArray arrayWithObjects:user1, user2, user3, nil];
+
+            NSArray* objects;
+            BOOL success;
+
+            // store it
+            success = [sqliteStorage save:users error:nil];
+            [[theValue(success) should] equal:theValue(YES)];
+
+            // read it
+            objects = [sqliteStorage readAll];
+            [[objects should] haveCountOf:(NSUInteger)3];
+//            [[objects should] containObjects:user1, nil];
+//            [[objects should] containObjects:user2, nil];
+//            [[objects should] containObjects:user3, nil];
+
+            success = [sqliteStorage reset:nil];
+            [[theValue(success) should] equal:theValue(YES)];
+
+            // read from the empty store...
+            objects = [sqliteStorage readAll];
+
+            [[objects should] haveCountOf:(NSUInteger)0];
+        });
+
+        it(@"should be able to do bunch of read, save, reset operations", ^{
+            NSMutableDictionary* user1 = [NSMutableDictionary
+                                          dictionaryWithObjectsAndKeys:@"Matthias",@"name",@"123",@"id", nil];
+            NSMutableDictionary* user2 = [NSMutableDictionary
+                                          dictionaryWithObjectsAndKeys:@"abstractj",@"name",@"456",@"id", nil];
+            NSMutableDictionary* user3 = [NSMutableDictionary
+                                          dictionaryWithObjectsAndKeys:@"qmx",@"name",@"5",@"id", nil];
+
+            NSArray* users = [NSArray arrayWithObjects:user1, user2, user3, nil];
+
+            NSArray* objects;
+
+            BOOL success;
+
+            // store it
+            success = [sqliteStorage save:users error:nil];
+            [[theValue(success) should] equal:theValue(YES)];
+
+            // reload store
+            sqliteStorage = [AGSQLiteStorage storeWithConfig:config];
+
+            // read it
+            objects = [sqliteStorage readAll];
+            [[objects should] haveCountOf:(NSUInteger)3];
+//            [[objects should] containObjects:user1, nil];
+//            [[objects should] containObjects:user2, nil];
+//            [[objects should] containObjects:user3, nil];
+
+            [sqliteStorage reset:nil];
+
+            // read from the empty store...
+            objects = [sqliteStorage readAll];
+            [[objects should] haveCountOf:(NSUInteger)0];
+
+            // store it again...
+            success = [sqliteStorage save:users error:nil];
+            [[theValue(success) should] equal:theValue(YES)];
+
+            // reload store
+            sqliteStorage = [AGSQLiteStorage storeWithConfig:config];
+
+            // read it again ...
+            objects = [sqliteStorage readAll];
+            [[objects should] haveCountOf:(NSUInteger)3];
 //            [[objects should] containObjects:user1, nil];
 //            [[objects should] containObjects:user2, nil];
 //            [[objects should] containObjects:user3, nil];
         });
-//
-//        it(@"should not be empty after storing objects", ^{
-//            NSMutableDictionary* user1 = [NSMutableDictionary
-//                                          dictionaryWithObjectsAndKeys:@"Matthias",@"name",@"123",@"id", nil];
-//            NSMutableDictionary* user2 = [NSMutableDictionary
-//                                          dictionaryWithObjectsAndKeys:@"abstractj",@"name",@"456",@"id", nil];
-//            NSMutableDictionary* user3 = [NSMutableDictionary
-//                                          dictionaryWithObjectsAndKeys:@"qmx",@"name",@"5",@"id", nil];
-//
-//            NSArray* users = [NSArray arrayWithObjects:user1, user2, user3, nil];
-//
-//            // store it
-//            [sqliteStorage save:users error:nil];
-//
-//            // reload store
-//            sqliteStorage = [AGSQLiteStorage storeWithConfig:config];
-//
-//            // check if empty:
-//            [[theValue([sqliteStorage isEmpty]) should] equal:theValue(NO)];
-//        });
-//
-//        it(@"should read nothing after reset", ^{
-//            NSMutableDictionary* user1 = [NSMutableDictionary
-//                                          dictionaryWithObjectsAndKeys:@"Matthias",@"name",@"123",@"id", nil];
-//            NSMutableDictionary* user2 = [NSMutableDictionary
-//                                          dictionaryWithObjectsAndKeys:@"abstractj",@"name",@"456",@"id", nil];
-//            NSMutableDictionary* user3 = [NSMutableDictionary
-//                                          dictionaryWithObjectsAndKeys:@"qmx",@"name",@"5",@"id", nil];
-//
-//            NSArray* users = [NSArray arrayWithObjects:user1, user2, user3, nil];
-//
-//            NSArray* objects;
-//            BOOL success;
-//
-//            // store it
-//            success = [sqliteStorage save:users error:nil];
-//            [[theValue(success) should] equal:theValue(YES)];
-//
-//            // read it
-//            objects = [sqliteStorage readAll];
-//            [[objects should] haveCountOf:(NSUInteger)3];
-//            [[objects should] containObjects:user1, nil];
-//            [[objects should] containObjects:user2, nil];
-//            [[objects should] containObjects:user3, nil];
-//
-//
-//            success = [sqliteStorage reset:nil];
-//            [[theValue(success) should] equal:theValue(YES)];
-//
-//            // read from the empty store...
-//            objects = [sqliteStorage readAll];
-//
-//            [[objects should] haveCountOf:(NSUInteger)0];
-//        });
-//
-//        it(@"should be able to do bunch of read, save, reset operations", ^{
-//            NSMutableDictionary* user1 = [NSMutableDictionary
-//                                          dictionaryWithObjectsAndKeys:@"Matthias",@"name",@"123",@"id", nil];
-//            NSMutableDictionary* user2 = [NSMutableDictionary
-//                                          dictionaryWithObjectsAndKeys:@"abstractj",@"name",@"456",@"id", nil];
-//            NSMutableDictionary* user3 = [NSMutableDictionary
-//                                          dictionaryWithObjectsAndKeys:@"qmx",@"name",@"5",@"id", nil];
-//
-//            NSArray* users = [NSArray arrayWithObjects:user1, user2, user3, nil];
-//
-//            NSArray* objects;
-//
-//            BOOL success;
-//
-//            // store it
-//            success = [sqliteStorage save:users error:nil];
-//            [[theValue(success) should] equal:theValue(YES)];
-//
-//            // reload store
-//            sqliteStorage = [AGSQLiteStorage storeWithConfig:config];
-//
-//            // read it
-//            objects = [sqliteStorage readAll];
-//            [[objects should] haveCountOf:(NSUInteger)3];
-//            [[objects should] containObjects:user1, nil];
-//            [[objects should] containObjects:user2, nil];
-//            [[objects should] containObjects:user3, nil];
-//
-//            [sqliteStorage reset:nil];
-//
-//            // read from the empty store...
-//            objects = [sqliteStorage readAll];
-//            [[objects should] haveCountOf:(NSUInteger)0];
-//
-//            // store it again...
-//            success = [sqliteStorage save:users error:nil];
-//            [[theValue(success) should] equal:theValue(YES)];
-//
-//            // reload store
-//            sqliteStorage = [AGSQLiteStorage storeWithConfig:config];
-//
-//            // read it again ...
-//            objects = [sqliteStorage readAll];
-//            [[objects should] haveCountOf:(NSUInteger)3];
-//            [[objects should] containObjects:user1, nil];
-//            [[objects should] containObjects:user2, nil];
-//            [[objects should] containObjects:user3, nil];
-//        });
-//
-//        it(@"should not read a remove object", ^{
-//            NSMutableDictionary* user1 = [NSMutableDictionary
-//                                          dictionaryWithObjectsAndKeys:@"Matthias",@"name",@"0",@"id", nil];
-//
-//            BOOL success;
-//
-//            success = [sqliteStorage save:user1 error:nil];
-//            [[theValue(success) should] equal:theValue(YES)];
-//
-//            // reload store
-//            sqliteStorage = [AGSQLiteStorage storeWithConfig:config];
-//
-//            // read it
-//            NSMutableDictionary *object = [sqliteStorage read:@"0"];
-//            [[[object objectForKey:@"name"] should] equal:@"Matthias"];
-//
-//            // remove the above user:
-//            success = [sqliteStorage remove:user1 error:nil];
-//            [[theValue(success) should] equal:theValue(YES)];
-//
-//            // read from the empty store...
-//            NSArray* objects = [sqliteStorage readAll];
-//            [[objects should] haveCountOf:(NSUInteger)0];
-//        });
+
+        it(@"should not read a remove object", ^{
+            NSMutableDictionary* user1 = [NSMutableDictionary
+                                          dictionaryWithObjectsAndKeys:@"Sebi", @"name", nil];
+
+            BOOL success;
+
+            success = [sqliteStorage save:user1 error:nil];
+            [[theValue(success) should] equal:theValue(YES)];
+
+            // reload store
+            sqliteStorage = [AGSQLiteStorage storeWithConfig:config];
+
+            // read it
+            NSMutableDictionary *object = [sqliteStorage read:@"1"];
+            [[[object objectForKey:@"name"] should] equal:@"Sebi"];
+
+            // remove the above user:
+            success = [sqliteStorage remove:user1 error:nil];
+            [[theValue(success) should] equal:theValue(YES)];
+
+            // read from the empty store...
+            NSArray* objects = [sqliteStorage readAll];
+            [[objects should] haveCountOf:(NSUInteger)0];
+        });
 //
 //        it(@"should not remove a non-existing object", ^{
 //            NSMutableDictionary* user1 = [NSMutableDictionary

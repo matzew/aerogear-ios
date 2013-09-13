@@ -198,17 +198,27 @@
 
 -(BOOL) remove:(id)record error:(NSError**)error {
     BOOL statusCode = YES;
-    NSString *deleteStatement = [[AGSQLiteStatementBuilder sharedInstance] buildDeleteStatementForId:record forStore:_databaseName];
-    [_database open];
-    if (deleteStatement != nil) {
-        [_database executeUpdate:deleteStatement];
+    NSString *id = nil;
+    if (record != nil && record[_recordId] != nil) {
+        id = record[_recordId];
+        NSString *deleteStatement = [[AGSQLiteStatementBuilder sharedInstance] buildDeleteStatementForId:id forStore:_databaseName];
+        [_database open];
+        if (deleteStatement != nil) {
+            [_database executeUpdate:deleteStatement];
+        } else {
+            statusCode = NO;
+            if (!statusCode && error) {
+                *error = [self constructError:@"remove" msg:@"drop table failed"];
+            }
+        }
+        [_database close];
     } else {
         statusCode = NO;
         if (!statusCode && error) {
-            *error = [self constructError:@"reset" msg:@"drop table failed"];
+            *error = [self constructError:@"remove" msg:@"remove a nil id not possible"];
         }
-    }
-    [_database close];
+    }  
+
     return statusCode;
 }
 
