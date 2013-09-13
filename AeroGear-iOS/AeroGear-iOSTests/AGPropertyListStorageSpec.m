@@ -33,6 +33,9 @@ describe(@"AGPropertyListStorage", ^{
             [config setRecordId:@"id"];
 
             plistStore = [AGPropertyListStorage storeWithConfig:config];
+        });
+        
+        afterEach(^{
             // remove all elements from the store
             // so next test starts fresh
             [plistStore reset:nil];
@@ -64,6 +67,7 @@ describe(@"AGPropertyListStorage", ^{
                     dictionaryWithObjectsAndKeys:@"Robert",@"name", nil];
 
             AGStoreConfiguration* config = [[AGStoreConfiguration alloc] init];
+            [config setName:@"pliststore"];
             // apply a custom ID config...
             [config setRecordId:@"myId"];
             // re init the store:
