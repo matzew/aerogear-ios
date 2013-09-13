@@ -63,13 +63,13 @@
     BOOL success = [super save:data error:error];
     
     if (!success)
-        return FALSE;
+        return NO;
 
     if (![_array writeToFile:_file atomically:YES]) {
         if (error) {
-            *error = [self constructError:@"save" msg:@"error on save"];
-            return FALSE;
+            *error = [self constructError:@"save" msg:@"error on save:writeToFile"];
         }
+        return NO;
     }
     
     return YES;
@@ -79,13 +79,13 @@
     BOOL success = [super reset:error];
     
     if (!success)
-        return FALSE;
+        return NO;
     
     if (![_array writeToFile:_file atomically:YES]) {
         if (error) {
-            *error = [self constructError:@"reset" msg:@"error on reset"];
-            return FALSE;
+            *error = [self constructError:@"reset" msg:@"error on reset:writeToFile"];
         }
+        return NO;
     }
     
     return YES;
@@ -96,13 +96,13 @@
     BOOL success = [super remove:record error:error];
     
     if (!success)
-        return FALSE;
+        return NO;
     
     if (![_array writeToFile:_file atomically:YES]) {
         if (error) {
-            *error = [self constructError:@"remove" msg:@"error on remove"];
-            return FALSE;
+            *error = [self constructError:@"remove" msg:@"error on remove:writeToFile"];
         }
+        return NO;
     }
     
     return YES;
