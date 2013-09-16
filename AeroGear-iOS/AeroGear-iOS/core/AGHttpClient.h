@@ -23,4 +23,5 @@
 + (AGHttpClient *)clientFor:(NSURL *)url;
 + (AGHttpClient *)clientFor:(NSURL *)url timeout:(NSTimeInterval)interval;
 
+- (void)setUploadProgressBlock:(void (^)(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite))block;
 @end

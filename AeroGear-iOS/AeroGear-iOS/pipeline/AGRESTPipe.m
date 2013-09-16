@@ -283,6 +283,10 @@
     [_restClient.operationQueue cancelAllOperations];
 }
 
+- (void)setUploadProgressBlock:(void (^)(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite))block {
+    [_restClient setUploadProgressBlock:block];
+}
+
 // extract the sting value (e.g. for read:id, or remove:id)
 -(NSString *) getStringValue:(id) value {
     NSString* objectKey;

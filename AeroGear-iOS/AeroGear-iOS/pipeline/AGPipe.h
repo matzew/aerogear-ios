@@ -210,7 +210,9 @@ Of course the _collection_ behind the responseObject can be stored to a variable
 /**
  * Saves (or updates) a given object from the underlying server connection.
  *
- * @param object a 'JSON' map, representing the data to save/update.
+ * @param object a 'JSON' map, representing the data to save/update. If the map contains values
+ * of NSURL objects that point to local files, a multipart request will be constructed to upload the
+ * files to the server. To track progress of the upload, call [AGPipe setUploadProgressBlock:].
  *
  * @param success A block object to be executed when the request operation finishes successfully.
  * This block has no return value and takes one argument: The object created from the response
@@ -254,5 +256,16 @@ Of course the _collection_ behind the responseObject can be stored to a variable
  *
  */
 -(void) cancel;
+
+/**
+ * Sets a progress status callback that is invoked during uploading of a file(s).
+ *
+ * @param block The block accepts three arguments: the number of bytes written in the latest write,
+ * the total bytes written for this connection, and the total bytes expected to be written during
+ * the request determined by the length of the HTTP body.
+ *
+ * NOTE. The block can be called several times and is always executed on the main thread.
+ */
+- (void) setUploadProgressBlock:(void (^)(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite)) block;
 
 @end

@@ -50,9 +50,13 @@ static char const * const TimerTagKey = "TimerTagKey";
 @end
 // -------------------------------------------------------
 
+typedef void (^AGURLConnectionOperationProgressBlock)(NSUInteger bytes, long long totalBytes, long long totalBytesExpected);
+
 @implementation AGHttpClient {
     // secs before a request timeouts (alternative name for primitive "double")
     NSTimeInterval _interval;
+    
+    AGURLConnectionOperationProgressBlock _uploadProgress;
 }
 
 + (AGHttpClient *)clientFor:(NSURL *)url {
@@ -90,7 +94,20 @@ static char const * const TimerTagKey = "TimerTagKey";
          success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
          failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure {
     
-	NSURLRequest* request = [self requestWithMethod:@"POST" path:path parameters:parameters];
+    NSURLRequest *request;
+    
+    if ([self paramsContainFileURLs:parameters]) {
+        NSError *error = nil;
+        request = [self multipartFormRequestWithMethod:@"POST" path:path parameters:parameters error:&error];
+        
+        // if there was an error
+        if (!request) {
+            failure(nil, error);
+            return;
+        }
+    } else {
+        request = [self requestWithMethod:@"POST" path:path parameters:parameters];
+    }
     
     [self processRequest:request success:success failure:failure];
 }
@@ -104,7 +121,20 @@ static char const * const TimerTagKey = "TimerTagKey";
         success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
         failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure {
     
-	NSURLRequest* request = [self requestWithMethod:@"PUT" path:path parameters:parameters];
+    NSURLRequest *request;
+    
+    if ([self paramsContainFileURLs:parameters]) {
+        NSError *error = nil;
+        request = [self multipartFormRequestWithMethod:@"PUT" path:path parameters:parameters error:&error];
+        
+        // if there was an error
+        if (!request) {
+            failure(nil, error);
+            return;
+        }
+    } else {
+        request = [self requestWithMethod:@"PUT" path:path parameters:parameters];
+    }
     
     [self processRequest:request success:success failure:failure];
 }
@@ -112,15 +142,50 @@ static char const * const TimerTagKey = "TimerTagKey";
 // override to add a request timeout interval
 - (NSMutableURLRequest *)requestWithMethod:(NSString *)method
                                       path:(NSString *)path
-                                parameters:(NSDictionary *)parameters
-{
+                                parameters:(NSDictionary *)parameters {
     // invoke the 'requestWithMethod:path:parameters:' from AFNetworking:
     NSMutableURLRequest* req = [super requestWithMethod:method path:path parameters:parameters];
     
     // set the timeout interval
     [req setTimeoutInterval:_interval];
-
+    
     return req;
+}
+
+// - construct a multipart request
+- (NSMutableURLRequest *)multipartFormRequestWithMethod:(NSString *)method
+                                                   path:(NSString *)path
+                                             parameters:(NSDictionary *)parameters
+                                                  error:(NSError **) error {
+    __block NSError *err = nil;
+    
+    NSMutableURLRequest *request = [self multipartFormRequestWithMethod:method path:path parameters:parameters constructingBodyWithBlock: ^(id <AFMultipartFormData> formData) {
+        
+        [parameters enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+            if ([obj isKindOfClass:[NSURL class]]) {
+                [formData appendPartWithFileURL:obj name:key error:&err];
+            }
+            
+            // if there was any error adding the
+            // file stop immediately
+            if (err)
+                *stop = YES;
+        }];
+    }];
+    
+    if (err) {
+        *error = err;
+        return nil;
+    }
+    
+    // finally set the timeout interval
+    [request setTimeoutInterval:_interval];
+    
+    return request;
+}
+
+- (void)setUploadProgressBlock:(void (^)(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite))block {
+    _uploadProgress = [block copy];
 }
 
 // =====================================================
@@ -180,7 +245,24 @@ static char const * const TimerTagKey = "TimerTagKey";
         operation = [self HTTPRequestOperationWithRequest:request success:success failure:failure];
     }
     
+    if (_uploadProgress)
+        [operation setUploadProgressBlock:_uploadProgress];
+    
     [self enqueueHTTPRequestOperation:operation];
+}
+
+// determine if the paramaters contain file objects
+-(BOOL)paramsContainFileURLs:(NSDictionary *)params {
+    BOOL hasFiles = NO;
+    
+    for (id value in [params allValues]) {
+        if ([value isKindOfClass:[NSURL class]]) {
+            hasFiles = YES;
+            break;
+        }
+    }
+    
+    return hasFiles;
 }
 
 @end
