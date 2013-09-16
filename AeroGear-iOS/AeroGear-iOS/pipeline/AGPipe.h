@@ -80,7 +80,7 @@ The AGPipe also contains a ```remove``` method to delete the data on the server.
 
 In this case, where we have a RESTful pipe, the API issues an HTTP DELETE request.
 
- ## Read all data from the server
+  ## Read all data from the server
 
 The ```read``` method allows to (currently) read _all_ data from the server, of the underlying AGPipe:
 
@@ -113,6 +113,33 @@ Since we are pointing to a RESTful endpoint, the API issues a HTTP GET request. 
 
 Of course the _collection_ behind the responseObject can be stored to a variable..
 
+ ## Upload files
+ 
+ The AGPipe also supports uploading of files. If the map object passed on save method, contain values that are instances of NSURL objects that point to local files, a multipart request will be constructed to perform the uplaoding. Here is an example usage:
+ 
+ // the files to be uploaded
+ NSURL *file1 = [[NSBundle mainBundle] URLForResource:@"picture1" withExtension:@"jpg"];
+ NSURL *file2 = [[NSBundle mainBundle] URLForResource:@"picture2" withExtension:@"jpg"];
+ 
+ // construct the data to sent with the files added
+ NSDictionary *dict = @{@"somekey": @"somevalue", @"jboss.jpg":file1, @"jboss2.jpg":file2 };
+ 
+ // set an (optional) progress block
+ [pipe setUploadProgressBlock:^(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite) {
+ NSLog(@"Sent bytesWritten=%d totalBytesWritten=%qi of totalBytesExpectedToWrite=%qi bytes", bytesWritten, totalBytesWritten, totalBytesExpectedToWrite);
+ }];
+ 
+ // upload data
+ [[pipe save:dict success:^(id responseObject) {
+ NSLog(@"Successfully uploaded!");
+ 
+ } failure:^(NSError *error) {
+ NSLog(@"An error has occured during upload! \n%@", error);
+ }];
+ 
+ Note the 'key' in the dictionary is used as the 'name' field in the multipart request and is required. Further, you don't need to specify the 'Content-type' or the 'filename' fields as they are automatically determined internally by the last path component of the NSURL object passed in. If the mime-type can't be determined an 'application-octet-stream' would be send instead.
+ 
+ 
  ## Time out and Cancel pending operations
 
  ### Timeout
