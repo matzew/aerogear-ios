@@ -29,7 +29,7 @@
     return _sharedInstance;
 }
 
--(NSString *)buildInsertStatementWithData:(NSDictionary *)data forStore:(NSString *)storeName {
+-(NSString *)buildInsertStatementWithData:(NSDictionary *)data forStore:(NSString *)storeName andPrimaryKey:(NSString *)key {
     NSMutableString *statement = nil;
     
     if([data count] != 0 && storeName != nil && [storeName isKindOfClass:[NSString class]]) {
@@ -38,18 +38,30 @@
         
         NSEnumerator *columnNames = [data keyEnumerator];
         NSString *columnName = nil;
-        
+        BOOL primaryKeyFound = NO;
         while ((columnName = [columnNames nextObject])) {
-            [statement appendFormat:@"%@\", \"", data[columnName]];
+            if([columnName isEqualToString:key]) {
+                primaryKeyFound = YES;
+                [statement deleteCharactersInRange:NSMakeRange([statement length]- 1, 1)];
+                [statement appendFormat:@"%@, \"", data[columnName]];
+            }
+            else {
+                [statement appendFormat:@"%@\", \"", data[columnName]];
+            }
         }
-        
+        if (!primaryKeyFound) {
+            [statement deleteCharactersInRange:NSMakeRange([statement length]- 1, 1)];
+            [statement appendFormat:@"null, \""];
+
+        }
+                
         [statement deleteCharactersInRange:NSMakeRange([statement length]- 3, 3)];
         [statement appendFormat:@");"];
     }
     return statement;
 }
 
--(NSString *)buildCreateStatementWithData:(NSDictionary *)data forStore:(NSString *)storeName {
+-(NSString *)buildCreateStatementWithData:(NSDictionary *)data forStore:(NSString *)storeName andPrimaryKey:(NSString *)key {
     NSMutableString *statement = nil;
     
     if([data count] != 0 && storeName != nil && [storeName isKindOfClass:[NSString class]]) {
@@ -58,9 +70,17 @@
         
         NSEnumerator *columnNames = [data keyEnumerator];
         NSString *columnName = nil;
-        
+        BOOL primaryKeyFound = NO;
         while ((columnName = [columnNames nextObject])) {
-            [statement appendFormat:@"%@ text, ", columnName];
+            if([columnName isEqualToString:key]) {
+                [statement appendFormat:@"%@ integer primary key asc, ", columnName];
+                primaryKeyFound = YES;
+            } else {
+                [statement appendFormat:@"%@ text, ", columnName];
+            }
+        }
+        if (!primaryKeyFound) {
+           [statement appendFormat:@"%@ integer primary key asc, ", key];
         }
         
         [statement deleteCharactersInRange:NSMakeRange([statement length]- 2, 2)];
@@ -77,11 +97,11 @@
     return statement;
 }
 
--(NSString *) buildDeleteStatementForId:(id)record forStore:(NSString *)storeName {
+-(NSString *) buildDeleteStatementForId:(id)record forStore:(NSString *)storeName andPrimaryKey:(NSString *)key {
     NSMutableString *statement = nil;
     
     if(record != nil && storeName != nil && [storeName isKindOfClass:[NSString class]]) {
-        statement = [NSMutableString stringWithFormat:@"delete from %@ where oid = \"%@\"", storeName, record];
+        statement = [NSMutableString stringWithFormat:@"delete from %@ where %@ = \"%@\"", storeName, key, record];
     }
     return statement;
 }

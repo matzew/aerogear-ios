@@ -37,14 +37,14 @@ describe(@"AGSQLiteStatementBuilder", ^{
         });
         
         it(@"should be nil with empty data", ^{
-            createStatement = [builder buildCreateStatementWithData:nil forStore:@"myTable"];
+            createStatement = [builder buildCreateStatementWithData:nil forStore:@"myTable" andPrimaryKey:@"id"];
             [createStatement shouldBeNil];
         });
 
         it(@"with string dictionary should return SQL create statement with text columns ", ^{
-            createStatement = [builder buildCreateStatementWithData:data forStore:@"myTable"];
+            createStatement = [builder buildCreateStatementWithData:data forStore:@"myTable" andPrimaryKey:@"id"];
             [createStatement shouldNotBeNil];
-            [[createStatement should] equal:@"create table myTable (name text, id text, salary text, city text);"];
+            [[createStatement should] equal:@"create table myTable (name text, id integer primary key asc, salary text, city text);"];
         });
         
         it(@"with mixed type dictionary should return SQL create statement with text columns ", ^{
@@ -52,9 +52,9 @@ describe(@"AGSQLiteStatementBuilder", ^{
                      @"name" : @"David",
                      @"city" : @YES,
                      @"salary" : [NSNumber numberWithInt:2100]};
-            createStatement = [builder buildCreateStatementWithData:data forStore:@"myTable"];
+            createStatement = [builder buildCreateStatementWithData:data forStore:@"myTable" andPrimaryKey:@"id"];
             [createStatement shouldNotBeNil];
-            [[createStatement should] equal:@"create table myTable (name text, id text, salary text, city text);"];
+            [[createStatement should] equal:@"create table myTable (name text, id integer primary key asc, salary text, city text);"];
         });
     });
     
@@ -74,14 +74,14 @@ describe(@"AGSQLiteStatementBuilder", ^{
         });
         
         it(@"should be nil with empty data", ^{
-            statement = [builder buildInsertStatementWithData:nil forStore:@"myTable"];
+            statement = [builder buildInsertStatementWithData:nil forStore:@"myTable" andPrimaryKey:@"id"];
             [statement shouldBeNil];
         });
         
         it(@"with string dictionary should return SQL insert statement with text values ", ^{
-            statement = [builder buildInsertStatementWithData:data forStore:@"myTable"];
+            statement = [builder buildInsertStatementWithData:data forStore:@"myTable" andPrimaryKey:@"id"];
             [statement shouldNotBeNil];
-            [[statement should] equal:@"insert into myTable values (\"David\", \"1\", \"1000\", \"New York\");"];
+            [[statement should] equal:@"insert into myTable values (\"David\", 1, \"1000\", \"New York\");"];
         });
         
         it(@"with mixed type dictionary should return SQL create statement with text values ", ^{
@@ -89,9 +89,9 @@ describe(@"AGSQLiteStatementBuilder", ^{
                      @"name" : @"David",
                      @"city" : @YES,
                      @"salary" : [NSNumber numberWithInt:2100]};
-            statement = [builder buildInsertStatementWithData:data forStore:@"myTable"];
+            statement = [builder buildInsertStatementWithData:data forStore:@"myTable" andPrimaryKey:@"id"];
             [statement shouldNotBeNil];
-            [[statement should] equal:@"insert into myTable values (\"David\", \"1\", \"2100\", \"1\");"];
+            [[statement should] equal:@"insert into myTable values (\"David\", 1, \"2100\", \"1\");"];
         });
     });
     
@@ -127,7 +127,7 @@ describe(@"AGSQLiteStatementBuilder", ^{
         });
         
         it(@"should be nil with empty data", ^{
-            statement = [builder buildDeleteStatementForId:@"1" forStore:nil];
+            statement = [builder buildDeleteStatementForId:@"1" forStore:nil andPrimaryKey:@"id"];
             [statement shouldBeNil];
         });
         

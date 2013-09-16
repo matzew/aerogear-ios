@@ -241,11 +241,11 @@ describe(@"AGSQLiteStorage", ^{
 
         it(@"should be able to do bunch of read, save, reset operations", ^{
             NSMutableDictionary* user1 = [NSMutableDictionary
-                                          dictionaryWithObjectsAndKeys:@"Matthias",@"name",@"123",@"id", nil];
+                                          dictionaryWithObjectsAndKeys:@"Matthias",@"name",@"33",@"age", nil];
             NSMutableDictionary* user2 = [NSMutableDictionary
-                                          dictionaryWithObjectsAndKeys:@"abstractj",@"name",@"456",@"id", nil];
+                                          dictionaryWithObjectsAndKeys:@"abstractj",@"name",@"22",@"age", nil];
             NSMutableDictionary* user3 = [NSMutableDictionary
-                                          dictionaryWithObjectsAndKeys:@"qmx",@"name",@"5",@"id", nil];
+                                          dictionaryWithObjectsAndKeys:@"qmx",@"name",@"25",@"age", nil];
 
             NSArray* users = [NSArray arrayWithObjects:user1, user2, user3, nil];
 
@@ -312,10 +312,10 @@ describe(@"AGSQLiteStorage", ^{
             NSArray* objects = [sqliteStorage readAll];
             [[objects should] haveCountOf:(NSUInteger)0];
         });
-//
+
 //        it(@"should not remove a non-existing object", ^{
 //            NSMutableDictionary* user1 = [NSMutableDictionary
-//                                          dictionaryWithObjectsAndKeys:@"Matthias",@"name",@"0",@"id", nil];
+//                                          dictionaryWithObjectsAndKeys:@"Matthias", @"name", @"1", @"oid", nil];
 //
 //            BOOL success;
 //
@@ -326,10 +326,10 @@ describe(@"AGSQLiteStorage", ^{
 //            sqliteStorage = [AGSQLiteStorage storeWithConfig:config];
 //
 //            // read it
-//            NSMutableDictionary *object = [sqliteStorage read:@"0"];
+//            NSMutableDictionary *object = [sqliteStorage read:@"1"];
 //            [[[object objectForKey:@"name"] should] equal:@"Matthias"];
 //
-//            NSMutableDictionary* user2 = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"Matthias",@"name",@"1",@"id", nil];
+//            NSMutableDictionary* user2 = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"Matthias", @"name" ,@"2", @"oid", nil];
 //
 //            // remove the user with the id '1':
 //            success = [sqliteStorage remove:user2 error:nil];

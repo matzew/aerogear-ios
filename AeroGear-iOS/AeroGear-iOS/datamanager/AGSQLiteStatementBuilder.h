@@ -21,8 +21,8 @@
 
 + (AGSQLiteStatementBuilder *)sharedInstance;
 
--(NSString *) buildInsertStatementWithData:(NSDictionary *)data forStore:(NSString *)storeName;
--(NSString *) buildCreateStatementWithData:(NSDictionary *)data forStore:(NSString *)storeName;
+-(NSString *) buildInsertStatementWithData:(NSDictionary *)data forStore:(NSString *)storeName andPrimaryKey:(NSString *)key;
+-(NSString *) buildCreateStatementWithData:(NSDictionary *)data forStore:(NSString *)storeName andPrimaryKey:(NSString *)key;
 -(NSString *) buildDropStatementForStore:(NSString *)storeName;
--(NSString *) buildDeleteStatementForId:(id)record forStore:(NSString *)storeName;
+-(NSString *) buildDeleteStatementForId:(id)record forStore:(NSString *)storeName andPrimaryKey:(NSString *)key;
 @end

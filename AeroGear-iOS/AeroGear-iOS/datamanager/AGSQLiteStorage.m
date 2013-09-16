@@ -70,13 +70,13 @@
 // =====================================================
 
 -(NSArray*) readAll {
-    NSString *query = [NSString stringWithFormat:@"select oid, * from %@", _databaseName];
+    NSString *query = [NSString stringWithFormat:@"select * from %@", _databaseName];
     NSArray* results = [self readWithQuery:query];
     return results;
 }
 
 -(id) read:(id)recordId {
-    NSString *query = [NSString stringWithFormat:@"select oid, * from %@ where oid=%@", _databaseName, recordId];
+    NSString *query = [NSString stringWithFormat:@"select * from %@ where %@=%@", _databaseName, _recordId, recordId];
     NSArray* results = [self readWithQuery:query];
     if ([results count] == 0) {
         return nil;
@@ -146,7 +146,7 @@
 //private save for one item:
 -(BOOL) saveOne:(NSDictionary*)data {
     BOOL statusCode = YES;
-    NSString *insertStatement = [[AGSQLiteStatementBuilder sharedInstance] buildInsertStatementWithData:data forStore:_databaseName];
+    NSString *insertStatement = [[AGSQLiteStatementBuilder sharedInstance] buildInsertStatementWithData:data forStore:_databaseName andPrimaryKey:_recordId];
        
     [_database open];
     statusCode = [_database executeUpdate:insertStatement];
@@ -160,7 +160,7 @@
 // create if not exist
 -(BOOL) createTableWith:(NSDictionary*)data {
     BOOL statusCode = YES;
-    NSString *createStatement = [[AGSQLiteStatementBuilder sharedInstance] buildCreateStatementWithData:data forStore:_databaseName];
+    NSString *createStatement = [[AGSQLiteStatementBuilder sharedInstance] buildCreateStatementWithData:data forStore:_databaseName andPrimaryKey:_recordId];
     [_database open];
     if (createStatement != nil) {
         [_database executeUpdate:createStatement];
@@ -201,7 +201,7 @@
     NSString *id = nil;
     if (record != nil && record[_recordId] != nil) {
         id = record[_recordId];
-        NSString *deleteStatement = [[AGSQLiteStatementBuilder sharedInstance] buildDeleteStatementForId:id forStore:_databaseName];
+        NSString *deleteStatement = [[AGSQLiteStatementBuilder sharedInstance] buildDeleteStatementForId:id forStore:_databaseName andPrimaryKey:_recordId];
         [_database open];
         if (deleteStatement != nil) {
             [_database executeUpdate:deleteStatement];
@@ -222,23 +222,6 @@
     return statusCode;
 }
 
-
-//-(BOOL) remove:(id)record error:(NSError**)error {
-    
-//    BOOL success = [super remove:record error:error];
-//    
-//    if (!success)
-//        return FALSE;
-//    
-//    if (![_array writeToFile:_file atomically:YES]) {
-//        if (error) {
-//            *error = [self constructError:@"remove" msg:@"error on remove"];
-//            return FALSE;
-//        }
-//    }
-    
-//    return YES;
-//}
 
 // =====================================================
 // =========== private utility methods  ================
