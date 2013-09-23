@@ -38,6 +38,8 @@
 
 + (NSString*)lastHTTPMethodCalled;
 
++ (NSDictionary*)lastHTTPRequestHeaders;
+
 + (void)clearAllMockedRequests;
 
 @end

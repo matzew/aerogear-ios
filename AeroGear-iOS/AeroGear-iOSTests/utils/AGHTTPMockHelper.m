@@ -20,6 +20,7 @@
 @implementation AGHTTPMockHelper
 
 static NSString* HTTPMethodCalled;
+static NSDictionary* HTTPRequestHeaders;
 
 + (void)mockResponse:(NSData*)data {
     return [self mockResponse:data headers:nil status:200 responseTime:0];
@@ -51,6 +52,7 @@ static NSString* HTTPMethodCalled;
     
 	[OHHTTPStubs addRequestHandler:^(NSURLRequest *request, BOOL onlyCheck) {
         HTTPMethodCalled = request.HTTPMethod;
+        HTTPRequestHeaders = request.allHTTPHeaderFields;
         
         return [OHHTTPStubsResponse responseWithData:data
                                           statusCode:status
@@ -63,8 +65,15 @@ static NSString* HTTPMethodCalled;
     return HTTPMethodCalled;
 }
 
++ (NSDictionary*)lastHTTPRequestHeaders {
+    return HTTPRequestHeaders;
+}
+
 + (void)clearAllMockedRequests {
     [OHHTTPStubs removeAllRequestHandlers];
+    
+    HTTPMethodCalled = nil;
+    HTTPRequestHeaders = nil;
 }
 
 @end

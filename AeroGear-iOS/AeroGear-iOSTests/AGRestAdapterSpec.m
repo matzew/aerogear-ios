@@ -225,7 +225,109 @@ describe(@"AGRestAdapter", ^{
 
             [[expectFutureValue(theValue(finishedFlag)) shouldEventually] beYes];
         });
+        
+        it(@"save with url objects without ID should trigger a POST multipart request", ^{
+            [AGHTTPMockHelper mockResponseStatus:200];
+            
+            // create a dummy file to send
+            
+            // access support directory
+            NSURL *tmpFolder = [[NSFileManager defaultManager]
+                                URLForDirectory:NSApplicationSupportDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:YES error:nil];
+            
+            // write a file
+            NSURL *file = [tmpFolder URLByAppendingPathComponent:@"file.txt"];
+            [@"Lorem ipsum dolor sit amet," writeToURL:file atomically:YES encoding:NSUTF8StringEncoding error:nil];
+            
+            // construct the payload with the file added
+            NSDictionary *dict = @{@"somekey": @"somevalue", @"file":file};
+            
+            // upload
+            [restPipe save:dict success:^(id responseObject) {
+                [[[AGHTTPMockHelper lastHTTPMethodCalled] should] equal:@"POST"];
+                
+                [[theValue([[[AGHTTPMockHelper lastHTTPRequestHeaders] objectForKey:@"Content-Type"]
+                            hasPrefix:@"multipart/form-data"]) should] equal:theValue(YES)];
 
+                finishedFlag = YES;
+            } failure:^(NSError *error) {
+                // nope
+            }];
+
+            [[expectFutureValue(theValue(finishedFlag)) shouldEventually] beYes];
+            // remove dummy file
+            [[NSFileManager defaultManager] removeItemAtURL:file error:nil];
+        });
+        
+        it(@"save with url objects and an ID should trigger a PUT multipart request", ^{
+            [AGHTTPMockHelper mockResponseStatus:200];
+            
+            // create a dummy file to send
+            
+            // access support directory
+            NSURL *tmpFolder = [[NSFileManager defaultManager]
+                                URLForDirectory:NSApplicationSupportDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:YES error:nil];
+            
+            // write a file
+            NSURL *file = [tmpFolder URLByAppendingPathComponent:@"file.txt"];
+            [@"Lorem ipsum dolor sit amet," writeToURL:file atomically:YES encoding:NSUTF8StringEncoding error:nil];
+            
+            // construct the payload with the file added
+            NSDictionary *dict = @{@"id": @"1", @"somekey": @"somevalue", @"file":file};
+            
+            // upload
+            [restPipe save:dict success:^(id responseObject) {
+                [[[AGHTTPMockHelper lastHTTPMethodCalled] should] equal:@"PUT"];
+                
+                [[theValue([[[AGHTTPMockHelper lastHTTPRequestHeaders] objectForKey:@"Content-Type"]
+                            hasPrefix:@"multipart/form-data"]) should] equal:theValue(YES)];
+                
+                finishedFlag = YES;
+            } failure:^(NSError *error) {
+                // nope
+            }];
+            
+            [[expectFutureValue(theValue(finishedFlag)) shouldEventually] beYes];
+            // remove dummy file
+            [[NSFileManager defaultManager] removeItemAtURL:file error:nil];
+        });
+        
+        it(@"should throw an error when the url is not a file url", ^{
+            NSURL *invalidURL = [NSURL URLWithString:@"http://foo.com"];
+            NSDictionary *dict = @{@"somekey": @"somevalue", @"file":invalidURL};
+            
+            // upload
+            [restPipe save:dict success:^(id responseObject) {
+                // nope
+            } failure:^(NSError *error) {
+                [[theValue(error.code) should] equal:theValue(NSURLErrorBadURL)];
+                finishedFlag = YES;
+            }];
+            
+            [[expectFutureValue(theValue(finishedFlag)) shouldEventually] beYes];
+        });
+        
+        it(@"should throw an error when the file url points to an non reachable filel", ^{
+            NSURL *tmpFolder = [[NSFileManager defaultManager]
+                                URLForDirectory:NSApplicationSupportDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:YES error:nil];
+            
+            // write a file
+            NSURL *file = [tmpFolder URLByAppendingPathComponent:@"notexist.txt"];
+            
+            
+            NSDictionary *dict = @{@"somekey": @"somevalue", @"file":file};
+            
+            // upload
+            [restPipe save:dict success:^(id responseObject) {
+                // nope
+            } failure:^(NSError *error) {
+                [[theValue(error.code) should] equal:theValue(NSURLErrorBadURL)];
+                finishedFlag = YES;
+            }];
+            
+            [[expectFutureValue(theValue(finishedFlag)) shouldEventually] beYes];
+        });
+        
         it(@"should accept valid types", ^{
             [[theValue([AGRESTPipe accepts:@"REST"]) should] equal:theValue(YES)];
             // TODO more types as we add
