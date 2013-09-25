@@ -17,8 +17,76 @@
 
 #import "AGPropertyListStorage.h"
 
+/**
+  Provides a common interface around NSPropertyListSerialization and NSJSONSerialization
+  plist output formats.
+ */
+@protocol AGEncoder <NSObject>
+
+-(NSData *) encode:(id)plist error:(NSError **)error;
+-(id)       decode:(NSData *)data error:(NSError **)error;
+
+-(BOOL) isValid:(id)plist;
+
+@end
+
+/**
+  An encoder backed by a NSPropertyListSerialization
+ */
+@interface AGPListEncoder : NSObject <AGEncoder>
+@end
+
+@implementation AGPListEncoder
+
+-(NSData *) encode:(id)plist error:(NSError **)error {
+    return [NSPropertyListSerialization dataWithPropertyList:plist format:NSPropertyListXMLFormat_v1_0
+                                                             options:0 error:error];
+}
+
+-(id) decode:(NSData *)data error:(NSError **)error {
+    NSPropertyListFormat format = NSPropertyListXMLFormat_v1_0;
+    
+    return [NSPropertyListSerialization propertyListWithData:data
+                                                     options:NSPropertyListMutableContainersAndLeaves
+                                                      format:&format error:error];
+}
+
+-(BOOL) isValid:(id)plist {
+    return [NSPropertyListSerialization propertyList:plist isValidForFormat:NSPropertyListXMLFormat_v1_0];
+}
+
+@end
+
+/**
+  An encoder backed by a NSJSONSerialization
+ */
+@interface AGJsonEncoder : NSObject <AGEncoder>
+@end
+
+@implementation AGJsonEncoder
+
+-(NSData *) encode:(id)plist error:(NSError **)error {
+    return [NSJSONSerialization dataWithJSONObject:plist
+                                    options:NSJSONWritingPrettyPrinted
+                                      error:error];
+}
+
+-(id) decode:(NSData *)data error:(NSError **)error {
+    return [NSJSONSerialization JSONObjectWithData:data
+                                    options:NSJSONReadingMutableContainers | NSJSONReadingMutableLeaves
+                                      error:error];
+}
+
+-(BOOL) isValid:(id)plist {
+    return [NSJSONSerialization isValidJSONObject:plist];
+}
+
+@end
+
 @implementation AGPropertyListStorage {
-    NSString* _file;
+    NSURL* _file;
+    
+    id<AGEncoder> _encoder;
 }
 
 @synthesize type = _type;
@@ -35,20 +103,36 @@
     self = [super init];
     if (self) {
         // base inits:
-        _type = @"PLIST";
         
         AGStoreConfiguration* config = (AGStoreConfiguration*) storeConfig;
         _recordId = config.recordId;
+        _type = config.type;
         
+        if ([_type isEqualToString:@"PLISTJ"])
+            _encoder = [[AGJsonEncoder alloc] init];
+        else  // if not specified use PLIST encoder
+            _encoder = [[AGPListEncoder alloc] init];
+
         // extract file path
-        _file = [self storeFilePathWithName:config.name];
+        _file = [self storeURLWithName:config.name];
         
-        // if file exists initialize store
-        if ([[NSFileManager defaultManager] fileExistsAtPath:_file]) {
-            _array = [[NSMutableArray alloc] initWithContentsOfFile:_file];
-        } else { // create an empty store
-            _array = [[NSMutableArray alloc] init];
+        // if plist file exists initialize store from it
+        if ([[NSFileManager defaultManager] fileExistsAtPath:[_file path]]) {
+            // load file
+            NSData *data = [NSData dataWithContentsOfURL:_file];
+
+            NSError *error;
+            
+            // decode structure
+            _array = [_encoder decode:data error:&error];
+            
+            if (error) {  // if there was an error during convert log it
+                NSLog(@"%@ %@: %@", [self class], NSStringFromSelector(_cmd), error);
+            }
         }
+        
+        if (!_array) // always create an empty store
+            _array = [[NSMutableArray alloc] init];
     }
     
     return self;
@@ -59,74 +143,55 @@
 // =====================================================
 
 -(BOOL) save:(id)data error:(NSError**)error {
-    
-    BOOL success = [super save:data error:error];
-    
-    if (!success)
-        return NO;
-
-    if (![_array writeToFile:_file atomically:YES]) {
-        if (error) {
-            *error = [self constructError:@"save" msg:@"error on save:writeToFile"];
-        }
+    // fail eager if not valid json object
+    if (![_encoder isValid:data]) {
+        if (error)
+            *error = [self constructError:@"save" msg:@"not a valid format for the type specified"];
+        
         return NO;
     }
     
-    return YES;
+    return [super save:data error:error] && [self updateStore:error];
 }
 
 -(BOOL) reset:(NSError**)error {
-    BOOL success = [super reset:error];
-    
-    if (!success)
-        return NO;
-    
-    if (![_array writeToFile:_file atomically:YES]) {
-        if (error) {
-            *error = [self constructError:@"reset" msg:@"error on reset:writeToFile"];
-        }
-        return NO;
-    }
-    
-    return YES;
+    return [super reset:error] && [self updateStore:error];
 }
 
 -(BOOL) remove:(id)record error:(NSError**)error {
-    
-    BOOL success = [super remove:record error:error];
-    
-    if (!success)
-        return NO;
-    
-    if (![_array writeToFile:_file atomically:YES]) {
-        if (error) {
-            *error = [self constructError:@"remove" msg:@"error on remove:writeToFile"];
-        }
-        return NO;
-    }
-    
-    return YES;
+    return [super remove:record error:error] && [self updateStore:error];
 }
 
 // =====================================================
 // =========== private utility methods  ================
 // =====================================================
 
--(NSString*) storeFilePathWithName:(NSString*) name {
-    // calculate path
-    NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString* documentsDirectory = [paths objectAtIndex:0];
+-(BOOL) updateStore:(NSError **)error {
+    NSData *plist = [_encoder encode:_array error:error];
     
-    // create the Documents directory if it doesn't exist
-    BOOL isDir;
-    if (![[NSFileManager defaultManager] fileExistsAtPath:documentsDirectory isDirectory:&isDir]) {
-        NSError *error = nil;
-        [[NSFileManager defaultManager] createDirectoryAtPath:documentsDirectory
-                                  withIntermediateDirectories:YES attributes:nil error:&error];
+    if (!plist)
+        return NO;
+    
+    // since 'NSData:writeToFile' fails silently, constuct an
+    // error object to inform client
+    if (![plist writeToURL:_file atomically:YES]) {
+        if (error)
+            *error = [self constructError:@"save" msg:@"an error occurred during save!"];
+
+        return NO;
     }
     
+    // if we reach here, file was saved successfully
+    return YES;
+}
+
+-(NSURL*) storeURLWithName:(NSString*) name {
+    // access 'Application Support' directory
+    NSURL *supportURL = [[NSFileManager defaultManager] URLForDirectory:NSApplicationSupportDirectory
+                                                               inDomain:NSUserDomainMask appropriateForURL:nil
+                                                                 create:YES error:nil];
     // the filename is based on this store name
-    return [documentsDirectory stringByAppendingPathComponent:name];
+    return [supportURL URLByAppendingPathComponent:name];
 }
 
 @end
