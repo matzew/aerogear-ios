@@ -21,9 +21,8 @@
 SPEC_BEGIN(AGPropertyListStorageSpec)
 
 describe(@"AGPropertyListStorage", ^{
-    context(@"when newly created", ^{
+    context(@"when newly created with default PLIST storage format", ^{
 
-        // An 'property list' storage object:
         __block AGStoreConfiguration *config = nil;
         __block AGPropertyListStorage *plistStore = nil;
 
@@ -31,6 +30,7 @@ describe(@"AGPropertyListStorage", ^{
             config = [[AGStoreConfiguration alloc] init];
             [config setName:@"pliststore"];
             [config setRecordId:@"id"];
+            [config setType:@"PLIST"];
 
             plistStore = [AGPropertyListStorage storeWithConfig:config];
         });
@@ -44,7 +44,113 @@ describe(@"AGPropertyListStorage", ^{
         it(@"should not be nil", ^{
             [plistStore shouldNotBeNil];
         });
+        
+        it(@"should fail eagerly when trying to save an object with an NSNull value", ^{
+            NSMutableDictionary* user1 = [NSMutableDictionary
+                                          dictionaryWithObjectsAndKeys:[NSNull null], @"somekey", @"0",@"id", nil];
+            
+            BOOL success;
+            
+            success = [plistStore save:user1 error:nil];
+            [[theValue(success) should] equal:theValue(NO)];
+            
+            // should be empty
+            NSArray* objects = [plistStore readAll];
+            [[objects should] haveCountOf:0];
+        });
+        
+        it(@"should fail eagerly if the object to be saved cannot be converted to PLIST format", ^{
+            NSMutableDictionary* user1 = [NSMutableDictionary
+                                          dictionaryWithObjectsAndKeys:[NSPort port], @"somekey", @"0",@"id", nil];
+            
+            BOOL success;
+            
+            success = [plistStore save:user1 error:nil];
+            [[theValue(success) should] equal:theValue(NO)];
+            
+            // should be empty
+            NSArray* objects = [plistStore readAll];
+            [[objects should] haveCountOf:0];
+        });
+    });
 
+    context(@"when newly created with default JSON storage format", ^{
+
+        __block AGStoreConfiguration *config = nil;
+        __block AGPropertyListStorage *plistJStore = nil;
+        
+        beforeEach(^{
+            config = [[AGStoreConfiguration alloc] init];
+            [config setName:@"plistjstore"];
+            [config setRecordId:@"id"];
+            [config setType:@"PLISTJ"];
+            
+            plistJStore = [AGPropertyListStorage storeWithConfig:config];
+        });
+        
+        afterEach(^{
+            // remove all elements from the store
+            // so next test starts fresh
+            [plistJStore reset:nil];
+        });
+        
+        it(@"should be able to save an object containing an NSNull", ^{
+            NSMutableDictionary* user1 = [NSMutableDictionary
+                                          dictionaryWithObjectsAndKeys:[NSNull null], @"somekey", @"0",@"id", nil];
+            
+            BOOL success;
+            
+            success = [plistJStore save:user1 error:nil];
+            [[theValue(success) should] equal:theValue(YES)];
+            
+            // reload store
+            plistJStore = [AGPropertyListStorage storeWithConfig:config];
+            
+            // read it
+            NSMutableDictionary *object = [plistJStore read:@"0"];
+            [[[object objectForKey:@"somekey"] should] equal:[NSNull null]];
+            
+        });
+        
+        it(@"should fail eagerly if the object to be saved cannot be converted to JSON format", ^{
+            NSMutableDictionary* user1 = [NSMutableDictionary
+                                          dictionaryWithObjectsAndKeys:[NSData data], @"somekey", @"0",@"id", nil];
+            
+            BOOL success;
+            
+            success = [plistJStore save:user1 error:nil];
+            [[theValue(success) should] equal:theValue(NO)];
+            
+            // should be empty
+            NSArray* objects = [plistJStore readAll];
+            [[objects should] haveCountOf:0];
+        });
+    });
+
+    context(@"performing CRUD operations", ^{
+
+        __block AGStoreConfiguration *config = nil;
+        __block AGPropertyListStorage *plistStore = nil;
+        
+        beforeEach(^{
+            config = [[AGStoreConfiguration alloc] init];
+            [config setName:@"pliststore"];
+            [config setRecordId:@"id"];
+            [config setType:@"PLIST"];
+            
+            plistStore = [AGPropertyListStorage storeWithConfig:config];
+        });
+        
+        afterEach(^{
+            // remove all elements from the store
+            // so next test starts fresh
+            [plistStore reset:nil];
+        });
+        
+        it(@"should not be nil", ^{
+            [plistStore shouldNotBeNil];
+        });
+        
         it(@"should save a single object ", ^{
             NSMutableDictionary* user = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"Matthias",@"name", nil];
 
@@ -70,6 +176,7 @@ describe(@"AGPropertyListStorage", ^{
             [config setName:@"pliststore"];
             // apply a custom ID config...
             [config setRecordId:@"myId"];
+
             // re init the store:
             plistStore = [AGPropertyListStorage storeWithConfig:config];
 
@@ -316,7 +423,7 @@ describe(@"AGPropertyListStorage", ^{
 
             [[objects should] haveCountOf:1];
         });
-
+        
         it(@"should perform filtering using an NSPredicate", ^{
             NSMutableDictionary *user1 = [@{@"id" : @"0",
                     @"name" : @"Robert",
@@ -417,6 +524,32 @@ describe(@"AGPropertyListStorage", ^{
                 [[user[@"department"][@"name"] should] equal:@"Software"];
                 [[theValue([user[@"salary"] intValue]) should] beBetween:theValue(1500) and:theValue(2000)];
             }
+        });
+    });
+    
+    context(@"when newly created with default JSON storage format", ^{
+        
+        // An 'property list' storage object:
+        __block AGStoreConfiguration *config = nil;
+        __block AGPropertyListStorage *plistjStore = nil;
+        
+        beforeEach(^{
+            config = [[AGStoreConfiguration alloc] init];
+            [config setName:@"plistjstore"];
+            [config setRecordId:@"id"];
+            [config setType:@"PLISTJ"];
+            
+            plistjStore = [AGPropertyListStorage storeWithConfig:config];
+        });
+        
+        afterEach(^{
+            // remove all elements from the store
+            // so next test starts fresh
+            [plistjStore reset:nil];
+        });
+        
+        it(@"should not be nil", ^{
+            [plistjStore shouldNotBeNil];
         });
     });
 });
