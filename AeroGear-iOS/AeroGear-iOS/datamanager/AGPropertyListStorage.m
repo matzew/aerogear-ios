@@ -143,7 +143,7 @@
 // =====================================================
 
 -(BOOL) save:(id)data error:(NSError**)error {
-    // fail eager if not valid json object
+    // fail eager if not valid object
     if (![_encoder isValid:data]) {
         if (error)
             *error = [self constructError:@"save" msg:@"not a valid format for the type specified"];
