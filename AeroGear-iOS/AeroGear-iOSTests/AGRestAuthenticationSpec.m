@@ -17,9 +17,12 @@
 
 #import <Kiwi/Kiwi.h>
 #import "AGHTTPMockHelper.h"
-
+#import "AGHttpClient.h"
 #import "AGRestAuthentication.h"
 #import "AGAuthConfiguration.h"
+
+// useful macro to check iOS version
+#define SYSTEM_VERSION_LESS_THAN(v) ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
 
 SPEC_BEGIN(AGRestAuthenticationSpec)
 
@@ -35,6 +38,8 @@ describe(@"AGRestAuthentication", ^{
         __block AGRestAuthentication* restAuthModule = nil;
 
         __block BOOL finishedFlag;
+        
+        NSInteger const TIMEOUT_ERROR_CODE = SYSTEM_VERSION_LESS_THAN(@"6")? -999: -1001;
 
         beforeAll(^{
             PASSING_USERNAME = @"john";
@@ -97,7 +102,7 @@ describe(@"AGRestAuthentication", ^{
             [restAuthModule login:@{@"loginName": PASSING_USERNAME, @"password": LOGIN_PASSWORD} success:^(id responseObject) {
                 // nope
             } failure:^(NSError *error) {
-                //[[theValue(error.code) should] equal:theValue(-1001)];
+                [[theValue(error.code) should] equal:theValue(TIMEOUT_ERROR_CODE)];
                 finishedFlag = YES;
             }];
 
@@ -152,7 +157,7 @@ describe(@"AGRestAuthentication", ^{
                     // nope
 
                 } failure:^(NSError *error) {
-                    //[[theValue(error.code) should] equal:theValue(-1001)];
+                    [[theValue(error.code) should] equal:theValue(TIMEOUT_ERROR_CODE)];
                     finishedFlag = YES;
                 }];
             } failure:^(NSError *error) {
@@ -211,30 +216,10 @@ describe(@"AGRestAuthentication", ^{
             [restAuthModule enroll:registerPayload success:^(id responseObject) {
                 // nope
             } failure:^(NSError *error) {
-                //[[theValue(error.code) should] equal:theValue(-1001)];
+                [[theValue(error.code) should] equal:theValue(TIMEOUT_ERROR_CODE)];
 
                 finishedFlag = YES;
             }];
-
-            [[expectFutureValue(theValue(finishedFlag)) shouldEventuallyBeforeTimingOutAfter(5)] beYes];
-        });
-
-        it(@"should successfully cancel a request", ^{
-            // install the mock:
-            [AGHTTPMockHelper mockResponseTimeout:[[NSString stringWithFormat:LOGIN_SUCCESS_RESPONSE, PASSING_USERNAME]
-                    dataUsingEncoding:NSUTF8StringEncoding]
-                                           status:200
-                                     responseTime:2]; // two secs delay
-
-            [restAuthModule login:@{@"loginName": PASSING_USERNAME, @"password": LOGIN_PASSWORD} success:^(id responseObject) {
-                // nope
-            } failure:^(NSError *error) {
-                [[theValue(error.code) should] equal:theValue(-999)];
-                finishedFlag = YES;
-            }];
-
-            // cancel the request
-            [restAuthModule cancel];
 
             [[expectFutureValue(theValue(finishedFlag)) shouldEventuallyBeforeTimingOutAfter(5)] beYes];
         });

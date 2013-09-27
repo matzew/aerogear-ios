@@ -19,6 +19,9 @@
 #import "AGHttpClient.h"
 #import "AGHTTPMockHelper.h"
 
+// useful macro to check iOS version
+#define SYSTEM_VERSION_LESS_THAN(v) ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
+
 // access the timer of the operation for the purpose of testing
 @interface AFHTTPRequestOperation (Testing)
 @property (nonatomic, retain) NSTimer* timer;
@@ -35,6 +38,8 @@ describe(@"AGHttpClient", ^{
         __block AGHttpClient* _restClient = nil;
         __block BOOL finishedFlag;
 
+         NSInteger const TIMEOUT_ERROR_CODE = SYSTEM_VERSION_LESS_THAN(@"6")? -999: -1001;
+        
         beforeAll(^{
             PROJECTS = @"[{\"id\":1,\"title\":\"First Project\",\"style\":\"project-161-58-58\",\"tasks\":[]},"
             "{\"id\":2,\"title\":\"Second Project\",\"style\":\"project-64-144-230\",\"tasks\":[]}]";
@@ -167,9 +172,7 @@ describe(@"AGHttpClient", ^{
                 // nope
 
             } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-
-                //[[theValue(error.code) should] equal:theValue(-999)];
-
+                [[theValue(error.code) should] equal:theValue(TIMEOUT_ERROR_CODE)];
                 finishedFlag = YES;
             }];
 
@@ -193,9 +196,7 @@ describe(@"AGHttpClient", ^{
                 // nope
 
             } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-
-                //[[theValue(error.code) should] equal:theValue(-1001)];
-
+                [[theValue(error.code) should] equal:theValue(TIMEOUT_ERROR_CODE)];
                 finishedFlag = YES;
             }];
 
@@ -223,9 +224,7 @@ describe(@"AGHttpClient", ^{
                 [_restClient postPath:@"projects" parameters:projectSecond success:^(AFHTTPRequestOperation *operation, id responseObject) {
                     // nope
                 } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-
-                    //[[theValue(error.code) should] equal:theValue(-1001)];
-
+                    [[theValue(error.code) should] equal:theValue(TIMEOUT_ERROR_CODE)];
                     finishedFlag = YES;
                 } ];
 
@@ -259,9 +258,7 @@ describe(@"AGHttpClient", ^{
                     // nope
 
                 } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-
-                    //[[theValue(error.code) should] equal:theValue(-1001)];
-
+                    [[theValue(error.code) should] equal:theValue(TIMEOUT_ERROR_CODE)];
                     finishedFlag = YES;
                 } ];
 
@@ -294,9 +291,7 @@ describe(@"AGHttpClient", ^{
                 [_restClient putPath:@"projects/1" parameters:projectSecond success:^(AFHTTPRequestOperation *operation, id responseObject) {
                     // nope
                 } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-
-                    //[[theValue(error.code) should] equal:theValue(-1001)];
-
+                    [[theValue(error.code) should] equal:theValue(TIMEOUT_ERROR_CODE)];
                     finishedFlag = YES;
                 } ];
 
@@ -329,9 +324,7 @@ describe(@"AGHttpClient", ^{
                 [_restClient postPath:@"projects" parameters:projectSecond success:^(AFHTTPRequestOperation *operation, id responseObject) {
                     // nope
                 } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-
-                    //[[theValue(error.code) should] equal:theValue(-1001)];
-
+                    [[theValue(error.code) should] equal:theValue(TIMEOUT_ERROR_CODE)];
                     finishedFlag = YES;
                 } ];
 

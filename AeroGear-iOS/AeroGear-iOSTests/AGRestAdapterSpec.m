@@ -19,6 +19,9 @@
 #import "AGRESTPipe.h"
 #import "AGHTTPMockHelper.h"
 
+// useful macro to check iOS version
+#define SYSTEM_VERSION_LESS_THAN(v) ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
+
 SPEC_BEGIN(AGRestAdapterSpec)
 
 describe(@"AGRestAdapter", ^{
@@ -29,7 +32,9 @@ describe(@"AGRestAdapter", ^{
 
         __block AGRESTPipe* restPipe = nil;
         __block BOOL finishedFlag;
-
+        
+        NSInteger const TIMEOUT_ERROR_CODE = SYSTEM_VERSION_LESS_THAN(@"6")? -999: -1001;
+       
         beforeAll(^{
             PROJECTS = @"[{\"id\":1,\"title\":\"First Project\",\"style\":\"project-161-58-58\",\"tasks\":[]},{\"id\":                 2,\"title\":\"Second Project\",\"style\":\"project-64-144-230\",\"tasks\":[]}]";
             PROJECT = @"{\"id\":1,\"title\":\"First Project\",\"style\":\"project-161-58-58\",\"tasks\":[]}";
@@ -147,17 +152,15 @@ describe(@"AGRestAdapter", ^{
             [AGHTTPMockHelper mockResponseTimeout:[PROJECT dataUsingEncoding:NSUTF8StringEncoding]
                                            status:200
                                      responseTime:2]; // two secs delay
-
             NSMutableDictionary* project = [NSMutableDictionary
                     dictionaryWithObjectsAndKeys:@"First Project", @"title",
                                                  @"project-161-58-58", @"style", nil];
-
 
             [restPipe save:project success:^(id responseObject) {
                 // nope
 
             } failure:^(NSError *error) {
-                //[[theValue(error.code) should] equal:theValue(-1001)];
+                [[theValue(error.code) should] equal:theValue(TIMEOUT_ERROR_CODE)];
                 finishedFlag = YES;
             }];
 
@@ -165,14 +168,9 @@ describe(@"AGRestAdapter", ^{
         });
 
         it(@"should honour timeout on save (PUT)", ^{
-            // here we simulate PUT
-            // for iOS 5 and iOS 6 the timeout should be honoured correctly
-            // regardless of the iOS 5 bug
-
             [AGHTTPMockHelper mockResponseTimeout:[PROJECT dataUsingEncoding:NSUTF8StringEncoding]
                                            status:200
                                      responseTime:2]; // two secs delay
-
             NSMutableDictionary* project = [NSMutableDictionary
                     dictionaryWithObjectsAndKeys:@"1", @"id", @"First Project", @"title",
                                                  @"project-161-58-58", @"style", nil];
@@ -181,47 +179,11 @@ describe(@"AGRestAdapter", ^{
             [restPipe save:project success:^(id responseObject) {
                 // nope
             } failure:^(NSError *error) {
-                //[[theValue(error.code) should] equal:theValue(-1001)];
+                [[theValue(error.code) should] equal:theValue(TIMEOUT_ERROR_CODE)];
                 finishedFlag = YES;
             }];
 
             [[expectFutureValue(theValue(finishedFlag)) shouldEventuallyBeforeTimingOutAfter(5)] beYes];
-        });
-
-        /*
-        it(@"should successfully cancel a request", ^{
-            [AGHTTPMockHelper mockResponseTimeout:[PROJECT dataUsingEncoding:NSUTF8StringEncoding]
-                                           status:200
-                                     responseTime:2]; // two secs delay
-
-            [restPipe read:^(id responseObject) {
-                // nope
-            } failure:^(NSError *error) {
-                [[theValue(error.code) should] equal:theValue(-999)];  // request cancelled code
-                finishedFlag = YES;
-            }];
-
-            // cancel the request
-            [restPipe cancel];
-
-            [[expectFutureValue(theValue(finishedFlag)) shouldEventuallyBeforeTimingOutAfter(5)] beYes];
-        });
-         */
-
-        it(@"should read an object with string argument", ^{
-            [AGHTTPMockHelper mockResponse:[PROJECT dataUsingEncoding:NSUTF8StringEncoding]];
-
-            [restPipe read:@"1"
-                    success:^(id responseObject) {
-                        [responseObject shouldNotBeNil];
-                        finishedFlag = YES;
-
-                    } failure:^(NSError *error) {
-                        // nope
-                    }
-            ];
-
-            [[expectFutureValue(theValue(finishedFlag)) shouldEventually] beYes];
         });
 
         it(@"should read an object with integer argument", ^{
@@ -233,7 +195,7 @@ describe(@"AGRestAdapter", ^{
                         finishedFlag = YES;
 
                     } failure:^(NSError *error) {
-                // nope
+                        // nope
                     }
             ];
 
