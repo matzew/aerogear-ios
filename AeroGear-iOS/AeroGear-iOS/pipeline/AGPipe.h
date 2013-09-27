@@ -116,7 +116,7 @@ Of course the _collection_ behind the responseObject can be stored to a variable
  ## Time out and Cancel pending operations
 
  ### Timeout
- During construction of the Pipe object, you can optionally specify a timeout interval (default is 60 secs) for an operation to complete. If the time interval is exceeded with no response from the server, then the _failure_ callback is executed. 
+ During construction of the Pipe object, you can optionally specify a timeout interval (default is 60 secs) for an operation to complete. If the time interval is exceeded with no response from the server, then the _failure_ callback is executed with an error code set to _NSURLErrorTimedOut_.
 
  From the todo example above:
 
@@ -124,10 +124,11 @@ Of course the _collection_ behind the responseObject can be stored to a variable
         ... 
         [config setTimeout:20];  // set the time interval to 20 secs
     }];
+ 
+ Note: If you are running on iOS versions < 6 and a timeout occurs on a pipe's _save_ operation, the error code is set to _NSURLErrorCancelled_.
 
  ### Cancel
- At any time after starting your operations, you can call ```cancel``` on the Pipe object to cancel all running Pipe operations. Any registered callbacks on the pipe are NOT executed so it is your responsibility to provide any neccessary cleanups after calling this method.
-
+ At any time after starting your operations, you can call ```cancel``` on the Pipe object to cancel all running Pipe operations. Doing so will invoke the pipe's _failure_ block with an error code set to  _NSURLErrorCancelled_. You can then check this code in order to perform your 'cancellation' logic .
 
     [projects read:^(id responseObject) {
         // LOG the JSON response, returned from the server:
@@ -137,8 +138,8 @@ Of course the _collection_ behind the responseObject can be stored to a variable
         NSLog(@"Read: An error occured! \n%@", error);
     }];
 
-    // cancel operations. NOTE that no 'success' or 'failure' callbacks are executed after this.
-    [projects cancel]; 
+    // cancel the request
+    [projects cancel];
  */
 @protocol AGPipe <NSObject>
 
@@ -245,9 +246,9 @@ Of course the _collection_ behind the responseObject can be stored to a variable
        failure:(void (^)(NSError *error))failure;
 
 /**
- * Cancel all running pipe operations. Any registered callbacks on the pipe are NOT executed.
- * It is your responsibility to provide any neccessary cleanups after calling this method.
- * 
+ * Cancel all running pipe operations. Doing so will invoke the pipe's 'failure' block with an error
+ * code set to NSURLErrorCancelled so that you can perform your 'cancellation' logic.
+ *
  * Note: Calling cancel has no effect on the server, so if you do a save or remove and then
  * call cancel, that action will still take place on the the server.
  *

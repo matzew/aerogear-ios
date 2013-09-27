@@ -203,9 +203,8 @@ As with the case of Pipe, configured timeout interval (in the config object) and
      failure:(void (^)(NSError *error))failure;
 
 /**
- * Cancel all running pipe operations. Any registered callbacks on the auth module are NOT executed.
- * It is your responsibility to provide any neccessary cleanups after calling this method.
- *
+ * Cancel all running pipe operations. Doing so will invoke the pipe's 'failure' block with an error
+ * code set to NSURLErrorCancelled so that you can perform your 'cancel' logic.
  */
 -(void) cancel;
 
