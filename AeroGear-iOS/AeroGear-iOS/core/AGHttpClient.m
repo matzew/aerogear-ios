@@ -31,8 +31,6 @@
 // the timer associated with the operation
 @property (nonatomic, retain) NSTimer* timer;
 
-// override to invalidate the timer oncancel
--(void)cancel;
 @end
 
 static char const * const TimerTagKey = "TimerTagKey";
@@ -49,14 +47,6 @@ static char const * const TimerTagKey = "TimerTagKey";
     objc_setAssociatedObject(self, TimerTagKey, timer, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
--(void)cancel {
-    [super cancel];
-    
-    if (self.timer) {
-        [self.timer invalidate];
-        self.timer = nil;
-    }
-}
 @end
 // -------------------------------------------------------
 
@@ -144,9 +134,8 @@ static char const * const TimerTagKey = "TimerTagKey";
 // where the timeout interval less than 240sec is ignored)
 //
 // In particular for those versions we:
-// - start a manual timer that upon fire (on request timeout) will invoke the client's failure block.
-// - success/failure blocks are wrapped, so that the associative timer is invalidated upon
-//   success or failure completion of the request.
+// - start a manual timer that upon fire will cancel the operation and invoke the client's failure block.
+// - success/failure blocks are wrapped, so that the associative timer is invalidated upon completion of the request.
 -(void)processRequest:(NSURLRequest*)request
               success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
               failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure {
@@ -172,25 +161,13 @@ static char const * const TimerTagKey = "TimerTagKey";
             failure(operation, error);
         }];
         
-        
         // the block to be executed when timeout occurs
+        //
+        // Note: internally AF will invoke the 'failure' block
+        //       with error code(-999, 'request couldn't be completed')
         void (^timeout)(void) = ^ {
             // cancel operation
             [operation cancel];
-            
-            // the timer is invalidated after calling this block(a non-repeating timer)
-            // nil out the operation timer instance var
-            operation.timer = nil;
-            
-            // construct error
-            NSError* error = [NSError errorWithDomain:NSURLErrorDomain
-                                                 code:-1001
-                                             userInfo:[NSDictionary dictionaryWithObjectsAndKeys:@"The request timed out.",
-                                                       NSLocalizedDescriptionKey, nil]];
-            // inform client
-            dispatch_async(dispatch_get_main_queue(), ^{
-                failure(operation, error);
-            });
         };
         
         // associate the timer and schedule to run
@@ -199,7 +176,7 @@ static char const * const TimerTagKey = "TimerTagKey";
                                                          selector:@selector(main)
                                                          userInfo:nil
                                                           repeats:NO];
-    } else {
+    } else { // delegate the construction to AF
         operation = [self HTTPRequestOperationWithRequest:request success:success failure:failure];
     }
     
