@@ -185,7 +185,7 @@ typedef void (^AGURLConnectionOperationProgressBlock)(NSUInteger bytes, long lon
 }
 
 - (void)setUploadProgressBlock:(void (^)(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite))block {
-    _uploadProgress = [block copy];
+    _uploadProgress = block;
 }
 
 // =====================================================
