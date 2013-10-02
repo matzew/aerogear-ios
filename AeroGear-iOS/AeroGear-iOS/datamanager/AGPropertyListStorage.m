@@ -72,9 +72,16 @@
 }
 
 -(id) decode:(NSData *)data error:(NSError **)error {
-    return [NSJSONSerialization JSONObjectWithData:data
+    id arr = [NSJSONSerialization JSONObjectWithData:data
                                     options:NSJSONReadingMutableContainers | NSJSONReadingMutableLeaves
                                       error:error];
+    
+    // cater for iOS 5 returning an 'immutable' array when the size is empty
+    if ([arr count] == 0 && ![arr isKindOfClass:[NSMutableArray class]])
+        return nil;
+    
+    return arr;
+
 }
 
 -(BOOL) isValid:(id)plist {
@@ -108,7 +115,7 @@
         _recordId = config.recordId;
         _type = config.type;
         
-        if ([_type isEqualToString:@"PLISTJ"])
+        if ([_type isEqualToString:@"JSON"])
             _encoder = [[AGJsonEncoder alloc] init];
         else  // if not specified use PLIST encoder
             _encoder = [[AGPListEncoder alloc] init];
