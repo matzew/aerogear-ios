@@ -52,7 +52,7 @@
     
     if ([storeConfig.type isEqualToString:@"MEMORY"]) {
         store = [AGMemoryStorage storeWithConfig:storeConfig];
-    } else if ([storeConfig.type isEqualToString:@"PLIST"]) {
+    } else if ([storeConfig.type isEqualToString:@"PLIST"] || [storeConfig.type isEqualToString:@"JSON"]) {
         store = [AGPropertyListStorage storeWithConfig:storeConfig];
     } else { // unknown type
         return nil;

@@ -30,7 +30,7 @@ describe(@"AGPropertyListStorage", ^{
             config = [[AGStoreConfiguration alloc] init];
             [config setName:@"pliststore"];
             [config setRecordId:@"id"];
-            [config setType:@"PLIST"];
+            // [config setType:@"PLIST"]; // can be omitted, since its the default
 
             plistStore = [AGPropertyListStorage storeWithConfig:config];
         });
@@ -83,7 +83,7 @@ describe(@"AGPropertyListStorage", ^{
             config = [[AGStoreConfiguration alloc] init];
             [config setName:@"plistjstore"];
             [config setRecordId:@"id"];
-            [config setType:@"PLISTJ"];
+            [config setType:@"JSON"];
             
             plistJStore = [AGPropertyListStorage storeWithConfig:config];
         });
@@ -537,7 +537,7 @@ describe(@"AGPropertyListStorage", ^{
             config = [[AGStoreConfiguration alloc] init];
             [config setName:@"plistjstore"];
             [config setRecordId:@"id"];
-            [config setType:@"PLISTJ"];
+            [config setType:@"JSON"];
             
             plistjStore = [AGPropertyListStorage storeWithConfig:config];
         });
