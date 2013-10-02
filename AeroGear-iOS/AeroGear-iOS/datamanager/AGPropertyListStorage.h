@@ -22,9 +22,12 @@
 #import "AGMemoryStorage.h"
 
 /**
- An AGStore implementation that uses a [Property List](http://tinyurl.com/ccbo327) for storage.
+ An AGStore implementation that uses a [Property List](http://tinyurl.com/ccbo327) for storage. It can either use a PLIST or JSON serialization output format depending on type name passed when constructing the Store. If the type is 'JSON' the store will use NSJSONSerialization  as its backend otherwise it will fell to use NSPropertyListSerialization.
 
- *IMPORTANT:* Users are not required to instantiate this class directly, instead an instance of this class is returned automatically when an DataStore with the _type_ config option is set to _"PLIST"_. See AGDataManager and AGStore class documentation for more information.
+ *NOTE:*
+ You must adhere to the rules governing the serialization of data types for each respective plist type.
+ 
+ *IMPORTANT:* Users are not required to instantiate this class directly, instead an instance of this class is returned automatically when an DataStore with the _type_ config option is set to _"PLIST"_ or _"JSON"_. See AGDataManager and AGStore class documentation for more information.
 
  ## Create a DataManager with a Property List store backend
  
@@ -34,7 +37,8 @@
     AGDataManager* manager = [AGDataManager manager];
     id<AGStore> plistStore = [manager store:^(id<AGStoreConfig> config) {
         [config setName:@"secrets"]; // will be used as the filename for the plist
-        [config setType:@"PLIST"]; // specify that a Property List is required
+        // specify that a Property List is required and will use the PLIST format as its output
+        [config setType:@"PLIST"];  // you can also use 'JSON' to instruct JSON serialization.
     }];
  
     // the object to save (e.g. a dictionary)
