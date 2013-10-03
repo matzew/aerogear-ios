@@ -29,34 +29,66 @@
     return _sharedInstance;
 }
 
+-(NSString *) buildSelectStatementForStore:(NSString *)storeName withPrimaryKey:(NSString *)key andPrimaryKeyValue:(NSString*)value {
+    NSString *statement = nil;
+    if (key && value) {
+        statement =[ NSString stringWithFormat:@"select value from %@ where %@=%@", storeName, key, value];
+    } else {
+        statement = [NSString stringWithFormat:@"select value from %@", storeName];
+    }
+    return statement;
+}
+
 -(NSString *)buildInsertStatementWithData:(NSDictionary *)data forStore:(NSString *)storeName andPrimaryKey:(NSString *)key {
-    NSMutableString *statement = nil;
+    NSString *statement = nil;
     
     if([data count] != 0 && storeName != nil && [storeName isKindOfClass:[NSString class]]) {
-        statement = [NSMutableString stringWithFormat:@"insert into %@ values (\"", storeName];
-        
-        
         NSEnumerator *columnNames = [data keyEnumerator];
         NSString *columnName = nil;
-        BOOL primaryKeyFound = NO;
+        NSString* primaryKeyValue = nil;
         while ((columnName = [columnNames nextObject])) {
             if([columnName isEqualToString:key]) {
-                primaryKeyFound = YES;
-                [statement deleteCharactersInRange:NSMakeRange([statement length]- 1, 1)];
-                [statement appendFormat:@"%@, \"", data[columnName]];
+                primaryKeyValue = data[columnName];
             }
-            else {
-                [statement appendFormat:@"%@\", \"", data[columnName]];
-            }
-        }
-        if (!primaryKeyFound) {
-            [statement deleteCharactersInRange:NSMakeRange([statement length]- 1, 1)];
-            [statement appendFormat:@"null, \""];
 
         }
-                
-        [statement deleteCharactersInRange:NSMakeRange([statement length]- 3, 3)];
-        [statement appendFormat:@");"];
+
+        NSError *error = nil;
+        NSData* json = [NSJSONSerialization dataWithJSONObject:data
+                                        options:NO
+                                          error:&error];
+        NSString *jsonString = [[NSString alloc] initWithData:json encoding:NSUTF8StringEncoding];
+        
+        statement = [[NSString alloc]initWithString:[[NSString stringWithFormat:@"insert into %@ values ", storeName] stringByAppendingString:[NSString stringWithFormat:@"(%@,'%@')", primaryKeyValue, jsonString]]];
+        
+    }
+    return statement;
+}
+
+-(NSString *)buildUpdateStatementWithData:(NSDictionary *)data forStore:(NSString *)storeName andPrimaryKey:(NSString *)key {
+    NSString *statement = nil;
+    
+    if([data count] != 0 && storeName != nil && [storeName isKindOfClass:[NSString class]]) {
+        NSEnumerator *columnNames = [data keyEnumerator];
+        NSString *columnName = nil;
+        NSString* primaryKeyValue = nil;
+        while ((columnName = [columnNames nextObject])) {
+            if([columnName isEqualToString:key]) {
+                primaryKeyValue = data[columnName];
+            }
+        }
+        if (primaryKeyValue == nil) {
+            return nil;
+        }
+        
+        NSError *error = nil;
+        NSData* json = [NSJSONSerialization dataWithJSONObject:data
+                                                       options:NO
+                                                         error:&error];
+        NSString *jsonString = [[NSString alloc] initWithData:json encoding:NSUTF8StringEncoding];
+        
+        statement = [[NSString alloc]initWithString:[[NSMutableString stringWithFormat:@"update %@ set value = ", storeName] stringByAppendingString:[NSString stringWithFormat:@" '%@' where id = %@", jsonString, primaryKeyValue]]];
+        
     }
     return statement;
 }
@@ -75,13 +107,12 @@
             if([columnName isEqualToString:key]) {
                 [statement appendFormat:@"%@ integer primary key asc, ", columnName];
                 primaryKeyFound = YES;
-            } else {
-                [statement appendFormat:@"%@ text, ", columnName];
             }
         }
         if (!primaryKeyFound) {
            [statement appendFormat:@"%@ integer primary key asc, ", key];
         }
+        [statement appendFormat:@"value text, "];
         
         [statement deleteCharactersInRange:NSMakeRange([statement length]- 2, 2)];
         [statement appendFormat:@");"];

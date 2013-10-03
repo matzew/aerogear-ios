@@ -70,20 +70,52 @@
 // =====================================================
 
 -(NSArray*) readAll {
-    NSString *query = [NSString stringWithFormat:@"select * from %@", _databaseName];
+    NSString* query = [[AGSQLiteStatementBuilder sharedInstance] buildSelectStatementForStore:_databaseName withPrimaryKey:nil andPrimaryKeyValue:nil];
+    //NSString *query = [NSString stringWithFormat:@"select value from %@", _databaseName];
     NSArray* results = [self readWithQuery:query];
-    return results;
+    NSMutableArray* deserializedResults = [[NSMutableArray alloc] init];
+    NSError *error = nil;
+    for (id record in results) {
+        NSString* jsonString = record[@"value"];
+        NSData *jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+        id jsonObject = [NSJSONSerialization JSONObjectWithData:jsonData
+                                                        options:NSJSONReadingAllowFragments
+                                                          error:&error];
+        if (jsonObject != nil) {
+            if ([jsonObject isKindOfClass:[NSDictionary class]]) {
+                NSDictionary *dedic=(NSDictionary *)jsonObject;
+                [deserializedResults addObject:dedic];
+            }
+        }
+    }
+
+    return deserializedResults;
 }
 
 -(id) read:(id)recordId {
-    NSString *query = [NSString stringWithFormat:@"select * from %@ where %@=%@", _databaseName, _recordId, recordId];
+    NSString* query = [[AGSQLiteStatementBuilder sharedInstance] buildSelectStatementForStore:_databaseName withPrimaryKey:_recordId andPrimaryKeyValue:recordId];
+    //NSString *query = [NSString stringWithFormat:@"select value from %@ where %@=%@", _databaseName, _recordId, recordId];
     NSArray* results = [self readWithQuery:query];
     if ([results count] == 0) {
         return nil;
     } else {
-        return results[0];
+        NSError *error = nil;
+        NSString* jsonString = results[0][@"value"];
+        NSData *jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+        id jsonObject = [NSJSONSerialization JSONObjectWithData:jsonData
+                                        options:NSJSONReadingAllowFragments
+                                          error:&error];
+        
+        if (jsonObject != nil) {
+            if ([jsonObject isKindOfClass:[NSDictionary class]]) {
+                NSDictionary *dedic=(NSDictionary *)jsonObject;
+                return dedic;
+            }
+        }
     }
+    return nil;
 }
+
 
 -(NSArray*) filter:(NSPredicate*)predicate {
     NSArray* results = [self readAll];
@@ -143,16 +175,20 @@
     return statusCode;
 }
 
-//private save for one item:
+// private save for one item:
 -(BOOL) saveOne:(NSDictionary*)data {
     BOOL statusCode = YES;
-    NSString *insertStatement = [[AGSQLiteStatementBuilder sharedInstance] buildInsertStatementWithData:data forStore:_databaseName andPrimaryKey:_recordId];
-       
+    NSString *insertStatement = nil;
+    insertStatement = [[AGSQLiteStatementBuilder sharedInstance] buildInsertStatementWithData:data forStore:_databaseName andPrimaryKey:_recordId];
     [_database open];
     statusCode = [_database executeUpdate:insertStatement];
-    
-    int lastId = [_database lastInsertRowId];
-    [data setValue:[NSString stringWithFormat:@"%d", lastId] forKey:_recordId];
+    if (!statusCode) { //insert fails => update
+        NSString* updateStatement = [[AGSQLiteStatementBuilder sharedInstance] buildUpdateStatementWithData:data forStore:_databaseName andPrimaryKey:_recordId];
+        statusCode = [_database executeUpdate:updateStatement];
+    } else { // for insert update id
+        int lastId = [_database lastInsertRowId];
+        [data setValue:[NSString stringWithFormat:@"%d", lastId] forKey:_recordId];
+    }
     [_database close];
     return statusCode;
 }
@@ -198,10 +234,10 @@
 
 -(BOOL) remove:(id)record error:(NSError**)error {
     BOOL statusCode = YES;
-    NSString *id = nil;
+    NSString *idString = nil;
     if (record != nil && record[_recordId] != nil) {
-        id = record[_recordId];
-        NSString *deleteStatement = [[AGSQLiteStatementBuilder sharedInstance] buildDeleteStatementForId:id forStore:_databaseName andPrimaryKey:_recordId];
+        idString = record[_recordId];
+        NSString *deleteStatement = [[AGSQLiteStatementBuilder sharedInstance] buildDeleteStatementForId:idString forStore:_databaseName andPrimaryKey:_recordId];
         [_database open];
         if (deleteStatement != nil) {
             [_database executeUpdate:deleteStatement];

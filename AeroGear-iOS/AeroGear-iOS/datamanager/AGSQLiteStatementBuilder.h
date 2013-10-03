@@ -20,8 +20,9 @@
 @interface AGSQLiteStatementBuilder : NSObject
 
 + (AGSQLiteStatementBuilder *)sharedInstance;
-
+-(NSString *) buildSelectStatementForStore:(NSString *)storeName withPrimaryKey:(NSString *)key andPrimaryKeyValue:(NSString*)value;
 -(NSString *) buildInsertStatementWithData:(NSDictionary *)data forStore:(NSString *)storeName andPrimaryKey:(NSString *)key;
+-(NSString *) buildUpdateStatementWithData:(NSDictionary *)data forStore:(NSString *)storeName andPrimaryKey:(NSString *)key;
 -(NSString *) buildCreateStatementWithData:(NSDictionary *)data forStore:(NSString *)storeName andPrimaryKey:(NSString *)key;
 -(NSString *) buildDropStatementForStore:(NSString *)storeName;
 -(NSString *) buildDeleteStatementForId:(id)record forStore:(NSString *)storeName andPrimaryKey:(NSString *)key;

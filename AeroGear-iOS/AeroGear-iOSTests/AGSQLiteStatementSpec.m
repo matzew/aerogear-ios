@@ -44,20 +44,48 @@ describe(@"AGSQLiteStatementBuilder", ^{
         it(@"with string dictionary should return SQL create statement with text columns ", ^{
             createStatement = [builder buildCreateStatementWithData:data forStore:@"myTable" andPrimaryKey:@"id"];
             [createStatement shouldNotBeNil];
-            [[createStatement should] equal:@"create table myTable (name text, id integer primary key asc, salary text, city text);"];
+            [[createStatement should] equal:@"create table myTable (id integer primary key asc, value text);"];
         });
         
-        it(@"with mixed type dictionary should return SQL create statement with text columns ", ^{
+        it(@"with mixed type dictionary should return SQL create statement with 2 columns: id and value ", ^{
             data = @{@"id" : @"1",
                      @"name" : @"David",
                      @"city" : @YES,
                      @"salary" : [NSNumber numberWithInt:2100]};
             createStatement = [builder buildCreateStatementWithData:data forStore:@"myTable" andPrimaryKey:@"id"];
             [createStatement shouldNotBeNil];
-            [[createStatement should] equal:@"create table myTable (name text, id integer primary key asc, salary text, city text);"];
+            [[createStatement should] equal:@"create table myTable (id integer primary key asc, value text);"];
         });
     });
     
+    context(@"builds a select statement", ^{
+        
+        __block AGSQLiteStatementBuilder *builder = nil;
+        __block NSString *statement = nil;
+        __block NSDictionary *data = nil;
+        
+        beforeEach(^{
+            builder = [AGSQLiteStatementBuilder sharedInstance];
+            data = @{@"id" : @"1",
+                     @"name" : @"David",
+                     @"city" : @"New York",
+                     @"salary" : @"1000"};
+            
+        });
+        
+        it(@"with id", ^{
+            statement = [builder buildSelectStatementForStore:@"myTable" withPrimaryKey:@"id" andPrimaryKeyValue:@"1"];
+            [statement shouldNotBeNil];
+            [[statement should] equal:@"select value from myTable where id=1"];
+        });
+        
+        it(@"without id", ^{
+            statement = [builder buildSelectStatementForStore:@"myTable" withPrimaryKey:nil andPrimaryKeyValue:nil];
+            [statement shouldNotBeNil];
+            [[statement should] equal:@"select value from myTable"];
+        });
+        
+    });
     context(@"builds an insert statement", ^{
 
         __block AGSQLiteStatementBuilder *builder = nil;
@@ -78,21 +106,40 @@ describe(@"AGSQLiteStatementBuilder", ^{
             [statement shouldBeNil];
         });
         
-        it(@"with string dictionary should return SQL insert statement with text values ", ^{
+        it(@"with string dictionary should return SQL insert statement with JSON value", ^{
             statement = [builder buildInsertStatementWithData:data forStore:@"myTable" andPrimaryKey:@"id"];
             [statement shouldNotBeNil];
-            [[statement should] equal:@"insert into myTable values (\"David\", 1, \"1000\", \"New York\");"];
+            [[statement should] equal:@"insert into myTable values (1,'{\"name\":\"David\",\"id\":\"1\",\"salary\":\"1000\",\"city\":\"New York\"}')"];
         });
         
-        it(@"with mixed type dictionary should return SQL create statement with text values ", ^{
+    });
+    
+    context(@"builds an update statement", ^{
+        
+        __block AGSQLiteStatementBuilder *builder = nil;
+        __block NSString *statement = nil;
+        __block NSDictionary *data = nil;
+        
+        beforeEach(^{
+            builder = [AGSQLiteStatementBuilder sharedInstance];
             data = @{@"id" : @"1",
                      @"name" : @"David",
-                     @"city" : @YES,
-                     @"salary" : [NSNumber numberWithInt:2100]};
-            statement = [builder buildInsertStatementWithData:data forStore:@"myTable" andPrimaryKey:@"id"];
-            [statement shouldNotBeNil];
-            [[statement should] equal:@"insert into myTable values (\"David\", 1, \"2100\", \"1\");"];
+                     @"city" : @"New York",
+                     @"salary" : @"1000"};
+            
         });
+        
+        it(@"should be nil with empty data", ^{
+            statement = [builder buildUpdateStatementWithData:nil forStore:@"myTable" andPrimaryKey:@"id"];
+            [statement shouldBeNil];
+        });
+        
+        it(@"with string dictionary should return SQL update statement with JSON value", ^{
+            statement = [builder buildUpdateStatementWithData:data forStore:@"myTable" andPrimaryKey:@"id"];
+            [statement shouldNotBeNil];
+            [[statement should] equal:@"update myTable set value =  '{\"name\":\"David\",\"id\":\"1\",\"salary\":\"1000\",\"city\":\"New York\"}' where id = 1"];
+        });
+        
     });
     
     context(@"builds an drop statement", ^{

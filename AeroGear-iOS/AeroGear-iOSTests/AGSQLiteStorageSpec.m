@@ -74,7 +74,7 @@ describe(@"AGSQLiteStorage", ^{
         });
 
         it(@"should save a single object ", ^{
-            NSMutableDictionary* user = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"Corinne" ,@"name", nil];
+            NSMutableDictionary* user = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"Corinne", @"name", nil];
 
             BOOL success = [sqliteStorage save:user error:nil];
             [[theValue(success) should] equal:theValue(YES)];
@@ -109,6 +109,32 @@ describe(@"AGSQLiteStorage", ^{
             [[user valueForKey:@"myId"] shouldNotBeNil];
             [[[user valueForKey:@"myId"] should] equal:@"1"];
 
+        });
+        
+        it(@"should save an object with embedded aggregate", ^{
+            NSMutableDictionary *user = [@{@"id" : @"0",
+                                            @"name" : @"Robert",
+                                            @"city" : @"Boston",
+                                            @"salary" : [NSNumber numberWithInt:2100],
+                                            @"department" : @{@"name" : @"Software", @"address" : @"Cornwell"},
+                                            @"experience" : @[@{@"language" : @"Java", @"level" : @"advanced"},
+                                                              @{@"language" : @"C", @"level" : @"advanced"}]
+                                            } mutableCopy];
+            
+            AGStoreConfiguration* config = [[AGStoreConfiguration alloc] init];
+            // apply a custom ID config...
+            [config setRecordId:@"myId"];
+            [config setName:@"Users"];
+            // re init the store:
+            sqliteStorage = [AGSQLiteStorage storeWithConfig:config];
+            
+            BOOL success = [sqliteStorage save:user error:nil];
+            [[theValue(success) should] equal:theValue(YES)];
+            
+            // save should have set custom ID
+            [[user valueForKey:@"myId"] shouldNotBeNil];
+            [[[user valueForKey:@"myId"] should] equal:@"1"];
+            
         });
         
         it(@"should read an object _after_ storing it", ^{
@@ -226,9 +252,9 @@ describe(@"AGSQLiteStorage", ^{
             // read it
             objects = [sqliteStorage readAll];
             [[objects should] haveCountOf:(NSUInteger)3];
-//            [[objects should] containObjects:user1, nil];
-//            [[objects should] containObjects:user2, nil];
-//            [[objects should] containObjects:user3, nil];
+            [[objects should] containObjects:user1, nil];
+            [[objects should] containObjects:user2, nil];
+            [[objects should] containObjects:user3, nil];
 
             success = [sqliteStorage reset:nil];
             [[theValue(success) should] equal:theValue(YES)];
@@ -263,9 +289,6 @@ describe(@"AGSQLiteStorage", ^{
             // read it
             objects = [sqliteStorage readAll];
             [[objects should] haveCountOf:(NSUInteger)3];
-//            [[objects should] containObjects:user1, nil];
-//            [[objects should] containObjects:user2, nil];
-//            [[objects should] containObjects:user3, nil];
 
             [sqliteStorage reset:nil];
 
@@ -283,14 +306,68 @@ describe(@"AGSQLiteStorage", ^{
             // read it again ...
             objects = [sqliteStorage readAll];
             [[objects should] haveCountOf:(NSUInteger)3];
-//            [[objects should] containObjects:user1, nil];
-//            [[objects should] containObjects:user2, nil];
-//            [[objects should] containObjects:user3, nil];
+            [[objects should] containObjects:user1, nil];
+            [[objects should] containObjects:user2, nil];
+            [[objects should] containObjects:user3, nil];
         });
 
+        it(@"should update when id already exist", ^{
+            NSMutableDictionary* user1 = [NSMutableDictionary
+                                          dictionaryWithObjectsAndKeys:@"Sebi", @"name", nil];
+
+            BOOL success;
+
+            success = [sqliteStorage save:user1 error:nil];
+            [[theValue(success) should] equal:theValue(YES)];
+            
+            user1[@"name"] = @"Sebastien";
+            success = [sqliteStorage save:user1 error:nil];
+            [[theValue(success) should] equal:theValue(YES)];
+
+            // reload store
+            sqliteStorage = [AGSQLiteStorage storeWithConfig:config];
+
+            // read it
+            NSMutableDictionary *object = [sqliteStorage read:@"1"];
+            [[[object objectForKey:@"name"] should] equal:@"Sebastien"];
+
+            // remove the above user:
+            success = [sqliteStorage remove:user1 error:nil];
+            [[theValue(success) should] equal:theValue(YES)];
+
+            // read from the empty store...
+            NSArray* objects = [sqliteStorage readAll];
+            [[objects should] haveCountOf:(NSUInteger)0];
+        });
+        
         it(@"should not read a remove object", ^{
             NSMutableDictionary* user1 = [NSMutableDictionary
                                           dictionaryWithObjectsAndKeys:@"Sebi", @"name", nil];
+            
+            BOOL success;
+            
+            success = [sqliteStorage save:user1 error:nil];
+            [[theValue(success) should] equal:theValue(YES)];
+            
+            // reload store
+            sqliteStorage = [AGSQLiteStorage storeWithConfig:config];
+            
+            // read it
+            NSMutableDictionary *object = [sqliteStorage read:@"1"];
+            [[[object objectForKey:@"name"] should] equal:@"Sebi"];
+            
+            // remove the above user:
+            success = [sqliteStorage remove:user1 error:nil];
+            [[theValue(success) should] equal:theValue(YES)];
+            
+            // read from the empty store...
+            NSArray* objects = [sqliteStorage readAll];
+            [[objects should] haveCountOf:(NSUInteger)0];
+        });
+
+        it(@"should not remove a non-existing object", ^{
+            NSMutableDictionary* user1 = [NSMutableDictionary
+                                          dictionaryWithObjectsAndKeys:@"Matthias", @"name", @"1", @"oid", nil];
 
             BOOL success;
 
@@ -302,146 +379,121 @@ describe(@"AGSQLiteStorage", ^{
 
             // read it
             NSMutableDictionary *object = [sqliteStorage read:@"1"];
-            [[[object objectForKey:@"name"] should] equal:@"Sebi"];
+            [[[object objectForKey:@"name"] should] equal:@"Matthias"];
 
-            // remove the above user:
-            success = [sqliteStorage remove:user1 error:nil];
-            [[theValue(success) should] equal:theValue(YES)];
+            NSMutableDictionary* user2 = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"Matthias", @"name" ,@"2", @"oid", nil];
 
-            // read from the empty store...
+            // try to remove the user with the id '1':
+            success = [sqliteStorage remove:user2 error:nil];
+            [[theValue(success) should] equal:theValue(NO)];
+
+            // should contain the first object
             NSArray* objects = [sqliteStorage readAll];
-            [[objects should] haveCountOf:(NSUInteger)0];
+
+            [[objects should] haveCountOf:1];
         });
 
-//        it(@"should not remove a non-existing object", ^{
-//            NSMutableDictionary* user1 = [NSMutableDictionary
-//                                          dictionaryWithObjectsAndKeys:@"Matthias", @"name", @"1", @"oid", nil];
-//
-//            BOOL success;
-//
-//            success = [sqliteStorage save:user1 error:nil];
-//            [[theValue(success) should] equal:theValue(YES)];
-//
-//            // reload store
-//            sqliteStorage = [AGSQLiteStorage storeWithConfig:config];
-//
-//            // read it
-//            NSMutableDictionary *object = [sqliteStorage read:@"1"];
-//            [[[object objectForKey:@"name"] should] equal:@"Matthias"];
-//
-//            NSMutableDictionary* user2 = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"Matthias", @"name" ,@"2", @"oid", nil];
-//
-//            // remove the user with the id '1':
-//            success = [sqliteStorage remove:user2 error:nil];
-//            [[theValue(success) should] equal:theValue(YES)];
-//
-//            // should contain the first object
-//            NSArray* objects = [sqliteStorage readAll];
-//
-//            [[objects should] haveCountOf:1];
-//        });
-//
-//        it(@"should perform filtering using an NSPredicate", ^{
-//            NSMutableDictionary *user1 = [@{@"id" : @"0",
-//                    @"name" : @"Robert",
-//                    @"city" : @"Boston",
-//                    @"salary" : [NSNumber numberWithInt:2100],
-//                    @"department" : @{@"name" : @"Software", @"address" : @"Cornwell"},
-//                    @"experience" : @[@{@"language" : @"Java", @"level" : @"advanced"},
-//                            @{@"language" : @"C", @"level" : @"advanced"}]
-//            } mutableCopy];
-//
-//            NSMutableDictionary *user2 = [@{@"id" : @"1",
-//                    @"name" : @"David",
-//                    @"city" : @"New York",
-//                    @"salary" : [NSNumber numberWithInt:1400],
-//                    @"department" : @{@"name" : @"Hardware", @"address" : @"Cornwell"},
-//                    @"experience" : @[@{@"language" : @"Java", @"level" : @"advanced"},
-//                            @{@"language" : @"Python", @"level" : @"intermediate"}]
-//            } mutableCopy];
-//
-//            NSMutableDictionary *user3 = [@{@"id" : @"2",
-//                    @"name" : @"Peter",
-//                    @"city" : @"New York",
-//                    @"salary" : [NSNumber numberWithInt:1800],
-//                    @"department" : @{@"name" : @"Software", @"address" : @"Branton"},
-//                    @"experience" : @[@{@"language" : @"Java", @"level" : @"advanced"},
-//                            @{@"language" : @"C", @"level" : @"intermediate"}]
-//            } mutableCopy];
-//
-//            NSMutableDictionary *user4 = [@{@"id" : @"3",
-//                    @"name" : @"John",
-//                    @"city" : @"Boston",
-//                    @"salary" : [NSNumber numberWithInt:1700],
-//                    @"department" : @{@"name" : @"Software", @"address" : @"Norwell"},
-//                    @"experience" : @[@{@"language" : @"Java", @"level" : @"intermediate"},
-//                            @{@"language" : @"JavaScript", @"level" : @"advanced"}]
-//            } mutableCopy];
-//
-//            NSMutableDictionary *user5 = [@{@"id" : @"4",
-//                    @"name" : @"Graham",
-//                    @"city" : @"Boston",
-//                    @"salary" : [NSNumber numberWithInt:2400],
-//                    @"department" : @{@"name" : @"Software", @"address" : @"Underwood"},
-//                    @"experience" : @[@{@"language" : @"Java", @"level" : @"advanced"},
-//                            @{@"language" : @"Python", @"level" : @"advanced"}]
-//            } mutableCopy];
-//
-//            NSArray *users = @[user1, user2, user3, user4, user5];
-//
-//            // save objects
-//            BOOL success = [sqliteStorage save:users error:nil];
-//            [[theValue(success) should] equal:theValue(YES)];
-//
-//            // reload store
-//            sqliteStorage = [AGSQLiteStorage storeWithConfig:config];
-//
-//            NSPredicate *predicate;
-//            NSArray *results;
-//
-//            // filter objects
-//            predicate = [NSPredicate
-//                    predicateWithFormat:@"city = 'Boston' AND department.name = 'Software' \
-//                      AND SUBQUERY(experience, $x, $x.language = 'Java' AND $x.level = 'advanced').@count > 0"];
-//
-//            results = [sqliteStorage filter:predicate];
-//
-//            // validate size
-//            [[results should] haveCountOf:2];
-//
-//            // validate each object
-//            for (NSDictionary *user in results) {
-//                [[user[@"city"] should] equal:@"Boston"];
-//                [[user[@"department"][@"name"] should] equal:@"Software"];
-//
-//                BOOL contains = [user[@"experience"] containsObject:@{@"language" : @"Java", @"level" : @"advanced"}];
-//                [[theValue(contains) should] equal:(theValue(YES))];
-//            }
-//
-//            // retrieve only users with knowledge of BOTH Java AND Ruby (should be none)
-//            predicate = [NSPredicate
-//                    predicateWithFormat:@"SUBQUERY(experience, $x, $x.language IN {'Java', 'Ruby'}).@count = 2"];
-//
-//            results = [sqliteStorage filter:predicate];
-//
-//            // validate size
-//            [[results should] haveCountOf:0];
-//
-//            // retrieve users with the specified salaries
-//            predicate = [NSPredicate
-//                    predicateWithFormat:@"department.name = 'Software' AND salary BETWEEN {1500, 2000}"];
-//
-//            results = [sqliteStorage filter:predicate];
-//
-//            // validate size
-//            [[results should] haveCountOf:2];
-//
-//            // validate each object
-//            for (NSDictionary *user in results) {
-//                [[user[@"department"][@"name"] should] equal:@"Software"];
-//                [[theValue([user[@"salary"] intValue]) should] beBetween:theValue(1500) and:theValue(2000)];
-//            }
-//        });
+        it(@"should perform filtering using an NSPredicate", ^{
+            NSMutableDictionary *user1 = [@{@"id" : @"0",
+                    @"name" : @"Robert",
+                    @"city" : @"Boston",
+                    @"salary" : [NSNumber numberWithInt:2100],
+                    @"department" : @{@"name" : @"Software", @"address" : @"Cornwell"},
+                    @"experience" : @[@{@"language" : @"Java", @"level" : @"advanced"},
+                            @{@"language" : @"C", @"level" : @"advanced"}]
+            } mutableCopy];
+
+            NSMutableDictionary *user2 = [@{@"id" : @"1",
+                    @"name" : @"David",
+                    @"city" : @"New York",
+                    @"salary" : [NSNumber numberWithInt:1400],
+                    @"department" : @{@"name" : @"Hardware", @"address" : @"Cornwell"},
+                    @"experience" : @[@{@"language" : @"Java", @"level" : @"advanced"},
+                            @{@"language" : @"Python", @"level" : @"intermediate"}]
+            } mutableCopy];
+
+            NSMutableDictionary *user3 = [@{@"id" : @"2",
+                    @"name" : @"Peter",
+                    @"city" : @"New York",
+                    @"salary" : [NSNumber numberWithInt:1800],
+                    @"department" : @{@"name" : @"Software", @"address" : @"Branton"},
+                    @"experience" : @[@{@"language" : @"Java", @"level" : @"advanced"},
+                            @{@"language" : @"C", @"level" : @"intermediate"}]
+            } mutableCopy];
+
+            NSMutableDictionary *user4 = [@{@"id" : @"3",
+                    @"name" : @"John",
+                    @"city" : @"Boston",
+                    @"salary" : [NSNumber numberWithInt:1700],
+                    @"department" : @{@"name" : @"Software", @"address" : @"Norwell"},
+                    @"experience" : @[@{@"language" : @"Java", @"level" : @"intermediate"},
+                            @{@"language" : @"JavaScript", @"level" : @"advanced"}]
+            } mutableCopy];
+
+            NSMutableDictionary *user5 = [@{@"id" : @"4",
+                    @"name" : @"Graham",
+                    @"city" : @"Boston",
+                    @"salary" : [NSNumber numberWithInt:2400],
+                    @"department" : @{@"name" : @"Software", @"address" : @"Underwood"},
+                    @"experience" : @[@{@"language" : @"Java", @"level" : @"advanced"},
+                            @{@"language" : @"Python", @"level" : @"advanced"}]
+            } mutableCopy];
+
+            NSArray *users = @[user1, user2, user3, user4, user5];
+
+            // save objects
+            BOOL success = [sqliteStorage save:users error:nil];
+            [[theValue(success) should] equal:theValue(YES)];
+
+            // reload store
+            sqliteStorage = [AGSQLiteStorage storeWithConfig:config];
+
+            NSPredicate *predicate;
+            NSArray *results;
+
+            // filter objects
+            predicate = [NSPredicate
+                    predicateWithFormat:@"city = 'Boston' AND department.name = 'Software' \
+                      AND SUBQUERY(experience, $x, $x.language = 'Java' AND $x.level = 'advanced').@count > 0"];
+
+            results = [sqliteStorage filter:predicate];
+
+            // validate size
+            [[results should] haveCountOf:2];
+
+            // validate each object
+            for (NSDictionary *user in results) {
+                [[user[@"city"] should] equal:@"Boston"];
+                [[user[@"department"][@"name"] should] equal:@"Software"];
+
+                BOOL contains = [user[@"experience"] containsObject:@{@"language" : @"Java", @"level" : @"advanced"}];
+                [[theValue(contains) should] equal:(theValue(YES))];
+            }
+
+            // retrieve only users with knowledge of BOTH Java AND Ruby (should be none)
+            predicate = [NSPredicate
+                    predicateWithFormat:@"SUBQUERY(experience, $x, $x.language IN {'Java', 'Ruby'}).@count = 2"];
+
+            results = [sqliteStorage filter:predicate];
+
+            // validate size
+            [[results should] haveCountOf:0];
+
+            // retrieve users with the specified salaries
+            predicate = [NSPredicate
+                    predicateWithFormat:@"department.name = 'Software' AND salary BETWEEN {1500, 2000}"];
+
+            results = [sqliteStorage filter:predicate];
+
+            // validate size
+            [[results should] haveCountOf:2];
+
+            // validate each object
+            for (NSDictionary *user in results) {
+                [[user[@"department"][@"name"] should] equal:@"Software"];
+                [[theValue([user[@"salary"] intValue]) should] beBetween:theValue(1500) and:theValue(2000)];
+            }
+        });
     });
 });
 
