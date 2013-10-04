@@ -81,7 +81,7 @@
                 
                 if (error) {
                     *error = [self constructError:@"save" msg:@"array contains non-dictionary objects!"];
-                    return false;
+                    return NO;
                 }
             }
         }
@@ -107,7 +107,7 @@
 //private save for one item:
 -(void) saveOne:(NSDictionary*)data {
     // does the record already exist ?
-    BOOL _objFound = NO;
+    BOOL objFound = NO;
     
     for (id record in _array) {
         // check the 'id':
@@ -117,12 +117,12 @@
             [_array removeObjectAtIndex:index];
             [_array addObject:data];
             //
-            _objFound = YES;
+            objFound = YES;
             break;
         }
     }
 
-    if (!_objFound) {
+    if (!objFound) {
         // if the object hasnt' set a recordId property
         if ([data objectForKey:_recordId] == nil) {
             //generate a UIID to be used as this object recordId
@@ -155,7 +155,7 @@
         if (error) {
             *error = [self constructError:@"remove" msg:@"object was nil"];
             // do nothing
-            return FALSE;
+            return NO;
         }
     }
     
@@ -166,24 +166,25 @@
         if (error) {
             *error = [self constructError:@"remove" msg:@"recordId not set"];
             // do nothing
-            return FALSE;
+            return NO;
         }
     }
 
-    id objectToDelete;
+    // does the record already exist ?
+    BOOL objFound = NO;
     
     for (id item in _array) {
         // check the 'id':
         if ([[item objectForKey:_recordId] isEqual:objectKey]) {
             // replace/update it:
-            objectToDelete = item;
+            objFound = YES;
             NSUInteger index = [_array indexOfObject:item];
             [_array removeObjectAtIndex:index];
             break;
         }
     }
-        
-    return YES;
+    
+    return objFound;
 }
 
 -(NSString *) description {

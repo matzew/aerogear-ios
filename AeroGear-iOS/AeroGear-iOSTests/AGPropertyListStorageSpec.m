@@ -416,7 +416,7 @@ describe(@"AGPropertyListStorage", ^{
 
             // remove the user with the id '1':
             success = [plistStore remove:user2 error:nil];
-            [[theValue(success) should] equal:theValue(YES)];
+            [[theValue(success) should] equal:theValue(NO)];
 
             // should contain the first object
             NSArray* objects = [plistStore readAll];
