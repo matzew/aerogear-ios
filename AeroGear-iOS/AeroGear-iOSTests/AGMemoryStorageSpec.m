@@ -242,6 +242,31 @@ describe(@"AGMemoryStorage", ^{
             [[objects should] containObjects:user3, nil];
         });
         
+        it(@"should not be able to save a non-dictionary object", ^{
+            // an arbitary object instead of an nsdictionary
+            NSSet *user1 = [NSSet setWithObjects:@"Matthias",@"name",@"1",@"id", nil];
+            NSError *error;
+            
+            BOOL success = [memStore save:user1 error:&error];
+            
+            [[theValue(success) should] equal:theValue(NO)];
+            [[error.localizedDescription should] equal:@"dictionary objects are supported only"];
+        });
+        
+        it(@"should not be able to save a non-dictionary object contained inside an NSArray", ^{
+            // an arbitary object instead of an nsdictionary
+            NSSet *user1 = [NSSet setWithObjects:@"Matthias",@"name",@"1",@"id", nil];
+            
+            // wrap it inside an array
+            NSMutableArray *arr = [NSMutableArray arrayWithObjects:user1, nil];
+            NSError *error;
+            
+            BOOL success = [memStore save:arr error:&error];
+            
+            [[theValue(success) should] equal:theValue(NO)];
+            [[error.localizedDescription should] equal:@"array contains non-dictionary objects!"];
+        });
+        
         it(@"should not read a remove object", ^{
             NSMutableDictionary* user1 = [NSMutableDictionary
                                           dictionaryWithObjectsAndKeys:@"Matthias",@"name",@"0",@"id", nil];
@@ -289,7 +314,35 @@ describe(@"AGMemoryStorage", ^{
             
             [[objects should] haveCountOf:1];
         });
-
+        
+        it(@"should not be able to remove a nil object", ^{
+            NSError *error;
+            BOOL success;
+            
+            success = [memStore remove:nil error:&error];
+            
+            [[theValue(success) should] equal:theValue(NO)];
+            [[error.localizedDescription should] equal:@"object was nil"];
+            
+            
+            success = [memStore remove:[NSNull null] error:&error];
+            
+            [[theValue(success) should] equal:theValue(NO)];
+            [[error.localizedDescription should] equal:@"object was nil"];
+        });
+        
+        it(@"should not be able to remove an object with no 'recordId' set", ^{
+            NSMutableDictionary* user1 = [NSMutableDictionary
+                                          dictionaryWithObjectsAndKeys:@"Matthias",@"name",@"123",@"bogudIdName", nil];
+            
+            NSError *error;
+            BOOL success = [memStore remove:user1 error:&error];
+            
+            [[theValue(success) should] equal:theValue(NO)];
+            [[error.localizedDescription should] equal:@"recordId not set"];
+        });
+        
+        
         it(@"should perform filtering using an NSPredicate", ^{
             NSMutableDictionary *user1 = [@{@"id" : @"0",
                     @"name" : @"Robert",

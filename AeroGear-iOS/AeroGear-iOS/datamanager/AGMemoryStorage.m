@@ -81,8 +81,10 @@
                 
                 if (error) {
                     *error = [self constructError:@"save" msg:@"array contains non-dictionary objects!"];
-                    return NO;
                 }
+
+                // do nothing
+                return NO;
             }
         }
 
@@ -97,8 +99,10 @@
     } else { // not a dictionary, fail back
         if (error) {
             *error = [self constructError:@"save" msg:@"dictionary objects are supported only"];
-            return NO;
         }
+        
+        // do nothing
+        return NO;
     }
 
     return YES;
@@ -154,9 +158,10 @@
         
         if (error) {
             *error = [self constructError:@"remove" msg:@"object was nil"];
-            // do nothing
-            return NO;
         }
+        
+        // do nothing
+        return NO;
     }
     
     id objectKey = [record objectForKey:_recordId];
@@ -165,9 +170,10 @@
         
         if (error) {
             *error = [self constructError:@"remove" msg:@"recordId not set"];
-            // do nothing
-            return NO;
         }
+        
+        // do nothing
+        return NO;
     }
 
     // does the record already exist ?
