@@ -235,7 +235,8 @@
 -(BOOL) remove:(id)record error:(NSError**)error {
     BOOL statusCode = YES;
     NSString *idString = nil;
-    if (record != nil && record[_recordId] != nil) {
+    BOOL isNull = [record isKindOfClass:[NSNull class]];
+    if (!isNull && record != nil && record[_recordId] != nil) {
         idString = record[_recordId];
         NSString *deleteStatement = [[AGSQLiteStatementBuilder sharedInstance] buildDeleteStatementForId:idString forStore:_databaseName andPrimaryKey:_recordId];
         [_database open];
@@ -253,8 +254,8 @@
         if (!statusCode && error) {
             *error = [self constructError:@"remove" msg:@"remove a nil id not possible"];
         }
-    }  
-
+    }
+    
     return statusCode;
 }
 

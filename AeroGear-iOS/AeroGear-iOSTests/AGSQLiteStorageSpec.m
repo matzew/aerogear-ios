@@ -392,7 +392,34 @@ describe(@"AGSQLiteStorage", ^{
 
             [[objects should] haveCountOf:1];
         });
-
+        
+        it(@"should not be able to remove a nil object", ^{
+            NSError *error;
+            BOOL success;
+            
+            success = [sqliteStorage remove:nil error:&error];
+            
+            [[theValue(success) should] equal:theValue(NO)];
+            [[error.localizedDescription should] equal:@"remove a nil id not possible"];
+            
+            
+            success = [sqliteStorage remove:[NSNull null] error:&error];
+            
+            [[theValue(success) should] equal:theValue(NO)];
+            [[error.localizedDescription should] equal:@"remove a nil id not possible"];
+        });
+        
+        it(@"should not be able to remove an object with no 'recordId' set", ^{
+            NSMutableDictionary* user1 = [NSMutableDictionary
+                                          dictionaryWithObjectsAndKeys:@"Matthias",@"name",@"123",@"bogudIdName", nil];
+            
+            NSError *error;
+            BOOL success = [sqliteStorage remove:user1 error:&error];
+            
+            [[theValue(success) should] equal:theValue(NO)];
+            [[error.localizedDescription should] equal:@"remove a nil id not possible"];
+        });
+        
         it(@"should perform filtering using an NSPredicate", ^{
             NSMutableDictionary *user1 = [@{@"id" : @"0",
                     @"name" : @"Robert",
