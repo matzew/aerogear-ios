@@ -87,7 +87,7 @@ The ```remove``` function allows you to delete a single entry in the collection,
     if (![myStore remove:@"0" error:error])
         NSLog(@"Save: An error occured during remove! \n%@", error);    
 
-The remove method accepts the _recordID_ of the object you want to remove. If the object does not exist in the store, FALSE is returned.
+The remove method accepts the _recordID_ of the object you want to remove. If the object does not exist in the store, NO is returned.
 
 ## Filter the entire Store
 
