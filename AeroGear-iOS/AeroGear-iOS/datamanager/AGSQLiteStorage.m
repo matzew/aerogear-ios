@@ -21,6 +21,7 @@
 @implementation AGSQLiteStorage {
     NSString* _databaseName;
     NSString* _path;
+    AGSQLiteStatementBuilder* _statementBuilder;
 }
 
 @synthesize type = _type;
@@ -49,6 +50,8 @@
         // if file exists open DB, if file not exist create an empty one
         _database = [FMDatabase databaseWithPath:[NSString stringWithFormat:@"%@.sqlite3", [_path stringByAppendingPathComponent:_databaseName]]];
         NSLog(@"Database in %@",[_path stringByAppendingPathComponent:_databaseName]);
+        
+        _statementBuilder = [[AGSQLiteStatementBuilder alloc] initWithStoreName:_databaseName andPrimaryKeyName:_recordId];
     }
     
     return self;
@@ -70,7 +73,7 @@
 // =====================================================
 
 -(NSArray*) readAll {
-    NSString* query = [[AGSQLiteStatementBuilder sharedInstance] buildSelectStatementForStore:_databaseName withPrimaryKey:nil andPrimaryKeyValue:nil];
+    NSString* query = [_statementBuilder buildSelectStatementWithPrimaryKeyValue:nil];
     //NSString *query = [NSString stringWithFormat:@"select value from %@", _databaseName];
     NSArray* results = [self readWithQuery:query];
     NSMutableArray* deserializedResults = [[NSMutableArray alloc] init];
@@ -93,7 +96,7 @@
 }
 
 -(id) read:(id)recordId {
-    NSString* query = [[AGSQLiteStatementBuilder sharedInstance] buildSelectStatementForStore:_databaseName withPrimaryKey:_recordId andPrimaryKeyValue:recordId];
+    NSString* query = [_statementBuilder buildSelectStatementWithPrimaryKeyValue:recordId];
     //NSString *query = [NSString stringWithFormat:@"select value from %@ where %@=%@", _databaseName, _recordId, recordId];
     NSArray* results = [self readWithQuery:query];
     if ([results count] == 0) {
@@ -179,11 +182,11 @@
 -(BOOL) saveOne:(NSDictionary*)data {
     BOOL statusCode = YES;
     NSString *insertStatement = nil;
-    insertStatement = [[AGSQLiteStatementBuilder sharedInstance] buildInsertStatementWithData:data forStore:_databaseName andPrimaryKey:_recordId];
+    insertStatement = [_statementBuilder buildInsertStatementWithData:data];
     [_database open];
     statusCode = [_database executeUpdate:insertStatement];
     if (!statusCode) { //insert fails => update
-        NSString* updateStatement = [[AGSQLiteStatementBuilder sharedInstance] buildUpdateStatementWithData:data forStore:_databaseName andPrimaryKey:_recordId];
+        NSString* updateStatement = [_statementBuilder buildUpdateStatementWithData:data];
         statusCode = [_database executeUpdate:updateStatement];
     } else { // for insert update id
         int lastId = [_database lastInsertRowId];
@@ -196,7 +199,7 @@
 // create if not exist
 -(BOOL) createTableWith:(NSDictionary*)data {
     BOOL statusCode = YES;
-    NSString *createStatement = [[AGSQLiteStatementBuilder sharedInstance] buildCreateStatementWithData:data forStore:_databaseName andPrimaryKey:_recordId];
+    NSString *createStatement = [_statementBuilder buildCreateStatementWithData:data];
     [_database open];
     if (createStatement != nil) {
         [_database executeUpdate:createStatement];
@@ -210,7 +213,7 @@
 
 -(BOOL) reset:(NSError**)error {
     BOOL statusCode = YES;
-    NSString *dropStatement = [[AGSQLiteStatementBuilder sharedInstance] buildDropStatementForStore:_databaseName];
+    NSString *dropStatement = [_statementBuilder buildDropStatement];
     [_database open];
     if (dropStatement != nil) {
          [_database executeUpdate:dropStatement];
@@ -238,7 +241,7 @@
     BOOL isNull = [record isKindOfClass:[NSNull class]];
     if (!isNull && record != nil && record[_recordId] != nil) {
         idString = record[_recordId];
-        NSString *deleteStatement = [[AGSQLiteStatementBuilder sharedInstance] buildDeleteStatementForId:idString forStore:_databaseName andPrimaryKey:_recordId];
+        NSString *deleteStatement = [_statementBuilder buildDeleteStatementForId:idString];
         [_database open];
         if (deleteStatement != nil) {
             [_database executeUpdate:deleteStatement];

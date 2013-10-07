@@ -18,6 +18,8 @@
 #import "AGSQLiteStatementBuilder.h"
 
 @implementation AGSQLiteStatementBuilder
+NSString *_storeName = nil;
+NSString *_primaryKey = nil;
 
 + (AGSQLiteStatementBuilder *)sharedInstance {
     static AGSQLiteStatementBuilder *_sharedInstance = nil;
@@ -29,25 +31,34 @@
     return _sharedInstance;
 }
 
--(NSString *) buildSelectStatementForStore:(NSString *)storeName withPrimaryKey:(NSString *)key andPrimaryKeyValue:(NSString*)value {
+-(id)initWithStoreName:(NSString *)storeName andPrimaryKeyName:(NSString *)key {
+    self = [super init];
+    if (self) {
+        _storeName = storeName;
+        _primaryKey = key;
+    }
+    return self;
+}
+
+-(NSString *) buildSelectStatementWithPrimaryKeyValue:(NSString*)value {
     NSString *statement = nil;
-    if (key && value) {
-        statement =[ NSString stringWithFormat:@"select value from %@ where %@=%@", storeName, key, value];
+    if (_primaryKey && value) {
+        statement =[ NSString stringWithFormat:@"select value from %@ where %@=%@", _storeName, _primaryKey, value];
     } else {
-        statement = [NSString stringWithFormat:@"select value from %@", storeName];
+        statement = [NSString stringWithFormat:@"select value from %@", _storeName];
     }
     return statement;
 }
 
--(NSString *)buildInsertStatementWithData:(NSDictionary *)data forStore:(NSString *)storeName andPrimaryKey:(NSString *)key {
+-(NSString *)buildInsertStatementWithData:(NSDictionary *)data {
     NSString *statement = nil;
     
-    if([data count] != 0 && storeName != nil && [storeName isKindOfClass:[NSString class]]) {
+    if([data count] != 0 && _storeName != nil && [_storeName isKindOfClass:[NSString class]]) {
         NSEnumerator *columnNames = [data keyEnumerator];
         NSString *columnName = nil;
         NSString* primaryKeyValue = nil;
         while ((columnName = [columnNames nextObject])) {
-            if([columnName isEqualToString:key]) {
+            if([columnName isEqualToString:_primaryKey]) {
                 primaryKeyValue = data[columnName];
             }
 
@@ -59,21 +70,21 @@
                                           error:&error];
         NSString *jsonString = [[NSString alloc] initWithData:json encoding:NSUTF8StringEncoding];
         
-        statement = [[NSString alloc]initWithString:[[NSString stringWithFormat:@"insert into %@ values ", storeName] stringByAppendingString:[NSString stringWithFormat:@"(%@,'%@')", primaryKeyValue, jsonString]]];
+        statement = [[NSString alloc]initWithString:[[NSString stringWithFormat:@"insert into %@ values ", _storeName] stringByAppendingString:[NSString stringWithFormat:@"(%@,'%@')", primaryKeyValue, jsonString]]];
         
     }
     return statement;
 }
 
--(NSString *)buildUpdateStatementWithData:(NSDictionary *)data forStore:(NSString *)storeName andPrimaryKey:(NSString *)key {
+-(NSString *)buildUpdateStatementWithData:(NSDictionary *)data {
     NSString *statement = nil;
     
-    if([data count] != 0 && storeName != nil && [storeName isKindOfClass:[NSString class]]) {
+    if([data count] != 0 && _storeName != nil && [_storeName isKindOfClass:[NSString class]]) {
         NSEnumerator *columnNames = [data keyEnumerator];
         NSString *columnName = nil;
         NSString* primaryKeyValue = nil;
         while ((columnName = [columnNames nextObject])) {
-            if([columnName isEqualToString:key]) {
+            if([columnName isEqualToString:_primaryKey]) {
                 primaryKeyValue = data[columnName];
             }
         }
@@ -87,30 +98,30 @@
                                                          error:&error];
         NSString *jsonString = [[NSString alloc] initWithData:json encoding:NSUTF8StringEncoding];
         
-        statement = [[NSString alloc]initWithString:[[NSMutableString stringWithFormat:@"update %@ set value = ", storeName] stringByAppendingString:[NSString stringWithFormat:@" '%@' where id = %@", jsonString, primaryKeyValue]]];
+        statement = [[NSString alloc]initWithString:[[NSMutableString stringWithFormat:@"update %@ set value = ", _storeName] stringByAppendingString:[NSString stringWithFormat:@" '%@' where id = %@", jsonString, primaryKeyValue]]];
         
     }
     return statement;
 }
 
--(NSString *)buildCreateStatementWithData:(NSDictionary *)data forStore:(NSString *)storeName andPrimaryKey:(NSString *)key {
+-(NSString *)buildCreateStatementWithData:(NSDictionary *)data {
     NSMutableString *statement = nil;
     
-    if([data count] != 0 && storeName != nil && [storeName isKindOfClass:[NSString class]]) {
-        statement = [NSMutableString stringWithFormat:@"create table %@ (", storeName];
+    if([data count] != 0 && _storeName != nil && [_storeName isKindOfClass:[NSString class]]) {
+        statement = [NSMutableString stringWithFormat:@"create table %@ (", _storeName];
         
         
         NSEnumerator *columnNames = [data keyEnumerator];
         NSString *columnName = nil;
         BOOL primaryKeyFound = NO;
         while ((columnName = [columnNames nextObject])) {
-            if([columnName isEqualToString:key]) {
+            if([columnName isEqualToString:_primaryKey]) {
                 [statement appendFormat:@"%@ integer primary key asc, ", columnName];
                 primaryKeyFound = YES;
             }
         }
         if (!primaryKeyFound) {
-           [statement appendFormat:@"%@ integer primary key asc, ", key];
+           [statement appendFormat:@"%@ integer primary key asc, ", _primaryKey];
         }
         [statement appendFormat:@"value text, "];
         
@@ -120,19 +131,19 @@
     return statement;
 }
 
--(NSString *) buildDropStatementForStore:(NSString *)storeName {
+-(NSString *) buildDropStatement {
     NSMutableString *statement = nil;
-    if(storeName != nil && [storeName isKindOfClass:[NSString class]]) {
-        statement = [NSMutableString stringWithFormat:@"drop table %@;", storeName];
+    if(_storeName != nil && [_storeName isKindOfClass:[NSString class]]) {
+        statement = [NSMutableString stringWithFormat:@"drop table %@;", _storeName];
     }
     return statement;
 }
 
--(NSString *) buildDeleteStatementForId:(id)record forStore:(NSString *)storeName andPrimaryKey:(NSString *)key {
+-(NSString *) buildDeleteStatementForId:(id)record {
     NSMutableString *statement = nil;
     
-    if(record != nil && storeName != nil && [storeName isKindOfClass:[NSString class]]) {
-        statement = [NSMutableString stringWithFormat:@"delete from %@ where %@ = \"%@\"", storeName, key, record];
+    if(record != nil && _storeName != nil && [_storeName isKindOfClass:[NSString class]]) {
+        statement = [NSMutableString stringWithFormat:@"delete from %@ where %@ = \"%@\"", _storeName, _primaryKey, record];
     }
     return statement;
 }

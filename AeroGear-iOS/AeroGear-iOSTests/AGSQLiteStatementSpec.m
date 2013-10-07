@@ -28,7 +28,7 @@ describe(@"AGSQLiteStatementBuilder", ^{
         __block NSDictionary *data = nil;
         
         beforeEach(^{
-            builder = [AGSQLiteStatementBuilder sharedInstance];
+            builder = [[AGSQLiteStatementBuilder alloc] initWithStoreName:@"myTable" andPrimaryKeyName:@"id"];
             data = @{@"id" : @"1",
                      @"name" : @"David",
                      @"city" : @"New York",
@@ -37,12 +37,12 @@ describe(@"AGSQLiteStatementBuilder", ^{
         });
         
         it(@"should be nil with empty data", ^{
-            createStatement = [builder buildCreateStatementWithData:nil forStore:@"myTable" andPrimaryKey:@"id"];
+            createStatement = [builder buildCreateStatementWithData:nil];
             [createStatement shouldBeNil];
         });
 
         it(@"with string dictionary should return SQL create statement with text columns ", ^{
-            createStatement = [builder buildCreateStatementWithData:data forStore:@"myTable" andPrimaryKey:@"id"];
+            createStatement = [builder buildCreateStatementWithData:data];
             [createStatement shouldNotBeNil];
             [[createStatement should] equal:@"create table myTable (id integer primary key asc, value text);"];
         });
@@ -52,7 +52,7 @@ describe(@"AGSQLiteStatementBuilder", ^{
                      @"name" : @"David",
                      @"city" : @YES,
                      @"salary" : [NSNumber numberWithInt:2100]};
-            createStatement = [builder buildCreateStatementWithData:data forStore:@"myTable" andPrimaryKey:@"id"];
+            createStatement = [builder buildCreateStatementWithData:data];
             [createStatement shouldNotBeNil];
             [[createStatement should] equal:@"create table myTable (id integer primary key asc, value text);"];
         });
@@ -65,7 +65,7 @@ describe(@"AGSQLiteStatementBuilder", ^{
         __block NSDictionary *data = nil;
         
         beforeEach(^{
-            builder = [AGSQLiteStatementBuilder sharedInstance];
+            builder = [[AGSQLiteStatementBuilder alloc] initWithStoreName:@"myTable" andPrimaryKeyName:@"id"];
             data = @{@"id" : @"1",
                      @"name" : @"David",
                      @"city" : @"New York",
@@ -74,13 +74,13 @@ describe(@"AGSQLiteStatementBuilder", ^{
         });
         
         it(@"with id", ^{
-            statement = [builder buildSelectStatementForStore:@"myTable" withPrimaryKey:@"id" andPrimaryKeyValue:@"1"];
+            statement = [builder buildSelectStatementWithPrimaryKeyValue:@"1"];
             [statement shouldNotBeNil];
             [[statement should] equal:@"select value from myTable where id=1"];
         });
         
         it(@"without id", ^{
-            statement = [builder buildSelectStatementForStore:@"myTable" withPrimaryKey:nil andPrimaryKeyValue:nil];
+            statement = [builder buildSelectStatementWithPrimaryKeyValue:nil];
             [statement shouldNotBeNil];
             [[statement should] equal:@"select value from myTable"];
         });
@@ -93,7 +93,7 @@ describe(@"AGSQLiteStatementBuilder", ^{
         __block NSDictionary *data = nil;
         
         beforeEach(^{
-            builder = [AGSQLiteStatementBuilder sharedInstance];
+            builder = [[AGSQLiteStatementBuilder alloc] initWithStoreName:@"myTable" andPrimaryKeyName:@"id"];
             data = @{@"id" : @"1",
                      @"name" : @"David",
                      @"city" : @"New York",
@@ -102,12 +102,12 @@ describe(@"AGSQLiteStatementBuilder", ^{
         });
         
         it(@"should be nil with empty data", ^{
-            statement = [builder buildInsertStatementWithData:nil forStore:@"myTable" andPrimaryKey:@"id"];
+            statement = [builder buildInsertStatementWithData:nil];
             [statement shouldBeNil];
         });
         
         it(@"with string dictionary should return SQL insert statement with JSON value", ^{
-            statement = [builder buildInsertStatementWithData:data forStore:@"myTable" andPrimaryKey:@"id"];
+            statement = [builder buildInsertStatementWithData:data];
             [statement shouldNotBeNil];
             [[statement should] equal:@"insert into myTable values (1,'{\"name\":\"David\",\"id\":\"1\",\"salary\":\"1000\",\"city\":\"New York\"}')"];
         });
@@ -121,7 +121,7 @@ describe(@"AGSQLiteStatementBuilder", ^{
         __block NSDictionary *data = nil;
         
         beforeEach(^{
-            builder = [AGSQLiteStatementBuilder sharedInstance];
+            builder = [[AGSQLiteStatementBuilder alloc] initWithStoreName:@"myTable" andPrimaryKeyName:@"id"];
             data = @{@"id" : @"1",
                      @"name" : @"David",
                      @"city" : @"New York",
@@ -130,12 +130,12 @@ describe(@"AGSQLiteStatementBuilder", ^{
         });
         
         it(@"should be nil with empty data", ^{
-            statement = [builder buildUpdateStatementWithData:nil forStore:@"myTable" andPrimaryKey:@"id"];
+            statement = [builder buildUpdateStatementWithData:nil];
             [statement shouldBeNil];
         });
         
         it(@"with string dictionary should return SQL update statement with JSON value", ^{
-            statement = [builder buildUpdateStatementWithData:data forStore:@"myTable" andPrimaryKey:@"id"];
+            statement = [builder buildUpdateStatementWithData:data];
             [statement shouldNotBeNil];
             [[statement should] equal:@"update myTable set value =  '{\"name\":\"David\",\"id\":\"1\",\"salary\":\"1000\",\"city\":\"New York\"}' where id = 1"];
         });
@@ -148,16 +148,17 @@ describe(@"AGSQLiteStatementBuilder", ^{
         __block NSString *statement = nil;
         
         beforeEach(^{
-            builder = [AGSQLiteStatementBuilder sharedInstance];
+            builder = [[AGSQLiteStatementBuilder alloc] initWithStoreName:nil andPrimaryKeyName:nil];
         });
         
         it(@"should be nil with empty data", ^{
-            statement = [builder buildDropStatementForStore:nil];
+            statement = [builder buildDropStatement];
             [statement shouldBeNil];
         });
         
         it(@"should have valid SQL syntax", ^{
-            statement = [builder buildDropStatementForStore:@"myTable"];
+            builder = [[AGSQLiteStatementBuilder alloc] initWithStoreName:@"myTable" andPrimaryKeyName:nil];
+            statement = [builder buildDropStatement];
             [statement shouldNotBeNil];
             [[statement should] equal:@"drop table myTable;"];
         });
@@ -170,16 +171,17 @@ describe(@"AGSQLiteStatementBuilder", ^{
         __block NSString *statement = nil;
         
         beforeEach(^{
-            builder = [AGSQLiteStatementBuilder sharedInstance];
+            builder = [[AGSQLiteStatementBuilder alloc] initWithStoreName:@"myTable" andPrimaryKeyName:@"id"];
         });
         
         it(@"should be nil with empty data", ^{
-            statement = [builder buildDeleteStatementForId:@"1" forStore:nil andPrimaryKey:@"id"];
+            builder = [[AGSQLiteStatementBuilder alloc] initWithStoreName:nil andPrimaryKeyName:@"id"];
+            statement = [builder buildDeleteStatementForId:@"1"];
             [statement shouldBeNil];
         });
         
         it(@"should have valid SQL syntax", ^{
-            statement = [builder buildDropStatementForStore:@"myTable"];
+            statement = [builder buildDropStatement];
             [statement shouldNotBeNil];
             [[statement should] equal:@"drop table myTable;"];
         });
