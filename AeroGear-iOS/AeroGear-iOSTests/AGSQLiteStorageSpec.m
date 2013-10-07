@@ -18,6 +18,7 @@
 #import <Kiwi/Kiwi.h>
 #import "AGSQLiteStorage.h"
 
+
 SPEC_BEGIN(AGSQLiteStorageSpec)
 
 describe(@"AGSQLiteStorage", ^{
@@ -78,7 +79,15 @@ describe(@"AGSQLiteStorage", ^{
 
             BOOL success = [sqliteStorage save:user error:nil];
             [[theValue(success) should] equal:theValue(YES)];
-        });      
+        });
+        
+        it(@"shouldn't save a non serialisable object ", ^{
+            FMDatabase *_database;
+            NSMutableDictionary* user = [NSMutableDictionary dictionaryWithObjectsAndKeys:_database, @"name", nil];
+            
+            BOOL success = [sqliteStorage save:user error:nil];
+            [[theValue(success) should] equal:theValue(NO)];
+        });
         
         it(@"should save a single object with id set", ^{
             NSMutableDictionary* user = [NSMutableDictionary dictionaryWithObjectsAndKeys:@"Matthias", @"name", nil];

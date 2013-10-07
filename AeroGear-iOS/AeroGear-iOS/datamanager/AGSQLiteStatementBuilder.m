@@ -61,15 +61,12 @@ NSString *_primaryKey = nil;
                 primaryKeyValue = data[col];
             }
         }
-
-        NSError *error = nil;
         NSData* json = [NSJSONSerialization dataWithJSONObject:data
-                                        options:NO
-                                          error:&error];
+                                                       options:NO
+                                                         error:nil];
         NSString *jsonString = [[NSString alloc] initWithData:json encoding:NSUTF8StringEncoding];
         
-        statement = [[NSString alloc]initWithString:[[NSString stringWithFormat:@"insert into %@ values ", _storeName] stringByAppendingString:[NSString stringWithFormat:@"(%@,'%@')", primaryKeyValue, jsonString]]];
-        
+        statement =[NSString stringWithFormat:@"insert into %@ values (%@,'%@')", _storeName, primaryKeyValue, jsonString];
     }
     return statement;
 }
@@ -89,14 +86,12 @@ NSString *_primaryKey = nil;
             return nil;
         }
         
-        NSError *error = nil;
         NSData* json = [NSJSONSerialization dataWithJSONObject:data
                                                        options:NO
-                                                         error:&error];
+                                                         error:nil];
         NSString *jsonString = [[NSString alloc] initWithData:json encoding:NSUTF8StringEncoding];
         
-        statement = [[NSString alloc]initWithString:[[NSMutableString stringWithFormat:@"update %@ set value = ", _storeName] stringByAppendingString:[NSString stringWithFormat:@" '%@' where id = %@", jsonString, primaryKeyValue]]];
-        
+        statement = [NSString stringWithFormat:@"update %@ set value =  '%@' where id = %@", _storeName, jsonString, primaryKeyValue];
     }
     return statement;
 }

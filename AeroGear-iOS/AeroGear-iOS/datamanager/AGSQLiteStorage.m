@@ -77,18 +77,16 @@
     //NSString *query = [NSString stringWithFormat:@"select value from %@", _databaseName];
     NSArray* results = [self readWithQuery:query];
     NSMutableArray* deserializedResults = [[NSMutableArray alloc] init];
-    NSError *error = nil;
+
     for (id record in results) {
         NSString* jsonString = record[@"value"];
         NSData *jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
         id jsonObject = [NSJSONSerialization JSONObjectWithData:jsonData
                                                         options:NSJSONReadingAllowFragments
-                                                          error:&error];
-        if (jsonObject != nil) {
-            if ([jsonObject isKindOfClass:[NSDictionary class]]) {
-                NSDictionary *dedic=(NSDictionary *)jsonObject;
+                                                          error:nil];
+        if (jsonObject && [jsonObject isKindOfClass:[NSDictionary class]]) {
+                NSDictionary *dedic = jsonObject;
                 [deserializedResults addObject:dedic];
-            }
         }
     }
 
@@ -128,51 +126,59 @@
 
 -(BOOL) save:(id)data error:(NSError**)error {
     BOOL statusCode = YES;
-    // a 'collection' of objects:
-    if ([data isKindOfClass:[NSArray class]]) {
-        // fail fast if the array contains non-dictionary objects
-        for (id record in data) {
-            if (![record isKindOfClass:[NSDictionary class]]) {
-                if (error) {
-                    *error = [self constructError:@"save" msg:@"array contains non-dictionary objects!"];
-                    return NO;
+    if ([NSJSONSerialization isValidJSONObject:data]) {
+        // a 'collection' of objects:
+        if ([data isKindOfClass:[NSArray class]]) {
+            // fail fast if the array contains non-dictionary objects
+            for (id record in data) {
+                if (![record isKindOfClass:[NSDictionary class]]) {
+                    if (error) {
+                        *error = [self constructError:@"save" msg:@"array contains non-dictionary objects!"];
+                        return NO;
+                    }
                 }
             }
-        }
-
-        if ([data count] != 0) {
-            statusCode = [self createTableWith: data[0]];
-        } else {
+            
+            if ([data count] != 0) {
+                statusCode = [self createTableWith: data[0]];
+            } else {
+                if (error) {
+                    *error = [self constructError:@"save" msg:@"create table failed"];
+                }
+            }
+            for (id record in data) {
+                statusCode = [self saveOne:record];
+                if (!statusCode && error) {
+                    *error = [self constructError:@"save" msg:@"insert into table failed"];
+                }
+            }
+            
+        } else if([data isKindOfClass:[NSDictionary class]]) {
+            // single obj:
+            statusCode = [self createTableWith: data];
+            if (statusCode) {
+                statusCode = [self saveOne:data];
+                if (!statusCode && error) {
+                    *error = [self constructError:@"save" msg:@"insert into table failed"];
+                }
+            } else {
+                if (error) {
+                    *error = [self constructError:@"save" msg:@"create table failed"];
+                }
+            }
+            
+        } else { // not a dictionary, fail back
             if (error) {
-                *error = [self constructError:@"save" msg:@"create table failed"];
+                *error = [self constructError:@"save" msg:@"dictionary objects are supported only"];
             }
-        }
-        for (id record in data) {
-            statusCode = [self saveOne:record];
-            if (!statusCode && error) {
-                *error = [self constructError:@"save" msg:@"insert into table failed"];
-            }
-        }
-        
-    } else if([data isKindOfClass:[NSDictionary class]]) {
-        // single obj:
-        statusCode = [self createTableWith: data];
-        if (statusCode) {
-            statusCode = [self saveOne:data];
-            if (!statusCode && error) {
-                *error = [self constructError:@"save" msg:@"insert into table failed"];
-            }
-        } else {
-            if (error) {
-                *error = [self constructError:@"save" msg:@"create table failed"];
-            }
-        }
-        
-    } else { // not a dictionary, fail back
-        if (error) {
-            *error = [self constructError:@"save" msg:@"dictionary objects are supported only"];
             return NO;
+            
         }
+    } else {
+        if (error) {
+            *error = [self constructError:@"save" msg:@"supported values should be either NSString, NSNumber, NSArray, NSDictionary, or NSNull"];
+        }
+        return NO;
     }
     
     return statusCode;
