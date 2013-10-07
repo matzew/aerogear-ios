@@ -55,13 +55,11 @@ NSString *_primaryKey = nil;
     
     if([data count] != 0 && _storeName != nil && [_storeName isKindOfClass:[NSString class]]) {
         NSEnumerator *columnNames = [data keyEnumerator];
-        NSString *columnName = nil;
         NSString* primaryKeyValue = nil;
-        while ((columnName = [columnNames nextObject])) {
-            if([columnName isEqualToString:_primaryKey]) {
-                primaryKeyValue = data[columnName];
+        for (NSString* col in columnNames) {
+            if([col isEqualToString:_primaryKey]) {
+                primaryKeyValue = data[col];
             }
-
         }
 
         NSError *error = nil;
@@ -81,11 +79,10 @@ NSString *_primaryKey = nil;
     
     if([data count] != 0 && _storeName != nil && [_storeName isKindOfClass:[NSString class]]) {
         NSEnumerator *columnNames = [data keyEnumerator];
-        NSString *columnName = nil;
         NSString* primaryKeyValue = nil;
-        while ((columnName = [columnNames nextObject])) {
-            if([columnName isEqualToString:_primaryKey]) {
-                primaryKeyValue = data[columnName];
+        for (NSString* col in columnNames) {
+            if([col isEqualToString:_primaryKey]) {
+                primaryKeyValue = data[col];
             }
         }
         if (primaryKeyValue == nil) {
@@ -110,16 +107,15 @@ NSString *_primaryKey = nil;
     if([data count] != 0 && _storeName != nil && [_storeName isKindOfClass:[NSString class]]) {
         statement = [NSMutableString stringWithFormat:@"create table %@ (", _storeName];
         
-        
         NSEnumerator *columnNames = [data keyEnumerator];
-        NSString *columnName = nil;
         BOOL primaryKeyFound = NO;
-        while ((columnName = [columnNames nextObject])) {
-            if([columnName isEqualToString:_primaryKey]) {
-                [statement appendFormat:@"%@ integer primary key asc, ", columnName];
+        for (NSString* col in columnNames) {
+            if([col isEqualToString:_primaryKey]) {
+                [statement appendFormat:@"%@ integer primary key asc, ", col];
                 primaryKeyFound = YES;
             }
         }
+
         if (!primaryKeyFound) {
            [statement appendFormat:@"%@ integer primary key asc, ", _primaryKey];
         }
