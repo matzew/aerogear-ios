@@ -19,7 +19,6 @@
 
 @interface AGSQLiteStatementBuilder : NSObject
 
-//+ (AGSQLiteStatementBuilder *)sharedInstance;
 -(id)initWithStoreName:(NSString *)storeName andPrimaryKeyName:(NSString *)key;
 -(NSString *) buildSelectStatementWithPrimaryKeyValue:(NSString*)value;
 -(NSString *) buildInsertStatementWithData:(NSDictionary *)data;

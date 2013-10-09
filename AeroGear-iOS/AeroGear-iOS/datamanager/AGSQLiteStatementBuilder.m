@@ -22,13 +22,13 @@ NSString *_storeName = nil;
 NSString *_primaryKey = nil;
 
 + (AGSQLiteStatementBuilder *)sharedInstance {
-    static AGSQLiteStatementBuilder *_sharedInstance = nil;
+    static AGSQLiteStatementBuilder *__sharedInstance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        _sharedInstance = [[self alloc] init];
+        __sharedInstance = [[self alloc] init];
     });
     
-    return _sharedInstance;
+    return __sharedInstance;
 }
 
 -(id)initWithStoreName:(NSString *)storeName andPrimaryKeyName:(NSString *)key {
