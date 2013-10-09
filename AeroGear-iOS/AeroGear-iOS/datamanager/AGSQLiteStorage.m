@@ -74,19 +74,13 @@
 
 -(NSArray*) readAll {
     NSString* query = [_statementBuilder buildSelectStatementWithPrimaryKeyValue:nil];
-    //NSString *query = [NSString stringWithFormat:@"select value from %@", _databaseName];
     NSArray* results = [self readWithQuery:query];
     NSMutableArray* deserializedResults = [[NSMutableArray alloc] init];
 
     for (id record in results) {
-        NSString* jsonString = record[@"value"];
-        NSData *jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
-        id jsonObject = [NSJSONSerialization JSONObjectWithData:jsonData
-                                                        options:NSJSONReadingAllowFragments
-                                                          error:nil];
+        id jsonObject = [self deserialiseValue:record];
         if (jsonObject && [jsonObject isKindOfClass:[NSDictionary class]]) {
-                NSDictionary *dedic = jsonObject;
-                [deserializedResults addObject:dedic];
+             [deserializedResults addObject:jsonObject];
         }
     }
 
@@ -95,23 +89,13 @@
 
 -(id) read:(id)recordId {
     NSString* query = [_statementBuilder buildSelectStatementWithPrimaryKeyValue:recordId];
-    //NSString *query = [NSString stringWithFormat:@"select value from %@ where %@=%@", _databaseName, _recordId, recordId];
     NSArray* results = [self readWithQuery:query];
     if ([results count] == 0) {
         return nil;
     } else {
-        NSError *error = nil;
-        NSString* jsonString = results[0][@"value"];
-        NSData *jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
-        id jsonObject = [NSJSONSerialization JSONObjectWithData:jsonData
-                                        options:NSJSONReadingAllowFragments
-                                          error:&error];
-        
-        if (jsonObject != nil) {
-            if ([jsonObject isKindOfClass:[NSDictionary class]]) {
-                NSDictionary *dedic=(NSDictionary *)jsonObject;
-                return dedic;
-            }
+        id jsonObject = [self deserialiseValue:results[0]];
+        if (jsonObject != nil && [jsonObject isKindOfClass:[NSDictionary class]]) {
+            return (NSDictionary *)jsonObject;
         }
     }
     return nil;
@@ -185,27 +169,27 @@
 }
 
 // private save for one item:
--(BOOL) saveOne:(NSDictionary*)data {
+-(BOOL) saveOne:(NSDictionary*)value {
     BOOL statusCode = YES;
     NSString *insertStatement = nil;
-    insertStatement = [_statementBuilder buildInsertStatementWithData:data];
+    insertStatement = [_statementBuilder buildInsertStatementWithValue:value];
     [_database open];
     statusCode = [_database executeUpdate:insertStatement];
     if (!statusCode) { //insert fails => update
-        NSString* updateStatement = [_statementBuilder buildUpdateStatementWithData:data];
+        NSString* updateStatement = [_statementBuilder buildUpdateStatementWithValue:value];
         statusCode = [_database executeUpdate:updateStatement];
     } else { // for insert update id
         int lastId = [_database lastInsertRowId];
-        [data setValue:[NSString stringWithFormat:@"%d", lastId] forKey:_recordId];
+        [value setValue:[NSString stringWithFormat:@"%d", lastId] forKey:_recordId];
     }
     [_database close];
     return statusCode;
 }
 
 // create if not exist
--(BOOL) createTableWith:(NSDictionary*)data {
+-(BOOL) createTableWith:(NSDictionary*)value {
     BOOL statusCode = YES;
-    NSString *createStatement = [_statementBuilder buildCreateStatementWithData:data];
+    NSString *createStatement = [_statementBuilder buildCreateStatementWithValue:value];
     [_database open];
     if (createStatement != nil) {
         [_database executeUpdate:createStatement];
@@ -272,8 +256,6 @@
 // =====================================================
 // =========== private utility methods  ================
 // =====================================================
-
-// TODO common part with AGPropertyListStorage::storeFilePathWithName
 -(NSString*) getFilePath {
     // calculate path
     NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -301,6 +283,15 @@
     
     [_database close];
     return results;
+}
+
+-(id) deserialiseValue:(id) record {
+    NSString* jsonString = record[@"value"];
+    NSData *jsonData = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
+    id jsonObject = [NSJSONSerialization JSONObjectWithData:jsonData
+                                                    options:NSJSONReadingAllowFragments
+                                                      error:nil];
+    return jsonObject;
 }
 
 @end

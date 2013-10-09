@@ -27,10 +27,9 @@
     NSString* _recordId;
 }
 
-// TODO move those from AGMemoryStorage.h to AGStore.h ?
+// TODO move those from AGMemoryStorage.h to AGStore.h
 +(id) storeWithConfig:(id<AGStoreConfig>) storeConfig;
 -(id) initWithConfig:(id<AGStoreConfig>) storeConfig;
-
 -(NSError *) constructError:(NSString*) domain
                         msg:(NSString*) msg;
 @end

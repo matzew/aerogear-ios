@@ -50,18 +50,18 @@ NSString *_primaryKey = nil;
     return statement;
 }
 
--(NSString *)buildInsertStatementWithData:(NSDictionary *)data {
+-(NSString *)buildInsertStatementWithValue:(NSDictionary *)value {
     NSString *statement = nil;
     
-    if([data count] != 0 && _storeName != nil && [_storeName isKindOfClass:[NSString class]]) {
-        NSEnumerator *columnNames = [data keyEnumerator];
+    if([value count] != 0 && _storeName != nil && [_storeName isKindOfClass:[NSString class]]) {
+        NSEnumerator *columnNames = [value keyEnumerator];
         NSString* primaryKeyValue = nil;
         for (NSString* col in columnNames) {
             if([col isEqualToString:_primaryKey]) {
-                primaryKeyValue = data[col];
+                primaryKeyValue = value[col];
             }
         }
-        NSData* json = [NSJSONSerialization dataWithJSONObject:data
+        NSData* json = [NSJSONSerialization dataWithJSONObject:value
                                                        options:NO
                                                          error:nil];
         NSString *jsonString = [[NSString alloc] initWithData:json encoding:NSUTF8StringEncoding];
@@ -71,22 +71,22 @@ NSString *_primaryKey = nil;
     return statement;
 }
 
--(NSString *)buildUpdateStatementWithData:(NSDictionary *)data {
+-(NSString *)buildUpdateStatementWithValue:(NSDictionary *)value {
     NSString *statement = nil;
     
-    if([data count] != 0 && _storeName != nil && [_storeName isKindOfClass:[NSString class]]) {
-        NSEnumerator *columnNames = [data keyEnumerator];
+    if([value count] != 0 && _storeName != nil && [_storeName isKindOfClass:[NSString class]]) {
+        NSEnumerator *columnNames = [value keyEnumerator];
         NSString* primaryKeyValue = nil;
         for (NSString* col in columnNames) {
             if([col isEqualToString:_primaryKey]) {
-                primaryKeyValue = data[col];
+                primaryKeyValue = value[col];
             }
         }
         if (primaryKeyValue == nil) {
             return nil;
         }
         
-        NSData* json = [NSJSONSerialization dataWithJSONObject:data
+        NSData* json = [NSJSONSerialization dataWithJSONObject:value
                                                        options:NO
                                                          error:nil];
         NSString *jsonString = [[NSString alloc] initWithData:json encoding:NSUTF8StringEncoding];
@@ -96,13 +96,13 @@ NSString *_primaryKey = nil;
     return statement;
 }
 
--(NSString *)buildCreateStatementWithData:(NSDictionary *)data {
+-(NSString *)buildCreateStatementWithValue:(NSDictionary *)value {
     NSMutableString *statement = nil;
     
-    if([data count] != 0 && _storeName != nil && [_storeName isKindOfClass:[NSString class]]) {
+    if([value count] != 0 && _storeName != nil && [_storeName isKindOfClass:[NSString class]]) {
         statement = [NSMutableString stringWithFormat:@"create table %@ (", _storeName];
         
-        NSEnumerator *columnNames = [data keyEnumerator];
+        NSEnumerator *columnNames = [value keyEnumerator];
         BOOL primaryKeyFound = NO;
         for (NSString* col in columnNames) {
             if([col isEqualToString:_primaryKey]) {

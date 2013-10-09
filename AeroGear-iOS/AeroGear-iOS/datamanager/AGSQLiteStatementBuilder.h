@@ -21,9 +21,9 @@
 
 -(id)initWithStoreName:(NSString *)storeName andPrimaryKeyName:(NSString *)key;
 -(NSString *) buildSelectStatementWithPrimaryKeyValue:(NSString*)value;
--(NSString *) buildInsertStatementWithData:(NSDictionary *)data;
--(NSString *) buildUpdateStatementWithData:(NSDictionary *)data;
--(NSString *) buildCreateStatementWithData:(NSDictionary *)data;
+-(NSString *) buildInsertStatementWithValue:(NSDictionary *)value;
+-(NSString *) buildUpdateStatementWithValue:(NSDictionary *)value;
+-(NSString *) buildCreateStatementWithValue:(NSDictionary *)value;
 -(NSString *) buildDropStatement;
 -(NSString *) buildDeleteStatementForId:(id)record;
 @end

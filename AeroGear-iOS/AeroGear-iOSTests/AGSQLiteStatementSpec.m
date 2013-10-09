@@ -37,12 +37,12 @@ describe(@"AGSQLiteStatementBuilder", ^{
         });
         
         it(@"should be nil with empty data", ^{
-            createStatement = [builder buildCreateStatementWithData:nil];
+            createStatement = [builder buildCreateStatementWithValue:nil];
             [createStatement shouldBeNil];
         });
 
         it(@"with string dictionary should return SQL create statement with text columns ", ^{
-            createStatement = [builder buildCreateStatementWithData:data];
+            createStatement = [builder buildCreateStatementWithValue:data];
             [createStatement shouldNotBeNil];
             [[createStatement should] equal:@"create table myTable (id integer primary key asc, value text);"];
         });
@@ -52,7 +52,7 @@ describe(@"AGSQLiteStatementBuilder", ^{
                      @"name" : @"David",
                      @"city" : @YES,
                      @"salary" : [NSNumber numberWithInt:2100]};
-            createStatement = [builder buildCreateStatementWithData:data];
+            createStatement = [builder buildCreateStatementWithValue:data];
             [createStatement shouldNotBeNil];
             [[createStatement should] equal:@"create table myTable (id integer primary key asc, value text);"];
         });
@@ -102,12 +102,12 @@ describe(@"AGSQLiteStatementBuilder", ^{
         });
         
         it(@"should be nil with empty data", ^{
-            statement = [builder buildInsertStatementWithData:nil];
+            statement = [builder buildInsertStatementWithValue:nil];
             [statement shouldBeNil];
         });
         
         it(@"with string dictionary should return SQL insert statement with JSON value", ^{
-            statement = [builder buildInsertStatementWithData:data];
+            statement = [builder buildInsertStatementWithValue:data];
             [statement shouldNotBeNil];
             [[statement should] equal:@"insert into myTable values (1,'{\"name\":\"David\",\"id\":\"1\",\"salary\":\"1000\",\"city\":\"New York\"}')"];
         });
@@ -130,12 +130,12 @@ describe(@"AGSQLiteStatementBuilder", ^{
         });
         
         it(@"should be nil with empty data", ^{
-            statement = [builder buildUpdateStatementWithData:nil];
+            statement = [builder buildUpdateStatementWithValue:nil];
             [statement shouldBeNil];
         });
         
         it(@"with string dictionary should return SQL update statement with JSON value", ^{
-            statement = [builder buildUpdateStatementWithData:data];
+            statement = [builder buildUpdateStatementWithValue:data];
             [statement shouldNotBeNil];
             [[statement should] equal:@"update myTable set value =  '{\"name\":\"David\",\"id\":\"1\",\"salary\":\"1000\",\"city\":\"New York\"}' where id = 1"];
         });
