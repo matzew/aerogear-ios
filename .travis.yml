@@ -5,3 +5,7 @@ script: travis/script.sh
 
 notifications:
   irc: "irc.freenode.org#aerogear"
+
+branches:
+  only:
+    - master
