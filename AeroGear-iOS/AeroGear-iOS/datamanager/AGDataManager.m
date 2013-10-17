@@ -19,6 +19,7 @@
 #import "AGMemoryStorage.h"
 #import "AGPropertyListStorage.h"
 #import "AGStoreConfiguration.h"
+#import "AGSQLiteStorage.h"
 
 @implementation AGDataManager {
     NSMutableDictionary* _stores;
@@ -54,6 +55,8 @@
         store = [AGMemoryStorage storeWithConfig:storeConfig];
     } else if ([storeConfig.type isEqualToString:@"PLIST"] || [storeConfig.type isEqualToString:@"JSON"]) {
         store = [AGPropertyListStorage storeWithConfig:storeConfig];
+    } else if ([storeConfig.type isEqualToString:@"SQLITE"]) {
+        store = [AGSQLiteStorage storeWithConfig:storeConfig];
     } else { // unknown type
         return nil;
     }

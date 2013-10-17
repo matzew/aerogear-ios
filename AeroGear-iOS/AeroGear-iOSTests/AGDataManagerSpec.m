@@ -61,6 +61,28 @@ describe(@"AGDataManager", ^{
             [(id)store shouldBeNil];
         });
     });
+    
+    context(@"when adding a new store of type SQLITE", ^{
+        
+        __block AGDataManager *manager = nil;
+        
+        beforeEach(^{
+            manager = [AGDataManager manager];
+        });
+        
+        it(@"should have a SQLITE type", ^{
+            id<AGStore> store = [manager store:^(id<AGStoreConfig> config) {
+                [config setName:@"tasks"];
+                [config setType:@"SQLITE"];
+            }];
+            
+            [(id)store shouldNotBeNil];
+            
+            [[store.type should] equal:@"SQLITE"];
+        });
+        
+    });
+    
 
     context(@"when adding and removing stores", ^{
 
