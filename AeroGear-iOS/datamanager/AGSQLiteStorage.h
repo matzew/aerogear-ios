@@ -15,10 +15,10 @@
  * limitations under the License.
  */
 
+#import <FMDatabase.h>
 #import <Foundation/Foundation.h>
 #import "AGStore.h"
 #import "AGStoreConfiguration.h"
-#import "FMDatabase.h"
 
 /**
  An AGStore implementation that uses a SQLite for storage. The storage is a key value store. The content is serialized in JSON output.
