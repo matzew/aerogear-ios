@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-pod install
 cd AeroGear-iOS
+pod install
 xctool clean build test ONLY_ACTIVE_ARCH=NO
 
